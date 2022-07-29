@@ -1,0 +1,29 @@
+biocframe package
+=================
+
+Submodules
+----------
+
+biocframe.DataFrame module
+--------------------------
+
+.. automodule:: biocframe.DataFrame
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+biocframe.utils module
+----------------------
+
+.. automodule:: biocframe.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: biocframe
+   :members:
+   :undoc-members:
+   :show-inheritance:

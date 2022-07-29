@@ -1,0 +1,7 @@
+biocframe
+=========
+
+.. toctree::
+   :maxdepth: 4
+
+   biocframe
