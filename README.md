@@ -1,0 +1,100 @@
+<!-- These are examples of badges you might want to add to your README:
+     please update the URLs accordingly
+
+[![Built Status](https://api.cirrus-ci.com/github/<USER>/BiocFrame.svg?branch=main)](https://cirrus-ci.com/github/<USER>/BiocFrame)
+[![ReadTheDocs](https://readthedocs.org/projects/BiocFrame/badge/?version=latest)](https://BiocFrame.readthedocs.io/en/stable/)
+[![Coveralls](https://img.shields.io/coveralls/github/<USER>/BiocFrame/main.svg)](https://coveralls.io/r/<USER>/BiocFrame)
+[![PyPI-Server](https://img.shields.io/pypi/v/BiocFrame.svg)](https://pypi.org/project/BiocFrame/)
+[![Conda-Forge](https://img.shields.io/conda/vn/conda-forge/BiocFrame.svg)](https://anaconda.org/conda-forge/BiocFrame)
+[![Monthly Downloads](https://pepy.tech/badge/BiocFrame/month)](https://pepy.tech/project/BiocFrame)
+[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/BiocFrame)
+-->
+
+[![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
+
+# BiocFrame
+
+BiocFrame provides a base `Dataframe` class, intended to be a flexible data structure compared to Pandas `DataFrame` This would be interoperable with pandas but will support usecases in genomics.
+
+## Install
+
+Package is published to [PyPI](https://pypi.org/project/biocframe/)
+
+```shell
+pip install biocframe
+```
+
+## Usage
+
+Lets create a `DataFrame` from a dictionary
+
+```python
+from biocframe import DataFrame
+
+df = DataFrame(
+    data = {
+        "seqnames": [
+            "chr1",
+            "chr2",
+            "chr2",
+            "chr2",
+            "chr1",
+            "chr1",
+            "chr3",
+            "chr3",
+            "chr3",
+            "chr3",
+        ]
+        * 20,
+        "starts": range(100, 300),
+        "ends": range(110, 310),
+        "strand": ["-", "+", "+", "*", "*", "+", "+", "+", "-", "-"] * 20,
+        "score": range(0, 200),
+        "GC": [random() for _ in range(10)] * 20,
+    }
+)
+```
+
+### Access Properties
+
+A couple of accessor methods/properties are available to access column names and dims
+
+```python
+# find the dimensions
+print(df.dims)
+
+# get the column names
+print(df.colnames)
+```
+
+### Setters
+
+Using the Pythonic way to set values
+
+```
+# set new column names
+df.colnames = [... new colnames ...]
+print(df.colnames)
+
+# add or reassign columns
+
+df["score"] = range(200, 400)
+```
+
+### Slice the `DataFrame`
+
+Currently slicing is only supported by indices. A future version may implement pandas query like operations.
+
+```python
+sliced_df = df[3:7, 2:5]
+```
+
+For more use cases including subset, checkout the [documentation](https://biocpy.github.io/BiocFrame/)
+
+
+<!-- pyscaffold-notes -->
+
+## Note
+
+This project has been set up using PyScaffold 4.3. For details and usage
+information on PyScaffold see https://pyscaffold.org/.
