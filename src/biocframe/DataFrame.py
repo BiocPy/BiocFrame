@@ -63,9 +63,46 @@ class DataFrame:
         self._colnames = value
         self._data = new_data
 
+    def _slice_by_index(
+        self, rowIndices: List[int] = None, colIndices: List[int] = None
+    ) -> "DataFrame":
+        """Internal method to slice dataframe by index
+
+        Args:
+            rowIndices (List[int], optional): row indices to keep. Defaults to None.
+            colIndices (List[int], optional): column indices to keep. Defaults to None.
+
+        Returns:
+            DataFrame: sliced `DataFrame` object
+        """    
+        new_data = self._data
+        new_index = self._index
+        new_cols = None
+
+        # slice the colnames
+        if colIndices is not None:
+            new_cols = _slice(self._colnames, colIndices)
+
+            new_data = {}
+            for col in new_cols:
+                new_data[col] = self._data[col]
+
+        # slice the rows of the data
+        if rowIndices is not None:
+            # slice the index
+            if self._index is not None:
+                new_index = _slice(self._index, rowIndices)
+
+            # slice the data
+            new_data = slice_data(new_data, rowIndices)
+
+        return DataFrame(new_data, new_index)
 
     def __getitem__(self, args: tuple) -> "DataFrame":
         """Subset a DataFrame
+
+        Slices can provided as a list of indices
+        e.g.:
 
         Args:
             args (tuple): indices to slice. tuple can
@@ -88,27 +125,16 @@ class DataFrame:
             )
             raise Exception("contains too many slices")
 
-        new_data = self._data
-        new_index = None
-        new_cols = None
-
-        # slice the index
-        if self._index is not None:
-            new_index = _slice(self._index, rowIndices)
-
-        # slice the colnames
-        if colIndices is not None:
-            new_cols = _slice(self._colnames, colIndices)
-
-            new_data = {}
-            for col in new_cols:
-                new_data[col] = self._data[col]
-
-        # slice the rows of the data
         if rowIndices is not None:
-            new_data = slice_data(new_data, rowIndices)
+            if isinstance(rowIndices, list):
+                if all([isinstance(ri, str) for ri in rowIndices]):
+                else:
 
-        return DataFrame(new_data, new_index)
+
+
+
+
+        return self._slice_by_index(rowIndices, colIndices)
 
     def __setitem__(self, key: str, newvalue: List[Any]):
         """Set/Assign a value to a column
