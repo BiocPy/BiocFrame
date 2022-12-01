@@ -14,7 +14,7 @@
 
 # BiocFrame
 
-BiocFrame provides a base `Dataframe` class, intended to be a flexible data structure compared to Pandas `DataFrame` This would be interoperable with pandas but will support usecases in genomics.
+BiocFrame provides a base `BiocFrame` class, intended to be a flexible data structure compared to Pandas `DataFrame` This would be interoperable with pandas but will support usecases in genomics.
 
 ## Install
 
@@ -26,12 +26,12 @@ pip install biocframe
 
 ## Usage
 
-Lets create a `DataFrame` from a dictionary
+Lets create a `BiocFrame` from a dictionary
 
 ```python
-from biocframe import DataFrame
+from biocframe import BiocFrame
 
-df = DataFrame(
+df = BiocFrame(
     data = {
         "seqnames": [
             "chr1",
@@ -57,33 +57,33 @@ df = DataFrame(
 
 ### Access Properties
 
-A couple of accessor methods/properties are available to access column names and dims
+Accessor methods/properties are available to access column names, row names and dims.
 
 ```python
 # find the dimensions
 print(df.dims)
 
 # get the column names
-print(df.colnames)
+print(df.columnNames)
 ```
 
 ### Setters
 
-Using the Pythonic way to set values
+Using the Pythonic way to set properties
 
-```
+```python
 # set new column names
-df.colnames = [... new colnames ...]
-print(df.colnames)
+df.columnNames = [... new colnames ...]
+print(df.columnNames)
 
 # add or reassign columns
 
 df["score"] = range(200, 400)
 ```
 
-### Slice the `DataFrame`
+### Slice the `BiocFrame`
 
-Currently slicing is only supported by indices. A future version may implement pandas query like operations.
+Currently slicing is only supported by indices or names (column names or row names). A future version may implement pandas query like operations.
 
 ```python
 sliced_df = df[3:7, 2:5]
