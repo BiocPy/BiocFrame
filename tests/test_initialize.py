@@ -75,3 +75,21 @@ def test_should_fail():
         )
 
         BiocFrame.fromPandas(df_gr)
+
+
+def test_nested_biocFrame():
+
+    obj = {
+        "column1": [1, 2, 3],
+        "nested": BiocFrame(
+            {
+                "ncol1": [4, 5, 6],
+                "ncol2": ["a", "b", "c"],
+                "deep": ["j", "k", "l"],
+            }
+        ),
+        "column2": ["b", "n", "m"],
+    }
+
+    bframe = BiocFrame(obj)
+    assert bframe is not None

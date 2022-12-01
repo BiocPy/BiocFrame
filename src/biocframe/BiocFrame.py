@@ -273,6 +273,7 @@ class BiocFrame:
         Returns:
             DataFrame: sliced `BiocFrame` object
         """
+
         new_data = OrderedDict()
         new_rowNames = self._rowNames
         new_columnNames = self._columnNames
@@ -288,8 +289,8 @@ class BiocFrame:
             else:
                 raise TypeError("Column Slice: Unknown match_to_indices type")
 
-            for col in new_columnNames:
-                new_data[col] = self._data[col]
+        for col in new_columnNames:
+            new_data[col] = self._data[col]
 
         # slice the rows of the data
         if rowIndicesOrNames is not None:

@@ -218,3 +218,33 @@ def test_dataframe_ufuncs():
 
     new_bframe = np.sqrt(bframe)
     assert new_bframe is not None
+
+def test_nested_biocFrame_slice():
+
+    obj = {
+        "column1": [1, 2, 3],
+        "nested": BiocFrame(
+            {
+                "ncol1": [4, 5, 6],
+                "ncol2": ["a", "b", "c"],
+                "deep": ["j", "k", "l"],
+            }
+        ),
+        "column2": ["b", "n", "m"],
+    }
+
+    bframe = BiocFrame(obj)
+    assert bframe is not None
+
+    slice = bframe[0:2, 0:2]
+
+    assert slice is not None
+    assert len(slice.columnNames) == 2
+    assert len(list(set(slice.columnNames).difference(["column1", "nested"]))) == 0
+
+    assert len(slice.dims) == 2
+    assert slice.dims == (2, 2)
+
+    slice_nbframe = slice.column("nested")
+    assert len(slice_nbframe.dims) == 2
+    assert slice_nbframe.dims == (2, 3)
