@@ -17,49 +17,34 @@ def test_bframe_basic_ops():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {
-                "ncol2": ["a"],
-                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
-            },
-            {
-                "ncol1": [5, 6],
-                "ncol2": ["b", "c"],
-            },
+            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
+            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
         ],
         "column2": ["b", "n", "m"],
     }
 
-    df = BiocFrame(obj)
+    bframe = BiocFrame(obj)
 
-    assert df is not None
-    assert len(df.columnNames) == 3
+    assert bframe is not None
+    assert len(bframe.columnNames) == 3
     assert (
-        len(
-            list(
-                set(df.columnNames).difference(
-                    [
-                        "column1",
-                        "nested",
-                        "column2",
-                    ]
-                )
-            )
-        )
+        len(list(set(bframe.columnNames).difference(["column1", "nested", "column2",])))
         == 0
     )
 
-    assert len(df.dims) == 2
-    assert df.dims == (3, 3)
+    assert len(bframe.dims) == 2
+    assert bframe.dims == (3, 3)
 
-    assert df.rowNames is None
+    assert bframe.rowNames is None
 
-    assert df.columnNames is not None
-    assert len(df.columnNames) == 3
+    assert bframe.columnNames is not None
+    assert len(bframe.columnNames) == 3
 
-    assert df.metadata is None
+    assert bframe.metadata is None
 
-    assert len(df.dims) == 2
-    assert df.dims == (3, 3)
+    assert len(bframe.dims) == 2
+    assert bframe.dims == (3, 3)
+
 
 def test_bframe_setters():
 
@@ -71,54 +56,48 @@ def test_bframe_setters():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {
-                "ncol2": ["a"],
-                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
-            },
-            {
-                "ncol1": [5, 6],
-                "ncol2": ["b", "c"],
-            },
+            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
+            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
         ],
         "column2": ["b", "n", "m"],
     }
 
-    df = BiocFrame(obj)
+    bframe = BiocFrame(obj)
 
-    assert df is not None
+    assert bframe is not None
 
-    assert df.rowNames is None
+    assert bframe.rowNames is None
 
-    df.rowNames = ["row1", "row2", "row3"]
-    assert df.rowNames is not None
-    assert len(df.rowNames) == 3
+    bframe.rowNames = ["row1", "row2", "row3"]
+    assert bframe.rowNames is not None
+    assert len(bframe.rowNames) == 3
 
-    assert df.columnNames is not None
-    assert len(df.columnNames) == 3
+    assert bframe.columnNames is not None
+    assert len(bframe.columnNames) == 3
 
-    df.columnNames = ["col1", "col2", "col3"]
+    bframe.columnNames = ["col1", "col2", "col3"]
 
-    assert df.columnNames is not None
-    assert len(df.columnNames) == 3
+    assert bframe.columnNames is not None
+    assert len(bframe.columnNames) == 3
 
-    assert df.metadata is None
+    assert bframe.metadata is None
 
-    df.metadata = {"a": "b"}
-    assert df.metadata is not None
+    bframe.metadata = {"a": "b"}
+    assert bframe.metadata is not None
 
-    df["new_col"] = [1, 2, 3]
+    bframe["new_col"] = [1, 2, 3]
 
-    assert df is not None
+    assert bframe is not None
 
-    assert len(df.dims) == 2
-    assert df.dims == (3, 4)
+    assert len(bframe.dims) == 2
+    assert bframe.dims == (3, 4)
 
-    df["col2"] = [1, 2, 3]
+    bframe["col2"] = [1, 2, 3]
 
-    assert df is not None
+    assert bframe is not None
 
-    assert len(df.dims) == 2
-    assert df.dims == (3, 4)
+    assert len(bframe.dims) == 2
+    assert bframe.dims == (3, 4)
 
 
 def test_bframe_setters_should_fail():
@@ -131,48 +110,42 @@ def test_bframe_setters_should_fail():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {
-                "ncol2": ["a"],
-                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
-            },
-            {
-                "ncol1": [5, 6],
-                "ncol2": ["b", "c"],
-            },
+            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
+            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
         ],
         "column2": ["b", "n", "m"],
     }
 
-    df = BiocFrame(obj)
+    bframe = BiocFrame(obj)
 
-    assert df is not None
+    assert bframe is not None
 
-    assert df.rowNames is None
-
-    with pytest.raises(Exception):
-        df.rowNames = ["row1", "row2"]
+    assert bframe.rowNames is None
 
     with pytest.raises(Exception):
-        df.columnNames = ["col2", "col3"]
-
-    assert df.columnNames is not None
-    assert len(df.columnNames) == 3
+        bframe.rowNames = ["row1", "row2"]
 
     with pytest.raises(Exception):
-        df["new_col"] = [2, 3]
+        bframe.columnNames = ["col2", "col3"]
 
-    assert df is not None
-
-    assert len(df.dims) == 2
-    assert df.dims == (3, 3)
+    assert bframe.columnNames is not None
+    assert len(bframe.columnNames) == 3
 
     with pytest.raises(Exception):
-        df["col2"] = [1, 2]
+        bframe["new_col"] = [2, 3]
 
-    assert df is not None
+    assert bframe is not None
 
-    assert len(df.dims) == 2
-    assert df.dims == (3, 3)
+    assert len(bframe.dims) == 2
+    assert bframe.dims == (3, 3)
+
+    with pytest.raises(Exception):
+        bframe["col2"] = [1, 2]
+
+    assert bframe is not None
+
+    assert len(bframe.dims) == 2
+    assert bframe.dims == (3, 3)
 
 
 def test_dataframe_slice():
@@ -185,20 +158,14 @@ def test_dataframe_slice():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {
-                "ncol2": ["a"],
-                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
-            },
-            {
-                "ncol1": [5, 6],
-                "ncol2": ["b", "c"],
-            },
+            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
+            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
         ],
         "column2": ["b", "n", "m"],
     }
 
-    df = BiocFrame(obj)
-    slice = df[0:2, 0:2]
+    bframe = BiocFrame(obj)
+    slice = bframe[0:2, 0:2]
 
     assert slice is not None
     assert len(slice.columnNames) == 2
@@ -206,6 +173,29 @@ def test_dataframe_slice():
 
     assert len(slice.dims) == 2
     assert slice.dims == (2, 2)
+
+
+def test_dataframe_delete():
+
+    obj = {
+        "column1": [1, 2, 3],
+        "nested": [
+            {
+                "ncol1": [4, 5, 6],
+                "ncol2": ["a", "b", "c"],
+                "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
+            },
+            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
+            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+        ],
+        "column2": ["b", "n", "m"],
+    }
+
+    bframe = BiocFrame(obj)
+    del bframe["nested"]
+
+    assert bframe is not None
+    assert bframe.dims == (3, 2)
 
 
 def test_dataframe_ufuncs():
@@ -218,19 +208,13 @@ def test_dataframe_ufuncs():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {
-                "ncol2": ["a"],
-                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
-            },
-            {
-                "ncol1": [5, 6],
-                "ncol2": ["b", "c"],
-            },
+            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
+            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
         ],
         "column2": ["b", "n", "m"],
     }
 
-    df = BiocFrame(obj)
+    bframe = BiocFrame(obj)
 
-    new_df = np.sqrt(df)
-    assert new_df is not None
+    new_bframe = np.sqrt(bframe)
+    assert new_bframe is not None

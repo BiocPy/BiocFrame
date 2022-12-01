@@ -1,4 +1,4 @@
-from typing import Any, List, Union, Mapping, Sequence, Optional, Tuple
+from typing import Any, List, Union, Sequence, Optional, Tuple, MutableMapping
 from .utils import match_to_indices
 from collections import OrderedDict
 import pandas as pd
@@ -12,11 +12,11 @@ __license__ = "MIT"
 class BiocFrame:
     def __init__(
         self,
-        data: Optional[Mapping[str, Union[List[Any], Mapping]]] = {},
+        data: Optional[MutableMapping[str, Union[List[Any], MutableMapping]]] = {},
         numberOfRows: Optional[int] = None,
         rowNames: Optional[Sequence[str]] = None,
         columnNames: Optional[Sequence[str]] = None,
-        metadata: Optional[Mapping] = None,
+        metadata: Optional[MutableMapping] = None,
     ) -> None:
 
         self._numberOfRows = numberOfRows
@@ -153,7 +153,7 @@ class BiocFrame:
         self._data = new_data
 
     @property
-    def metadata(self) -> Mapping:
+    def metadata(self) -> MutableMapping:
         """Access metadata of the BiocFrame
 
         Returns:
@@ -162,7 +162,7 @@ class BiocFrame:
         return self._metadata
 
     @metadata.setter
-    def metadata(self, metadata: Mapping):
+    def metadata(self, metadata: MutableMapping):
         """Set new metadata
 
         Args:
@@ -181,7 +181,9 @@ class BiocFrame:
         """
         return name in self._columnNames
 
-    def column(self, indexOrName: Union[str, int]) -> Union[Sequence[Any], Mapping]:
+    def column(
+        self, indexOrName: Union[str, int]
+    ) -> Union[Sequence[Any], MutableMapping]:
         """Get a column from BiocFrame either by index or name
 
         Args:
@@ -212,15 +214,15 @@ class BiocFrame:
                 "Unkown Type for `indexOrName`, must be either string or index"
             )
 
-    def row(self, indexOrName: Union[str, int]) -> Mapping[str, Any]:
+    def row(self, indexOrName: Union[str, int]) -> MutableMapping[str, Any]:
         """Get a row from BiocFrame either by index or name
 
         Args:
             indexOrName (Union[str, int]): index or name of the row
 
         Raises:
-            ValueError: name not in column names
-            ValueError: index greather than number of columns
+            ValueError: name not in row names
+            ValueError: index greather than number of rows
             TypeError: indexOrName neither a string nor integer
 
         Returns:
@@ -247,7 +249,9 @@ class BiocFrame:
             )
 
         if rindex is None:
-            raise Exception("It should've already failed. contact the authors with a minimum reproducible example")
+            raise Exception(
+                "It should've already failed. contact the authors with a minimum reproducible example"
+            )
 
         row = OrderedDict()
         for k in self.columnNames:
@@ -366,11 +370,12 @@ class BiocFrame:
             f"`args` is not supported, must to a `str`, `int`, `tuple`, `list`"
         )
 
+    # TODO: implement inplace, view
     def __setitem__(self, key: str, newvalue: Sequence[Any]):
         """Set/Assign a value to a column
 
         Args:
-            key (str): Column name to set, use dot notation for nested structures
+            key (str): Column name to set
             newvalue (List[Any]): new value to set
         """
         if len(newvalue) != self._numberOfRows:
@@ -384,24 +389,21 @@ class BiocFrame:
             self._columnNames.append(key)
             self._numberOfColumns += 1
 
-    @staticmethod
-    def fromPandas(data: pd.DataFrame) -> "BiocFrame":
-        """Construct new `BiocFrame` from a `Pandas.DataFrame` object
+    # TODO: implement inplace, view
+    def __delitem__(self, name: str):
+        """Remove column from BiocFrame
 
         Args:
-            data (pd.DataFrame): Pandas DataFrame object
+            name (str): Column name to remove
 
-        Returns:
-            BiocFrame: a BiocFrame object
+        Raises:
+            ValueError: when column name does not exist
         """
-        rdata = data.to_dict("list")
-        rindex = None
+        if name not in self._columnNames:
+            raise ValueError(f"Columns: {name} does not exist.")
 
-        if data.index is not None:
-            rindex = data.index.to_list()
-
-        # TODO: there are other things to access from the pandas object
-        return BiocFrame(data=rdata, rowNames=rindex, columnNames=data.columns)
+        del self._data[name]
+        self._numberOfColumns -= 1
 
     def __len__(self) -> int:
         """Number of rows
@@ -415,7 +417,7 @@ class BiocFrame:
         """Iterator over rows"""
         return self
 
-    def __next__(self) -> Tuple[Union[int, str], Mapping]:
+    def __next__(self) -> Tuple[Union[int, str], MutableMapping]:
         """Get next value from Iterator
 
         Raises:
@@ -436,8 +438,27 @@ class BiocFrame:
         self._iterIdx += 1
         return (iter_r, iter_slice)
 
+    @staticmethod
+    def fromPandas(data: pd.DataFrame) -> "BiocFrame":
+        """Construct new `BiocFrame` from a `Pandas.DataFrame` object
+
+        Args:
+            data (pd.DataFrame): Pandas DataFrame object
+
+        Returns:
+            BiocFrame: a BiocFrame object
+        """
+        rdata = data.to_dict("list")
+        rindex = None
+
+        if data.index is not None:
+            rindex = data.index.to_list()
+
+        # TODO: there are other things to access from the pandas object
+        return BiocFrame(data=rdata, rowNames=rindex, columnNames=data.columns)
+
     def toPandas(self) -> pd.DataFrame:
-        """Transform `BiocFrame` as `Pandas.DataFrame` object
+        """Convert `BiocFrame` to a `Pandas.DataFrame` object
 
         Returns:
             pd.DataFrame: a Pandas Dataframe object
@@ -447,14 +468,15 @@ class BiocFrame:
         )
 
     # TODO: very primilimary implementation, probably a lot more to do here
+    # TODO: implement inplace, view
     def __array_ufunc__(self, func, method, *inputs, **kwargs) -> "BiocFrame":
         """Interface with numpy array methods
 
         Usage:
-            np.sqrt(bioframe)
+            np.sqrt(bframe)
 
         Raises:
-            Exception: Input not supported
+            Exception: Input not a `BiocFrame` object
 
         Returns:
             BiocFrame: BiocFrame after the function is applied
