@@ -136,4 +136,4 @@ def test_dataframe_ufuncs():
     df = BiocFrame(obj)
 
     new_df = np.sqrt(df)
-    assert new_df is None
+    assert new_df is not None
