@@ -96,6 +96,15 @@ class BiocFrame:
         return (self._numberOfRows, self._numberOfColumns)
 
     @property
+    def shape(self) -> Tuple[int, int]:
+        """Dimensions of the BiocFrame
+
+        Returns:
+            Tuple[int, int]: A tuple of number of rows and number of columns
+        """
+        return self.dims
+
+    @property
     def rowNames(self) -> Sequence[str]:
         """Access row index of BiocFrame
 
@@ -425,16 +434,14 @@ class BiocFrame:
             StopIteration: when Index is out of range
         """
         try:
-            if self._iterIdx < self._numberOfRows:
-                iter_r = self._iterIdx
-                if self._rowNames is not None:
-                    iter_r = self._rowNames[iter_r]
+            iter_r = self._iterIdx
+            if self._rowNames is not None:
+                iter_r = self._rowNames[iter_r]
 
-                iter_slice = self.row(iter_r)
+            iter_slice = self.row(iter_r)
         except IndexError:
-            raise StopIteration
-        finally:
             self._iterIdx = 0
+            raise StopIteration
 
         self._iterIdx += 1
         return (iter_r, iter_slice)

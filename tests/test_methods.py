@@ -148,7 +148,7 @@ def test_bframe_setters_should_fail():
     assert bframe.dims == (3, 3)
 
 
-def test_dataframe_slice():
+def test_bframe_slice():
 
     obj = {
         "column1": [1, 2, 3],
@@ -175,7 +175,7 @@ def test_dataframe_slice():
     assert slice.dims == (2, 2)
 
 
-def test_dataframe_delete():
+def test_bframe_delete():
 
     obj = {
         "column1": [1, 2, 3],
@@ -198,7 +198,7 @@ def test_dataframe_delete():
     assert bframe.dims == (3, 2)
 
 
-def test_dataframe_ufuncs():
+def test_bframe_ufuncs():
 
     obj = {
         "column1": [1, 2, 3],
@@ -248,3 +248,28 @@ def test_nested_biocFrame_slice():
     slice_nbframe = slice.column("nested")
     assert len(slice_nbframe.dims) == 2
     assert slice_nbframe.dims == (2, 3)
+
+def test_bframe_iter():
+
+    obj = {
+        "column1": [1, 2, 3],
+        "nested": [
+            {
+                "ncol1": [4, 5, 6],
+                "ncol2": ["a", "b", "c"],
+                "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
+            },
+            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
+            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+        ],
+        "column2": ["b", "n", "m"],
+    }
+
+    bframe = BiocFrame(obj)
+    assert bframe is not None
+
+    iterCount = 0
+    for k,v in bframe:
+        iterCount += 1
+
+    assert iterCount == bframe.dims[0]

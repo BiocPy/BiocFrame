@@ -6,7 +6,7 @@ __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
-def test_dataframe():
+def test_bframe():
 
     obj = {
         "seqnames": [
