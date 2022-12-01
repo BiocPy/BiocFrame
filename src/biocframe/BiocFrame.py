@@ -298,9 +298,9 @@ class BiocFrame:
             if self._rowNames is not None:
                 new_row_indices = match_to_indices(self._rowNames, rowIndicesOrNames)
 
-                if isinstance(new_column_indices, slice):
+                if isinstance(new_row_indices, slice):
                     new_rowNames = new_rowNames[new_row_indices]
-                elif isinstance(new_column_indices, list):
+                elif isinstance(new_row_indices, list):
                     new_rowNames = [new_rowNames[i] for i in new_row_indices]
                 else:
                     raise TypeError("Row Slice: Unknown match_to_indices type")
