@@ -1,4 +1,4 @@
-from biocframe.DataFrame import DataFrame
+from biocframe.BiocFrame import BiocFrame
 from random import random
 
 __author__ = "jkanche"
@@ -29,14 +29,14 @@ def test_dataframe():
         "GC": [random() for _ in range(10)] * 20,
     }
 
-    df = DataFrame(obj)
+    df = BiocFrame(obj)
 
     assert df is not None
-    assert len(df.colnames) == 6
+    assert len(df.columnNames) == 6
     assert (
         len(
             list(
-                set(df.colnames).difference(
+                set(df.columnNames).difference(
                     ["seqnames", "starts", "ends", "strand", "score", "GC"]
                 )
             )
@@ -48,20 +48,13 @@ def test_dataframe():
     assert df.dims == (200, 6)
 
     # assign new columns
-
-    df.colnames = ["seqname", "start", "end", "strands", "scores", "GCs"]
+    df.columnNames = ["chr", "start", "end", "strands", "scores", "GCs"]
 
     sliced_df = df[3:7, 2:5]
 
     assert sliced_df is not None
     assert sliced_df.dims == (4, 3)
     assert (
-        len(
-            list(
-                set(sliced_df.colnames).difference(
-                    ["end", "strands", "scores"]
-                )
-            )
-        )
+        len(list(set(sliced_df.columnNames).difference(["end", "strands", "scores"])))
         == 0
     )
