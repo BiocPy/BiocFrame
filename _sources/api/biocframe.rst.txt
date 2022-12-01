@@ -4,10 +4,10 @@ biocframe package
 Submodules
 ----------
 
-biocframe.DataFrame module
+biocframe.BiocFrame module
 --------------------------
 
-.. automodule:: biocframe.DataFrame
+.. automodule:: biocframe.BiocFrame
    :members:
    :undoc-members:
    :show-inheritance:
