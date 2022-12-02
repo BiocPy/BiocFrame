@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>biocframe.utils - BiocFrame 0.2 documentation</title>
+        <title>biocframe.utils - BiocFrame 0.2.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">BiocFrame 0.2 documentation</div></a>
+      <a href="../../index.html"><div class="brand">BiocFrame 0.2.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.2 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.2.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -203,59 +203,6 @@
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;jkanche&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;jkanche&quot;</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
-
-
-<span class="c1"># def iterative_extract_keys(</span>
-<span class="c1">#     obj: Dict[str, Union[Sequence[Any], Mapping]], prefix: str = None</span>
-<span class="c1"># ) -&gt; List[str]:</span>
-<span class="c1">#     &quot;&quot;&quot;Recursively extract keys from a dictionary object</span>
-
-<span class="c1">#     Args:</span>
-<span class="c1">#         obj (Dict[str, Union[List, Dict]]): the dictionary object of columns</span>
-<span class="c1">#         prefix (str, optional): Prefix to append to names. Defaults to None.</span>
-
-<span class="c1">#     Returns:</span>
-<span class="c1">#         List[str]: all keys (including nested) keys from the objected</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-
-<span class="c1">#     keys = []</span>
-<span class="c1">#     dims = []</span>
-<span class="c1">#     for k, v in obj.items():</span>
-<span class="c1">#         if isinstance(v, dict):</span>
-<span class="c1">#             kn, dn = iterative_extract_keys(</span>
-<span class="c1">#                 v, prefix=f&quot;{prefix}.{k}&quot; if prefix is not None else f&quot;{k}&quot;</span>
-<span class="c1">#             )</span>
-<span class="c1">#             keys.extend(kn)</span>
-<span class="c1">#             dims.extend(dn)</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             keys.append(f&quot;{prefix}.{k}&quot; if prefix is not None else f&quot;{k}&quot;)</span>
-<span class="c1">#             dims.append(len(v))</span>
-
-<span class="c1">#     return (keys, dims)</span>
-
-
-<span class="c1"># def iterative_slice_data(</span>
-<span class="c1">#     obj: Dict[str, Union[Sequence[Any], Mapping]],</span>
-<span class="c1">#     rowIndices: Union[List[int], slice],</span>
-<span class="c1"># ) -&gt; Dict[str, Union[Sequence[Any], Mapping]]:</span>
-<span class="c1">#     &quot;&quot;&quot;Recursively slice a data object</span>
-
-<span class="c1">#     Args:</span>
-<span class="c1">#         obj (Dict[str, Union[List, Dict]]): columnar represented data to slice</span>
-<span class="c1">#         rowIndices (Union[List[int], slice]): rows to keep</span>
-
-<span class="c1">#     Returns:</span>
-<span class="c1">#          Dict[str, Union[List[Any], Dict]]: sliced object</span>
-<span class="c1">#     &quot;&quot;&quot;</span>
-
-<span class="c1">#     slices = {}</span>
-<span class="c1">#     for k, v in obj.items():</span>
-<span class="c1">#         if isinstance(v, dict):</span>
-<span class="c1">#             slices[k] = iterative_slice_data(v, rowIndices=rowIndices)</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             slices[k] = match_to_indices(v, rowIndices)</span>
-
-<span class="c1">#     return slices</span>
 
 
 <div class="viewcode-block" id="match_to_indices"><a class="viewcode-back" href="../../api/biocframe.html#biocframe.utils.match_to_indices">[docs]</a><span class="k">def</span> <span class="nf">match_to_indices</span><span class="p">(</span>

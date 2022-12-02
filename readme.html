@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Contributing" href="contributing.html" /><link rel="prev" title="BiocFrame" href="index.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>BiocFrame - BiocFrame 0.2 documentation</title>
+        <title>BiocFrame - BiocFrame 0.2.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.2 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.2.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.2 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.2.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
@@ -225,7 +225,7 @@
 <p>Lets create a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> from a dictionary</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
+<span class="n">bframe</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;seqnames&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="s2">&quot;chr1&quot;</span><span class="p">,</span>
@@ -253,10 +253,10 @@
 <h3>Access Properties<a class="headerlink" href="#access-properties" title="Permalink to this heading">#</a></h3>
 <p>Accessor methods/properties are available to access column names, row names and dims.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># find the dimensions</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
 
 <span class="c1"># get the column names</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columnNames</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">columnNames</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -264,19 +264,19 @@
 <h3>Setters<a class="headerlink" href="#setters" title="Permalink to this heading">#</a></h3>
 <p>Using the Pythonic way to set properties</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set new column names</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columnNames</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span> <span class="n">new</span> <span class="n">colnames</span> <span class="o">...</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columnNames</span><span class="p">)</span>
+<span class="n">bframe</span><span class="o">.</span><span class="n">columnNames</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span> <span class="n">new</span> <span class="n">colnames</span> <span class="o">...</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">columnNames</span><span class="p">)</span>
 
 <span class="c1"># add or reassign columns</span>
 
-<span class="n">df</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+<span class="n">bframe</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="slice-the-biocframe">
 <h3>Slice the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code><a class="headerlink" href="#slice-the-biocframe" title="Permalink to this heading">#</a></h3>
 <p>Currently slicing is only supported by indices or names (column names or row names). A future version may implement pandas query like operations.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sliced_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sliced_bframe</span> <span class="o">=</span> <span class="n">bframe</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>For more use cases including subset, checkout the <a class="reference external" href="https://biocpy.github.io/BiocFrame/">documentation</a></p>
