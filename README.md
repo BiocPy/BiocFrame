@@ -31,7 +31,7 @@ Lets create a `BiocFrame` from a dictionary
 ```python
 from biocframe import BiocFrame
 
-df = BiocFrame(
+bframe = BiocFrame(
     data = {
         "seqnames": [
             "chr1",
@@ -61,10 +61,10 @@ Accessor methods/properties are available to access column names, row names and 
 
 ```python
 # find the dimensions
-print(df.dims)
+print(bframe.dims)
 
 # get the column names
-print(df.columnNames)
+print(bframe.columnNames)
 ```
 
 ### Setters
@@ -73,12 +73,12 @@ Using the Pythonic way to set properties
 
 ```python
 # set new column names
-df.columnNames = [... new colnames ...]
-print(df.columnNames)
+bframe.columnNames = [... new colnames ...]
+print(bframe.columnNames)
 
 # add or reassign columns
 
-df["score"] = range(200, 400)
+bframe["score"] = range(200, 400)
 ```
 
 ### Slice the `BiocFrame`
@@ -86,7 +86,7 @@ df["score"] = range(200, 400)
 Currently slicing is only supported by indices or names (column names or row names). A future version may implement pandas query like operations.
 
 ```python
-sliced_df = df[3:7, 2:5]
+sliced_bframe = bframe[3:7, 2:5]
 ```
 
 For more use cases including subset, checkout the [documentation](https://biocpy.github.io/BiocFrame/)

@@ -6,7 +6,7 @@ __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
-def test_dataframe():
+def test_bframe():
 
     obj = {
         "seqnames": [
@@ -29,14 +29,14 @@ def test_dataframe():
         "GC": [random() for _ in range(10)] * 20,
     }
 
-    df = BiocFrame(obj)
+    bframe = BiocFrame(obj)
 
-    assert df is not None
-    assert len(df.columnNames) == 6
+    assert bframe is not None
+    assert len(bframe.columnNames) == 6
     assert (
         len(
             list(
-                set(df.columnNames).difference(
+                set(bframe.columnNames).difference(
                     ["seqnames", "starts", "ends", "strand", "score", "GC"]
                 )
             )
@@ -44,13 +44,13 @@ def test_dataframe():
         == 0
     )
 
-    assert len(df.dims) == 2
-    assert df.dims == (200, 6)
+    assert len(bframe.dims) == 2
+    assert bframe.dims == (200, 6)
 
     # assign new columns
-    df.columnNames = ["chr", "start", "end", "strands", "scores", "GCs"]
+    bframe.columnNames = ["chr", "start", "end", "strands", "scores", "GCs"]
 
-    sliced_df = df[3:7, 2:5]
+    sliced_df = bframe[3:7, 2:5]
 
     assert sliced_df is not None
     assert sliced_df.dims == (4, 3)

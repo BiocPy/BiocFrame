@@ -1,4 +1,4 @@
-from typing import Any, List, Union, Mapping, Sequence, Optional, Tuple
+from typing import Any, List, Union, Sequence, Optional, Tuple, MutableMapping
 from .utils import match_to_indices
 from collections import OrderedDict
 import pandas as pd
@@ -12,11 +12,11 @@ __license__ = "MIT"
 class BiocFrame:
     def __init__(
         self,
-        data: Optional[Mapping[str, Union[List[Any], Mapping]]] = {},
+        data: Optional[MutableMapping[str, Union[List[Any], MutableMapping]]] = {},
         numberOfRows: Optional[int] = None,
         rowNames: Optional[Sequence[str]] = None,
         columnNames: Optional[Sequence[str]] = None,
-        metadata: Optional[Mapping] = None,
+        metadata: Optional[MutableMapping] = None,
     ) -> None:
 
         self._numberOfRows = numberOfRows
@@ -26,6 +26,8 @@ class BiocFrame:
         self._metadata = metadata
 
         self._validate()
+
+        self._iterIdx = 0
 
     def _validate(self):
         """Internal method to validate the object
@@ -50,6 +52,7 @@ class BiocFrame:
         if self._columnNames is None:
             self._columnNames = list(self._data.keys())
         else:
+            # self._columnNames = list(self._columnNames)
             if len(self._columnNames) != len(self._data.keys()):
                 raise ValueError(f"`columnNames` and `data` order do not match")
 
@@ -65,10 +68,11 @@ class BiocFrame:
         self._numberOfColumns = len(self._columnNames)
 
         if self._rowNames:
+            # self._rowNames = list(self._rowNames)
             if self._numberOfRows is None:
                 self._numberOfRows = len(self._rowNames)
             else:
-                if len(self._rowNames) != len(self._numberOfRows):
+                if len(self._rowNames) != self._numberOfRows:
                     raise ValueError(f"`rowNames` and `numberOfRows` do not match")
 
         if self._numberOfRows == None:
@@ -92,6 +96,15 @@ class BiocFrame:
             Tuple[int, int]: A tuple of number of rows and number of columns
         """
         return (self._numberOfRows, self._numberOfColumns)
+
+    @property
+    def shape(self) -> Tuple[int, int]:
+        """Dimensions of the BiocFrame
+
+        Returns:
+            Tuple[int, int]: A tuple of number of rows and number of columns
+        """
+        return self.dims
 
     @property
     def rowNames(self) -> Sequence[str]:
@@ -151,7 +164,7 @@ class BiocFrame:
         self._data = new_data
 
     @property
-    def metadata(self) -> Mapping:
+    def metadata(self) -> MutableMapping:
         """Access metadata of the BiocFrame
 
         Returns:
@@ -160,7 +173,7 @@ class BiocFrame:
         return self._metadata
 
     @metadata.setter
-    def metadata(self, metadata: Mapping):
+    def metadata(self, metadata: MutableMapping):
         """Set new metadata
 
         Args:
@@ -168,20 +181,94 @@ class BiocFrame:
         """
         self._metadata = metadata
 
-    def column(self, indexOrName: Union[str, int]) -> Mapping:
-        if indexOrName not in self._columnNames:
-            raise ValueError(
-                f"{indexOrName} not in BiocFrame column names {self._columnNames}"
-            )
+    def hasColumn(self, name: str) -> bool:
+        """check if a column exists
 
+        Args:
+            name (str): column name
+
+        Returns:
+            bool: Whether the column exists in the BiocFrame
+        """
+        return name in self._columnNames
+
+    def column(
+        self, indexOrName: Union[str, int]
+    ) -> Union[Sequence[Any], MutableMapping]:
+        """Get a column from BiocFrame either by index or name
+
+        Args:
+            indexOrName (Union[str, int]): index or name of the column
+
+        Raises:
+            ValueError: name not in column names
+            ValueError: index greather than number of columns
+            TypeError: indexOrName neither a string nor integer
+
+        Returns:
+            Union[Sequence[Any], Mapping]: column from BiocFrame
+        """
         if isinstance(indexOrName, str):
+            if indexOrName not in self._columnNames:
+                raise ValueError(
+                    f"{indexOrName} not in BiocFrame column names {self._columnNames}"
+                )
             return self._data[indexOrName]
         elif isinstance(indexOrName, int):
+            if indexOrName > self._numberOfColumns:
+                raise ValueError(
+                    f"{indexOrName} greater than number of columns {self._numberOfColumns}"
+                )
             return self._data[self._columnNames[indexOrName]]
         else:
             raise TypeError(
                 "Unkown Type for `indexOrName`, must be either string or index"
             )
+
+    def row(self, indexOrName: Union[str, int]) -> MutableMapping[str, Any]:
+        """Get a row from BiocFrame either by index or name
+
+        Args:
+            indexOrName (Union[str, int]): index or name of the row
+
+        Raises:
+            ValueError: name not in row names
+            ValueError: index greather than number of rows
+            TypeError: indexOrName neither a string nor integer
+
+        Returns:
+            Mapping[str, Any]: row from BiocFrame
+        """
+
+        rindex = None
+        if isinstance(indexOrName, str):
+            if indexOrName not in self._rowNames:
+                raise ValueError(
+                    f"{indexOrName} not in BiocFrame column names {self._rowNames}"
+                )
+
+            rindex = self._rowNames.index(indexOrName)
+        elif isinstance(indexOrName, int):
+            if indexOrName > self._numberOfRows:
+                raise ValueError(
+                    f"{indexOrName} greater than number of columns {self._numberOfRows}"
+                )
+            rindex = indexOrName
+        else:
+            raise TypeError(
+                "Unkown Type for `indexOrName`, must be either string or index"
+            )
+
+        if rindex is None:
+            raise Exception(
+                "It should've already failed. contact the authors with a minimum reproducible example"
+            )
+
+        row = OrderedDict()
+        for k in self.columnNames:
+            row[k] = self._data[k][rindex]
+
+        return row
 
     def _slice(
         self,
@@ -197,6 +284,7 @@ class BiocFrame:
         Returns:
             DataFrame: sliced `BiocFrame` object
         """
+
         new_data = OrderedDict()
         new_rowNames = self._rowNames
         new_columnNames = self._columnNames
@@ -212,8 +300,8 @@ class BiocFrame:
             else:
                 raise TypeError("Column Slice: Unknown match_to_indices type")
 
-            for col in new_columnNames:
-                new_data[col] = self._data[col]
+        for col in new_columnNames:
+            new_data[col] = self._data[col]
 
         # slice the rows of the data
         if rowIndicesOrNames is not None:
@@ -221,9 +309,9 @@ class BiocFrame:
             if self._rowNames is not None:
                 new_row_indices = match_to_indices(self._rowNames, rowIndicesOrNames)
 
-                if isinstance(new_column_indices, slice):
+                if isinstance(new_row_indices, slice):
                     new_rowNames = new_rowNames[new_row_indices]
-                elif isinstance(new_column_indices, list):
+                elif isinstance(new_row_indices, list):
                     new_rowNames = [new_rowNames[i] for i in new_row_indices]
                 else:
                     raise TypeError("Row Slice: Unknown match_to_indices type")
@@ -294,22 +382,12 @@ class BiocFrame:
             f"`args` is not supported, must to a `str`, `int`, `tuple`, `list`"
         )
 
-    def hasColumn(self, name: str) -> bool:
-        """Is column in BiocFrame?
-
-        Args:
-            name (str): column name
-
-        Returns:
-            bool: Whether the column exists in the BiocFrame
-        """
-        return name in self._columnNames
-
+    # TODO: implement inplace, view
     def __setitem__(self, key: str, newvalue: Sequence[Any]):
         """Set/Assign a value to a column
 
         Args:
-            key (str): Column name to set, use dot notation for nested structures
+            key (str): Column name to set
             newvalue (List[Any]): new value to set
         """
         if len(newvalue) != self._numberOfRows:
@@ -322,6 +400,53 @@ class BiocFrame:
         if key not in self._columnNames:
             self._columnNames.append(key)
             self._numberOfColumns += 1
+
+    # TODO: implement inplace, view
+    def __delitem__(self, name: str):
+        """Remove column from BiocFrame
+
+        Args:
+            name (str): Column name to remove
+
+        Raises:
+            ValueError: when column name does not exist
+        """
+        if name not in self._columnNames:
+            raise ValueError(f"Columns: {name} does not exist.")
+
+        del self._data[name]
+        self._numberOfColumns -= 1
+
+    def __len__(self) -> int:
+        """Number of rows
+
+        Returns:
+            int: number of rows
+        """
+        return self._numberOfRows
+
+    def __iter__(self) -> "BiocFrame":
+        """Iterator over rows"""
+        return self
+
+    def __next__(self) -> Tuple[Union[int, str], MutableMapping]:
+        """Get next value from Iterator
+
+        Raises:
+            StopIteration: when Index is out of range
+        """
+        try:
+            iter_r = self._iterIdx
+            if self._rowNames is not None:
+                iter_r = self._rowNames[iter_r]
+
+            iter_slice = self.row(iter_r)
+        except IndexError:
+            self._iterIdx = 0
+            raise StopIteration
+
+        self._iterIdx += 1
+        return (iter_r, iter_slice)
 
     @staticmethod
     def fromPandas(data: pd.DataFrame) -> "BiocFrame":
@@ -336,14 +461,14 @@ class BiocFrame:
         rdata = data.to_dict("list")
         rindex = None
 
-        if data.index:
+        if data.index is not None:
             rindex = data.index.to_list()
 
         # TODO: there are other things to access from the pandas object
-        return BiocFrame(data=rdata, rowNames=rindex)
+        return BiocFrame(data=rdata, rowNames=rindex, columnNames=data.columns.to_list())
 
     def toPandas(self) -> pd.DataFrame:
-        """Transform `BiocFrame` as `Pandas.DataFrame` object
+        """Convert `BiocFrame` to a `Pandas.DataFrame` object
 
         Returns:
             pd.DataFrame: a Pandas Dataframe object
@@ -353,14 +478,15 @@ class BiocFrame:
         )
 
     # TODO: very primilimary implementation, probably a lot more to do here
+    # TODO: implement inplace, view
     def __array_ufunc__(self, func, method, *inputs, **kwargs) -> "BiocFrame":
         """Interface with numpy array methods
 
         Usage:
-            np.sqrt(bioframe)
+            np.sqrt(bframe)
 
         Raises:
-            Exception: Input not supported
+            Exception: Input not a `BiocFrame` object
 
         Returns:
             BiocFrame: BiocFrame after the function is applied
