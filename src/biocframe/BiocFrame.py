@@ -52,6 +52,7 @@ class BiocFrame:
         if self._columnNames is None:
             self._columnNames = list(self._data.keys())
         else:
+            # self._columnNames = list(self._columnNames)
             if len(self._columnNames) != len(self._data.keys()):
                 raise ValueError(f"`columnNames` and `data` order do not match")
 
@@ -67,6 +68,7 @@ class BiocFrame:
         self._numberOfColumns = len(self._columnNames)
 
         if self._rowNames:
+            # self._rowNames = list(self._rowNames)
             if self._numberOfRows is None:
                 self._numberOfRows = len(self._rowNames)
             else:
@@ -463,7 +465,7 @@ class BiocFrame:
             rindex = data.index.to_list()
 
         # TODO: there are other things to access from the pandas object
-        return BiocFrame(data=rdata, rowNames=rindex, columnNames=data.columns)
+        return BiocFrame(data=rdata, rowNames=rindex, columnNames=data.columns.to_list())
 
     def toPandas(self) -> pd.DataFrame:
         """Convert `BiocFrame` to a `Pandas.DataFrame` object
