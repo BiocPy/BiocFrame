@@ -363,7 +363,7 @@ class BiocFrame:
         # only possibility for a list is column names
         if isinstance(args, list):
             # are all args string
-            all_strs = all([isinstance(k, "str") for k in args])
+            all_strs = all([isinstance(k, str) for k in args])
             if all_strs:
                 return self._slice(None, args)
             else:
@@ -464,7 +464,6 @@ class BiocFrame:
         if data.index is not None:
             rindex = data.index.to_list()
 
-        # TODO: there are other things to access from the pandas object
         return BiocFrame(data=rdata, rowNames=rindex, columnNames=data.columns.to_list())
 
     def toPandas(self) -> pd.DataFrame:
