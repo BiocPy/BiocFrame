@@ -174,6 +174,16 @@ def test_bframe_slice():
     assert len(slice.dims) == 2
     assert slice.dims == (2, 2)
 
+    sliced_list = bframe[[0,2], 0:2]
+
+    print(sliced_list._data)
+    assert sliced_list is not None
+    assert len(sliced_list.columnNames) == 2
+    assert len(list(set(sliced_list.columnNames).difference(["column1", "nested"]))) == 0
+
+    assert len(sliced_list.dims) == 2
+    assert sliced_list.dims == (2, 2)
+
 
 def test_bframe_delete():
 

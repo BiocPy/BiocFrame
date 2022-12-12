@@ -114,6 +114,15 @@ class BiocFrame:
             Sequence[str]: a list of row index names
         """
         return self._rowNames
+    
+    @property
+    def data(self) -> MutableMapping[str, Any]:
+        """Access the data of BiocFrame as a dict
+
+        Returns:
+            MutableMapping[str, Any]: get the underlying dataframe as a dict
+        """
+        return self._data
 
     @rowNames.setter
     def rowNames(self, names: Sequence[str]):
@@ -318,11 +327,16 @@ class BiocFrame:
 
             # since row names are not set, the
             # only option here is to slice by index
-            if isinstance(new_row_indices, slice) or all(
+            if isinstance(new_row_indices, slice):
+                for k, v in new_data.items():
+                    new_data[k] = v[new_row_indices]
+            elif all(
                 [isinstance(k, int) for k in new_row_indices]
             ):
                 for k, v in new_data.items():
-                    new_data[k] = v[new_row_indices]
+                    new_data[k] = [v[idx] for idx in new_row_indices]
+            else:
+                raise TypeError("Row Slice: not all row slices are integers")
 
         return BiocFrame(
             data=new_data, rowNames=new_rowNames, columnNames=new_columnNames
@@ -336,6 +350,10 @@ class BiocFrame:
 
         Slices can provided as a list of indices
         e.g.:
+            bframe = BiocFrame({...}) 
+            bframe[0:2, 0:2]
+            bframe[[0,2], 0:2]
+            bframe[<List of column names>]
 
         Args:
             args (Union[Sequence[str], Tuple[Sequence, Optional[Sequence]]]): indices to slice.
