@@ -454,17 +454,17 @@ class BiocFrame:
             StopIteration: when Index is out of range
         """
         try:
-            iter_r = self._iterIdx
+            index_row = self._iterIdx
             if self._rowNames is not None:
-                iter_r = self._rowNames[iter_r]
+                index_row = self._rowNames[self._iterIdx]
 
-            iter_slice = self.row(iter_r)
+            iter_slice = self.row(self._iterIdx)
         except IndexError:
             self._iterIdx = 0
             raise StopIteration
 
         self._iterIdx += 1
-        return (iter_r, iter_slice)
+        return (index_row, iter_slice)
 
     @staticmethod
     def fromPandas(data: pd.DataFrame) -> "BiocFrame":
