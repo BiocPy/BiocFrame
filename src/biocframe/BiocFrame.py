@@ -114,7 +114,7 @@ class BiocFrame:
             Sequence[str]: a list of row index names
         """
         return self._rowNames
-    
+
     @property
     def data(self) -> MutableMapping[str, Any]:
         """Access the data of BiocFrame as a dict
@@ -281,14 +281,14 @@ class BiocFrame:
 
     def _slice(
         self,
-        rowIndicesOrNames: Optional[Union[Sequence[int], Sequence[str]]] = None,
-        colIndicesOrNames: Optional[Union[Sequence[int], Sequence[str]]] = None,
+        rowIndicesOrNames: Optional[Union[Sequence[int], Sequence[str], slice]] = None,
+        colIndicesOrNames: Optional[Union[Sequence[int], Sequence[str], slice]] = None,
     ) -> "BiocFrame":
         """Internal method to slice BiocFrame by index or values
 
         Args:
-            rowIndicesOrVals (Optional[Union[Sequence[int], Sequence[str]]], optional): row indices or vals to keep. Defaults to None.
-            colIndicesOrVals (Optional[Union[Sequence[int], Sequence[str]]], optional): column indices or vals to keep. Defaults to None.
+            rowIndicesOrVals (Optional[Union[Sequence[int], Sequence[str], slice]], optional): row indices or vals to keep. Defaults to None.
+            colIndicesOrVals (Optional[Union[Sequence[int], Sequence[str], slice]], optional): column indices or vals to keep. Defaults to None.
 
         Returns:
             DataFrame: sliced `BiocFrame` object
@@ -330,9 +330,7 @@ class BiocFrame:
             if isinstance(new_row_indices, slice):
                 for k, v in new_data.items():
                     new_data[k] = v[new_row_indices]
-            elif all(
-                [isinstance(k, int) for k in new_row_indices]
-            ):
+            elif all([isinstance(k, int) for k in new_row_indices]):
                 for k, v in new_data.items():
                     new_data[k] = [v[idx] for idx in new_row_indices]
             else:
@@ -344,7 +342,11 @@ class BiocFrame:
 
     # TODO: implement inplace, view
     def __getitem__(
-        self, args: Union[Sequence[str], Tuple[Sequence, Optional[Sequence]]]
+        self,
+        args: Union[
+            Sequence[str],
+            Tuple[Union[Sequence[int], slice], Optional[Union[Sequence[int], slice]]],
+        ],
     ) -> "BiocFrame":
         """Subset a BiocFrame
 
@@ -356,9 +358,9 @@ class BiocFrame:
             bframe[<List of column names>]
 
         Args:
-            args (Union[Sequence[str], Tuple[Sequence, Optional[Sequence]]]): indices to slice.
-                Sequence[str]: Slice by column names
-                Tuple[Sequence, Optional[Sequence]]]: slice by indices along the row and column axes.
+            args (Union[Sequence[str], Tuple[Union[Sequence[int], slice], Optional[Union[Sequence[int], slice]]]]): indices to slice.
+                - Sequence[str]: Slice by column names
+                - Tuple[Union[Sequence[int], slice], Optional[Union[Sequence[int], slice]]]: slice by indices along the row and column axes.
 
         Raises:
             Exception: Too many slices provided
@@ -482,7 +484,9 @@ class BiocFrame:
         if data.index is not None:
             rindex = data.index.to_list()
 
-        return BiocFrame(data=rdata, rowNames=rindex, columnNames=data.columns.to_list())
+        return BiocFrame(
+            data=rdata, rowNames=rindex, columnNames=data.columns.to_list()
+        )
 
     def toPandas(self) -> pd.DataFrame:
         """Convert `BiocFrame` to a `Pandas.DataFrame` object
@@ -503,7 +507,7 @@ class BiocFrame:
             np.sqrt(bframe)
 
         Raises:
-            Exception: Input not a `BiocFrame` object
+            TypeError: Input not a `BiocFrame` object
 
         Returns:
             BiocFrame: BiocFrame after the function is applied
@@ -511,7 +515,7 @@ class BiocFrame:
 
         input = inputs[0]
         if not isinstance(input, BiocFrame):
-            raise Exception("input not supported")
+            raise TypeError("input not supported")
 
         for col in self._columnNames:
             if pd.api.types.is_numeric_dtype(pd.Series(input.column(col))):
@@ -519,3 +523,13 @@ class BiocFrame:
                 input[col] = new_col
 
         return input
+
+    # compatibility with Pandas
+    @property
+    def columns(self) -> Sequence[str]:
+        """Access column names of BiocFrame
+
+        Returns:
+            Sequence[str]: a list of column names
+        """
+        return self._columnNames
