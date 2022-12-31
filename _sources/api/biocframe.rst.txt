@@ -1,6 +1,14 @@
 biocframe package
 =================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   biocframe.io
+
 Submodules
 ----------
 

@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="biocframe" href="modules.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="biocframe.io package" href="biocframe.io.html" /><link rel="prev" title="biocframe" href="modules.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
-        <title>biocframe package - BiocFrame 0.2.5 documentation</title>
+        <title>biocframe package - BiocFrame 0.2.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">BiocFrame 0.2.5 documentation</div></a>
+      <a href="../index.html"><div class="brand">BiocFrame 0.2.6 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.2.5 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.2.6 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -161,7 +161,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">Module Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">biocframe package</a></li>
+<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">biocframe package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="biocframe.io.html">biocframe.io package</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -200,6 +203,22 @@
         <article role="main">
           <section id="biocframe-package">
 <h1>biocframe package<a class="headerlink" href="#biocframe-package" title="Permalink to this heading">#</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="biocframe.io.html">biocframe.io package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="biocframe.io.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="biocframe.io.html#module-biocframe.io.pdf">biocframe.io.pdf module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="biocframe.io.html#biocframe.io.pdf.fromPandas"><code class="docutils literal notranslate"><span class="pre">fromPandas()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="biocframe.io.html#module-biocframe.io">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
 </section>
@@ -209,26 +228,40 @@
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">BiocFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Optional" title="(in Python v3.9)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.MutableMapping" title="(in Python v3.9)"><span class="pre">MutableMapping</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Union" title="(in Python v3.9)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.List" title="(in Python v3.9)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Any" title="(in Python v3.9)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.MutableMapping" title="(in Python v3.9)"><span class="pre">MutableMapping</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfRows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Optional" title="(in Python v3.9)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowNames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Optional" title="(in Python v3.9)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columnNames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Optional" title="(in Python v3.9)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Optional" title="(in Python v3.9)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.MutableMapping" title="(in Python v3.9)"><span class="pre">MutableMapping</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.colnames">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">colnames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.colnames" title="Permalink to this definition">#</a></dt>
+<dd><p>Access column names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of column names</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sequence[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.column">
 <span class="sig-name descname"><span class="pre">column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indexOrName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Union" title="(in Python v3.9)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Union" title="(in Python v3.9)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Any" title="(in Python v3.9)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.MutableMapping" title="(in Python v3.9)"><span class="pre">MutableMapping</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.column" title="Permalink to this definition">#</a></dt>
-<dd><p>Get a column from BiocFrame either by index or name</p>
+<dd><p>Access a column by index or name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>indexOrName</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – index or name of the column</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – name not in column names</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – index greather than number of columns</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#TypeError" title="(in Python v3.9)"><strong>TypeError</strong></a> – indexOrName neither a string nor integer</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – if name not in column names</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – if index greather than number of columns</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#TypeError" title="(in Python v3.9)"><strong>TypeError</strong></a> – if indexOrName is neither a string nor integer</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>column from BiocFrame</p>
+<dd class="field-odd"><p>column from the object</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Union[Sequence[Any], Mapping]</p>
+<dd class="field-even"><p>Union[Sequence[Any], MutableMapping]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -236,10 +269,10 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.columnNames">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">columnNames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.columnNames" title="Permalink to this definition">#</a></dt>
-<dd><p>Access column names of BiocFrame</p>
+<dd><p>Access column names</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a list of column names</p>
+<dd class="field-odd"><p>list of column names</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sequence[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
@@ -250,10 +283,10 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.columns">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">columns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.columns" title="Permalink to this definition">#</a></dt>
-<dd><p>Access column names of BiocFrame</p>
+<dd><p>Access column names</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a list of column names</p>
+<dd class="field-odd"><p>list of column names</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sequence[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
@@ -264,10 +297,10 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.data">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.MutableMapping" title="(in Python v3.9)"><span class="pre">MutableMapping</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Any" title="(in Python v3.9)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.data" title="Permalink to this definition">#</a></dt>
-<dd><p>Access the data of BiocFrame as a dict</p>
+<dd><p>Access data (as dictionary)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>get the underlying dataframe as a dict</p>
+<dd class="field-odd"><p>dictionary of columns and their values</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>MutableMapping[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)">str</a>, Any]</p>
@@ -285,23 +318,6 @@
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Tuple[<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)">int</a>, <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)">int</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.fromPandas">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromPandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.5.2)"><span class="pre">DataFrame</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><span class="pre">BiocFrame</span></a></span></span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.fromPandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.fromPandas" title="Permalink to this definition">#</a></dt>
-<dd><p>Construct new <cite>BiocFrame</cite> from a <cite>Pandas.DataFrame</cite> object</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>pd.DataFrame</em>) – Pandas DataFrame object</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>a BiocFrame object</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame">BiocFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -325,14 +341,14 @@
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.metadata">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.MutableMapping" title="(in Python v3.9)"><span class="pre">MutableMapping</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.metadata" title="Permalink to this definition">#</a></dt>
-<dd><p>Access metadata of the BiocFrame</p>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Optional" title="(in Python v3.9)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.MutableMapping" title="(in Python v3.9)"><span class="pre">MutableMapping</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.metadata" title="Permalink to this definition">#</a></dt>
+<dd><p>Access metadata</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>metadata object, usually a dictionary</p>
+<dd class="field-odd"><p>metadata object if available, usually a dictionary</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Mapping</p>
+<dd class="field-even"><p>Optional[MutableMapping]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -340,20 +356,20 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.row">
 <span class="sig-name descname"><span class="pre">row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indexOrName</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Union" title="(in Python v3.9)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.MutableMapping" title="(in Python v3.9)"><span class="pre">MutableMapping</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Any" title="(in Python v3.9)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.row" title="Permalink to this definition">#</a></dt>
-<dd><p>Get a row from BiocFrame either by index or name</p>
+<dd><p>Access a row by index or name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>indexOrName</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em>]</em>) – index or name of the row</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – name not in row names</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – index greather than number of rows</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#TypeError" title="(in Python v3.9)"><strong>TypeError</strong></a> – indexOrName neither a string nor integer</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – if name not in row names</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – if index greather than number of rows</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#TypeError" title="(in Python v3.9)"><strong>TypeError</strong></a> – if indexOrName neither a string nor integer</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>row from BiocFrame</p>
+<dd class="field-odd"><p>row from object</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Mapping[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)">str</a>, Any]</p>
@@ -364,10 +380,24 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.rowNames">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rowNames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.rowNames" title="Permalink to this definition">#</a></dt>
-<dd><p>Access row index of BiocFrame</p>
+<dd><p>Access row index</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a list of row index names</p>
+<dd class="field-odd"><p>list of row index names</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sequence[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.rownames">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rownames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.rownames" title="Permalink to this definition">#</a></dt>
+<dd><p>Access row index</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of row index names</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Sequence[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)">str</a>]</p>
@@ -439,7 +469,15 @@
       <footer>
         
         <div class="related-pages">
-          
+          <a class="next-page" href="biocframe.io.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">biocframe.io package</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
           <a class="prev-page" href="modules.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
@@ -482,19 +520,21 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">biocframe package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-biocframe.BiocFrame">biocframe.BiocFrame module</a><ul>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame"><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code></a><ul>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.colnames"><code class="docutils literal notranslate"><span class="pre">BiocFrame.colnames</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.columnNames"><code class="docutils literal notranslate"><span class="pre">BiocFrame.columnNames</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.columns</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.data"><code class="docutils literal notranslate"><span class="pre">BiocFrame.data</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.dims"><code class="docutils literal notranslate"><span class="pre">BiocFrame.dims</span></code></a></li>
-<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.fromPandas"><code class="docutils literal notranslate"><span class="pre">BiocFrame.fromPandas()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.hasColumn"><code class="docutils literal notranslate"><span class="pre">BiocFrame.hasColumn()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.metadata"><code class="docutils literal notranslate"><span class="pre">BiocFrame.metadata</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.row"><code class="docutils literal notranslate"><span class="pre">BiocFrame.row()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.rowNames"><code class="docutils literal notranslate"><span class="pre">BiocFrame.rowNames</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.rownames"><code class="docutils literal notranslate"><span class="pre">BiocFrame.rownames</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.shape"><code class="docutils literal notranslate"><span class="pre">BiocFrame.shape</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.toPandas"><code class="docutils literal notranslate"><span class="pre">BiocFrame.toPandas()</span></code></a></li>
 </ul>
