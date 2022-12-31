@@ -1,6 +1,7 @@
 from biocframe.BiocFrame import BiocFrame
 import pandas as pd
 import pytest
+import biocframe
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -43,7 +44,7 @@ def test_initialize_pandas():
         }
     )
 
-    bframe = BiocFrame.fromPandas(df_gr)
+    bframe = biocframe.fromPandas(df_gr)
     assert bframe is not None
 
 
@@ -74,7 +75,7 @@ def test_should_fail():
             }
         )
 
-        BiocFrame.fromPandas(df_gr)
+        biocframe.fromPandas(df_gr)
 
 
 def test_nested_biocFrame():
