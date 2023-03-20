@@ -158,6 +158,10 @@ class BiocFrame:
         Raises:
             ValueError: if provided names not the same as number of columns.
         """
+
+        if names is None:
+            raise ValueError("Column names cannot be None!")
+
         if len(names) != self._numberOfColumns:
             raise ValueError(
                 "Incorrect length of `names`, need to be "
