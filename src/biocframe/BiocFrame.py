@@ -70,8 +70,8 @@ class BiocFrame:
 
     def __str__(self) -> str:
         pattern = (
-            f"Class BiocFrame with {self.dims[0]} rows and {self.dims[1]} columns"
-            f"  columnNames: {self.columnNames}"
+            f"Class BiocFrame with {self.dims[0]} rows and {self.dims[1]} columns\n"
+            f"  columnNames: {self.columnNames}\n"
             f"  contains rowNames?: {self.rowNames is None}"
         )
         return pattern
