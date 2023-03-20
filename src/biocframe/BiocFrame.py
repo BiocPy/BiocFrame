@@ -108,32 +108,35 @@ class BiocFrame:
         return self._rowNames
 
     @property
-    def data(self) -> MutableMapping[str, Any]:
+    def data(self) -> MutableMapping[str, Union[List[Any], MutableMapping]]:
         """Access data (as dictionary).
 
         Returns:
-            MutableMapping[str, Any]: dictionary of columns and their values.
+            MutableMapping[str, Union[List[Any], MutableMapping]]: 
+                dictionary of columns and their values.
         """
         return self._data
 
     @rowNames.setter
-    def rowNames(self, names: Sequence[str]):
+    def rowNames(self, names: Optional[Sequence[str]]):
         """Set new index.
 
         Args:
-            names (Sequence[str]): new row names to set as index.
+            names (Sequence[str], optional): new row names to set as index.
 
         Raises:
             ValueError: if length of new index not the same as number of rows.
         """
-        if len(names) != self._numberOfRows:
-            raise ValueError(
-                "Incorrect length of `names`, need to be "
-                f"{self._numberOfRows} but provided {len(names)}"
-            )
 
-        if not (validate_unique_list(names)):
-            raise ValueError("names must be unique!")
+        if names is not None:
+            if len(names) != self._numberOfRows:
+                raise ValueError(
+                    "Incorrect length of `names`, need to be "
+                    f"{self._numberOfRows} but provided {len(names)}"
+                )
+
+            if not (validate_unique_list(names)):
+                raise ValueError("names must be unique!")
 
         self._rowNames = names
 
@@ -156,6 +159,10 @@ class BiocFrame:
         Raises:
             ValueError: if provided names not the same as number of columns.
         """
+
+        if names is None:
+            raise ValueError("Column names cannot be None!")
+
         if len(names) != self._numberOfColumns:
             raise ValueError(
                 "Incorrect length of `names`, need to be "
@@ -445,6 +452,7 @@ class BiocFrame:
             raise ValueError(f"Column: {name} does not exist.")
 
         del self._data[name]
+        self._columnNames.remove(name)
         self._numberOfColumns -= 1
 
     def __len__(self) -> int:
