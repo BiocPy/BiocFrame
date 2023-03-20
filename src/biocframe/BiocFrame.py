@@ -108,11 +108,12 @@ class BiocFrame:
         return self._rowNames
 
     @property
-    def data(self) -> MutableMapping[str, Any]:
+    def data(self) -> MutableMapping[str, Union[List[Any], MutableMapping]]:
         """Access data (as dictionary).
 
         Returns:
-            MutableMapping[str, Any]: dictionary of columns and their values.
+            MutableMapping[str, Union[List[Any], MutableMapping]]: 
+                dictionary of columns and their values.
         """
         return self._data
 
