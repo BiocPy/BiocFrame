@@ -117,23 +117,25 @@ class BiocFrame:
         return self._data
 
     @rowNames.setter
-    def rowNames(self, names: Sequence[str]):
+    def rowNames(self, names: Optional[Sequence[str]]):
         """Set new index.
 
         Args:
-            names (Sequence[str]): new row names to set as index.
+            names (Sequence[str], optional): new row names to set as index.
 
         Raises:
             ValueError: if length of new index not the same as number of rows.
         """
-        if len(names) != self._numberOfRows:
-            raise ValueError(
-                "Incorrect length of `names`, need to be "
-                f"{self._numberOfRows} but provided {len(names)}"
-            )
 
-        if not (validate_unique_list(names)):
-            raise ValueError("names must be unique!")
+        if names is not None:
+            if len(names) != self._numberOfRows:
+                raise ValueError(
+                    "Incorrect length of `names`, need to be "
+                    f"{self._numberOfRows} but provided {len(names)}"
+                )
+
+            if not (validate_unique_list(names)):
+                raise ValueError("names must be unique!")
 
         self._rowNames = names
 
