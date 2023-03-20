@@ -452,6 +452,7 @@ class BiocFrame:
             raise ValueError(f"Column: {name} does not exist.")
 
         del self._data[name]
+        self._columnNames.remove(name)
         self._numberOfColumns -= 1
 
     def __len__(self) -> int:
