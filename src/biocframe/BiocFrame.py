@@ -13,7 +13,7 @@ __license__ = "MIT"
 class BiocFrame:
     def __init__(
         self,
-        data: Optional[MutableMapping[str, Union[List[Any], MutableMapping]]] = {},
+        data: Optional[MutableMapping[str, Union[List[Any], MutableMapping]]] = None,
         numberOfRows: Optional[int] = None,
         rowNames: Optional[Sequence[str]] = None,
         columnNames: Optional[Sequence[str]] = None,
@@ -34,43 +34,39 @@ class BiocFrame:
         Args:
             data (MutableMapping[str, Union[List[Any], MutableMapping]], optional): 
                 a dictionary of colums and their values. all columns must have the 
-                same length. Defaults to {}.
+                same length. Defaults to None.
             numberOfRows (int, optional): Number of rows. Defaults to None.
             rowNames (Sequence[str], optional): Row index values . Defaults to None.
             columnNames (Sequence[str], optional): column names, if not provided, 
                 its automatically inferred from data. Defaults to None.
             metadata (MutableMapping, optional): metadata. Defaults to None.
         """
-
-        v_numberOfRows, v_columnNames, v_numberOfColumns = self._validate(
-            numberOfRows, rowNames, data, columnNames, metadata
-        )
-
-        self._numberOfRows = v_numberOfRows
+        self._numberOfRows = numberOfRows
         self._rowNames = rowNames
-        self._data = data
-        self._columnNames = v_columnNames
+        self._data = {} if data is None else data
+        self._columnNames = columnNames
         self._metadata = metadata
-        self._numberOfColumns = v_numberOfColumns
+
+        self._validate()
 
         self._iterIdx = 0
 
-    def _validate(self, numberOfRows, rowNames, data, columnNames, metadata):
+    def _validate(self):
         """Internal method to validate the object.
 
         Raises:
             ValueError: when provided object does not contain columns of same length.
         """
 
-        v_numberOfRows = validate_rows(numberOfRows, rowNames, data)
-        v_columnNames = validate_cols(columnNames, data)
+        self._numberOfRows = validate_rows(
+            self._numberOfRows, self._rowNames, self._data
+        )
+        self._columnNames = validate_cols(self._columnNames, self._data)
 
-        v_numberOfColumns = len(v_columnNames)
+        self._numberOfColumns = len(self._columnNames)
 
-        if v_numberOfRows is None:
-            v_numberOfRows = 0
-
-        return v_numberOfRows, v_columnNames, v_numberOfColumns
+        if self._numberOfRows is None:
+            self._numberOfRows = 0
 
     def __str__(self) -> str:
         pattern = (
@@ -99,11 +95,11 @@ class BiocFrame:
         return self.dims
 
     @property
-    def rowNames(self) -> Sequence[str]:
+    def rowNames(self) -> Optional[Sequence[str]]:
         """Access row index (names).
 
         Returns:
-            Sequence[str]: list of row index names.
+            Optional[Sequence[str]]: row index names if available else None.
         """
         return self._rowNames
 
