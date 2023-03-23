@@ -540,6 +540,15 @@ class BiocFrame:
         """
         return self.rowNames
 
+    @rownames.setter
+    def rownames(self, names: Sequence[str]):
+        """Alias to rowNames.
+
+        Args:
+            names (Sequence[str]): new row index.
+        """
+        self.rowNames = names
+
     @property
     def colnames(self) -> Sequence[str]:
         """Access column names.
@@ -548,3 +557,12 @@ class BiocFrame:
             Sequence[str]: list of column names.
         """
         return self.columnNames
+
+    @colnames.setter
+    def colnames(self, names: Sequence[str]):
+        """Alias to colNames.
+
+        Args:
+            names (Sequence[str]): new column names.
+        """
+        self.colNames = names
