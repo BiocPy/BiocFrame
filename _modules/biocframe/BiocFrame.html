@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 6.1.3 and Furo 2022.12.07 -->
-        <title>biocframe.BiocFrame - BiocFrame 0.2.8 documentation</title>
+        <title>biocframe.BiocFrame - BiocFrame 0.2.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">BiocFrame 0.2.8 documentation</div></a>
+      <a href="../../index.html"><div class="brand">BiocFrame 0.2.9 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.2.8 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.2.9 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -200,7 +200,7 @@
         </div>
         <article role="main">
           <h1>Source code for biocframe.BiocFrame</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">MutableMapping</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">MutableMapping</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">match_to_indices</span>
 
 <span class="kn">from</span> <span class="nn">._validators</span> <span class="kn">import</span> <span class="n">validate_rows</span><span class="p">,</span> <span class="n">validate_cols</span><span class="p">,</span> <span class="n">validate_unique_list</span>
@@ -215,7 +215,9 @@
 <div class="viewcode-block" id="BiocFrame"><a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame">[docs]</a><span class="k">class</span> <span class="nc">BiocFrame</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">MutableMapping</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+            <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">MutableMapping</span><span class="p">]]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">numberOfRows</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">rowNames</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">columnNames</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -234,7 +236,7 @@
 <span class="sd">            ValueError: if rows or columns mismatch from data.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            data (MutableMapping[str, Union[List[Any], MutableMapping]], optional): </span>
+<span class="sd">            data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional): </span>
 <span class="sd">                a dictionary of colums and their values. all columns must have the </span>
 <span class="sd">                same length. Defaults to None.</span>
 <span class="sd">            numberOfRows (int, optional): Number of rows. Defaults to None.</span>
@@ -263,7 +265,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_numberOfRows</span> <span class="o">=</span> <span class="n">validate_rows</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_numberOfRows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rowNames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_columnNames</span> <span class="o">=</span> <span class="n">validate_cols</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_columnNames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_columnNames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">validate_cols</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_columnNames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_numberOfColumns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_columnNames</span><span class="p">)</span>
 
@@ -272,8 +274,8 @@
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">pattern</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Class BiocFrame with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;  columnNames: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">columnNames</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Class BiocFrame with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows and </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> columns</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;  columnNames: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">columnNames</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;  contains rowNames?: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rowNames</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="kc">None</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">pattern</span>
@@ -306,11 +308,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rowNames</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">MutableMapping</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">MutableMapping</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Access data (as dictionary).</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            MutableMapping[str, Union[List[Any], MutableMapping]]: </span>
+<span class="sd">            MutableMapping[str, Union[Sequence[Any], MutableMapping]]: </span>
 <span class="sd">                dictionary of columns and their values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
@@ -511,7 +513,7 @@
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_column_indices</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
                 <span class="n">new_columnNames</span> <span class="o">=</span> <span class="n">new_columnNames</span><span class="p">[</span><span class="n">new_column_indices</span><span class="p">]</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_column_indices</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_column_indices</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
                 <span class="n">new_columnNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_columnNames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_column_indices</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Column Slice: Unknown match_to_indices type&quot;</span><span class="p">)</span>
@@ -527,7 +529,7 @@
 
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_row_indices</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
                     <span class="n">new_rowNames</span> <span class="o">=</span> <span class="n">new_rowNames</span><span class="p">[</span><span class="n">new_row_indices</span><span class="p">]</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_row_indices</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_row_indices</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
                     <span class="n">new_rowNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_rowNames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">new_row_indices</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Row Slice: Unknown match_to_indices type&quot;</span><span class="p">)</span>
@@ -620,7 +622,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            key (str): Column name.</span>
-<span class="sd">            newvalue (List[Any]): New value to set.</span>
+<span class="sd">            newvalue (Sequence[Any]): New value to set.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If length of `newvalue` does not match the length of the object.</span>
