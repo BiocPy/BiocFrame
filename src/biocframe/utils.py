@@ -1,4 +1,4 @@
-from typing import Any, List, Union, Sequence
+from typing import Any, Union, Sequence
 
 
 __author__ = "jkanche"
@@ -7,13 +7,14 @@ __license__ = "MIT"
 
 
 def match_to_indices(
-    data: Sequence[Any], indices: Union[List[int], slice, List[str]]
+    data: Sequence[Any], indices: Union[Sequence[int], slice, Sequence[str]]
 ) -> Union[slice, Sequence[Any]]:
     """slice an array
 
     Args:
         data (Sequence[Any]): input data array to slice
-        indices (Union[List[int], slice, List[str]): either a slice or a list of indices to keep
+        indices (Union[Sequence[int], slice, Sequence[str]): either a slice or 
+            a list of indices to keep
 
     Returns:
         Union[slice, Sequence[Any]]: either a slice or list of indices
@@ -21,7 +22,7 @@ def match_to_indices(
 
     if isinstance(indices, slice):
         return indices
-    elif isinstance(indices, list):
+    elif isinstance(indices, Sequence):
         all_strs = all([isinstance(k, str) for k in indices])
         # slice by value
         if all_strs:
@@ -35,4 +36,4 @@ def match_to_indices(
         else:
             return indices
 
-    raise TypeError(f"`indices` is neither a `list` nor a `slice`")
+    raise TypeError("`indices` is neither a `list` nor a `slice`")

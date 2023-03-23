@@ -6,17 +6,18 @@ __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
+
 def fromPandas(data: pd.DataFrame) -> BiocFrame:
-    """Construct a new `BiocFrame` from pandas `DataFrame` object
+    """Construct a new `BiocFrame` from pandas `DataFrame` object.
 
     Args:
-        data (pd.DataFrame): Pandas DataFrame object
+        data (pd.DataFrame): Pandas `DataFrame` object.
 
     Raises:
-        TypeError: if data is not a pandas `DataFrame`
+        TypeError: if data is not a pandas `DataFrame`.
 
     Returns:
-        BiocFrame: a new `BiocFrame` object
+        BiocFrame: a new `BiocFrame` object.
     """
 
     if not isinstance(data, pd.DataFrame):
@@ -28,6 +29,5 @@ def fromPandas(data: pd.DataFrame) -> BiocFrame:
     if data.index is not None:
         rindex = data.index.to_list()
 
-    return BiocFrame(
-        data=rdata, rowNames=rindex, columnNames=data.columns.to_list()
-    )
+    return BiocFrame(data=rdata, rowNames=rindex, columnNames=data.columns.to_list())
+

@@ -1,4 +1,4 @@
-from typing import Any, List, Union, Sequence, Optional, Tuple, MutableMapping
+from typing import Any, Union, Sequence, Optional, Tuple, MutableMapping
 from .utils import match_to_indices
 
 from ._validators import validate_rows, validate_cols, validate_unique_list
@@ -13,7 +13,9 @@ __license__ = "MIT"
 class BiocFrame:
     def __init__(
         self,
-        data: Optional[MutableMapping[str, Union[List[Any], MutableMapping]]] = None,
+        data: Optional[
+            MutableMapping[str, Union[Sequence[Any], MutableMapping]]
+        ] = None,
         numberOfRows: Optional[int] = None,
         rowNames: Optional[Sequence[str]] = None,
         columnNames: Optional[Sequence[str]] = None,
@@ -32,7 +34,7 @@ class BiocFrame:
             ValueError: if rows or columns mismatch from data.
 
         Args:
-            data (MutableMapping[str, Union[List[Any], MutableMapping]], optional): 
+            data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional): 
                 a dictionary of colums and their values. all columns must have the 
                 same length. Defaults to None.
             numberOfRows (int, optional): Number of rows. Defaults to None.
@@ -61,7 +63,7 @@ class BiocFrame:
         self._numberOfRows = validate_rows(
             self._numberOfRows, self._rowNames, self._data
         )
-        self._columnNames = validate_cols(self._columnNames, self._data)
+        self._columnNames, self._data = validate_cols(self._columnNames, self._data)
 
         self._numberOfColumns = len(self._columnNames)
 
@@ -104,11 +106,11 @@ class BiocFrame:
         return self._rowNames
 
     @property
-    def data(self) -> MutableMapping[str, Union[List[Any], MutableMapping]]:
+    def data(self) -> MutableMapping[str, Union[Sequence[Any], MutableMapping]]:
         """Access data (as dictionary).
 
         Returns:
-            MutableMapping[str, Union[List[Any], MutableMapping]]: 
+            MutableMapping[str, Union[Sequence[Any], MutableMapping]]: 
                 dictionary of columns and their values.
         """
         return self._data
@@ -309,7 +311,7 @@ class BiocFrame:
 
             if isinstance(new_column_indices, slice):
                 new_columnNames = new_columnNames[new_column_indices]
-            elif isinstance(new_column_indices, list):
+            elif isinstance(new_column_indices, Sequence):
                 new_columnNames = [new_columnNames[i] for i in new_column_indices]
             else:
                 raise TypeError("Column Slice: Unknown match_to_indices type")
@@ -325,7 +327,7 @@ class BiocFrame:
 
                 if isinstance(new_row_indices, slice):
                     new_rowNames = new_rowNames[new_row_indices]
-                elif isinstance(new_row_indices, list):
+                elif isinstance(new_row_indices, Sequence):
                     new_rowNames = [new_rowNames[i] for i in new_row_indices]
                 else:
                     raise TypeError("Row Slice: Unknown match_to_indices type")
@@ -418,7 +420,7 @@ class BiocFrame:
 
         Args:
             key (str): Column name.
-            newvalue (List[Any]): New value to set.
+            newvalue (Sequence[Any]): New value to set.
 
         Raises:
             ValueError: If length of `newvalue` does not match the length of the object.

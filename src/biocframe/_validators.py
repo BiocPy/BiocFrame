@@ -1,4 +1,4 @@
-from typing import Any, List, Union, Optional, MutableMapping, Sequence
+from typing import Any, Union, MutableMapping, Sequence
 from collections import OrderedDict
 
 
@@ -10,14 +10,14 @@ __license__ = "MIT"
 def validate_rows(
     numberOfRows: int,
     rowNames: Sequence[str],
-    data: MutableMapping[str, Union[List[Any], MutableMapping]],
+    data: MutableMapping[str, Union[Sequence[Any], MutableMapping]],
 ) -> int:
     """Validate rows of BiocFrame object.
 
     Args:
         numberOfRows (int, optional): Number of rows. Defaults to None.
         rowNames (Sequence[str], optional): Row index values . Defaults to None.
-        data (MutableMapping[str, Union[List[Any], MutableMapping]], optional): 
+        data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional): 
             a dictionary of colums and their values. all columns must have the 
             same length. Defaults to {}.
 
@@ -58,14 +58,14 @@ def validate_rows(
 
 def validate_cols(
     columnNames: Sequence[str],
-    data: MutableMapping[str, Union[List[Any], MutableMapping]],
+    data: MutableMapping[str, Union[Sequence[Any], MutableMapping]],
 ) -> Sequence[str]:
     """Validate columns of a BiocFrame object.
 
     Args:
         columnNames (Sequence[str], optional): column names, if not provided, 
             its automatically inferred from data. Defaults to None.
-        data (MutableMapping[str, Union[List[Any], MutableMapping]], optional): 
+        data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional): 
             a dictionary of colums and their values. all columns must have the 
             same length. Defaults to {}.. Defaults to {}.
 
@@ -83,16 +83,29 @@ def validate_cols(
                 "Number of columns mismatch between `columnNames` and `data`"
             )
 
-        # Technically should throw an error but
-        # lets just fix it
-        # colnames and dict order should be the same
-        new_odata = OrderedDict()
-        for k in columnNames:
-            new_odata[k] = data[k]
+    # Technically should throw an error but
+    # lets just fix it
+    # colnames and dict order should be the same
+    incorrect_types = []
+    new_odata = OrderedDict()
+    for k in columnNames:
+        # check for types
+        col_value = data[k]
 
-        data = new_odata
+        if not (hasattr(col_value, "__len__") and hasattr(col_value, "__getitem__")):
+            incorrect_types.append(k)
 
-    return columnNames
+        new_odata[k] = data[k]
+
+    if len(incorrect_types) > 0:
+        raise TypeError(
+            "All columns in data must support `len` and "
+            f"`slice` operations. Columns: {incorrect_types} do not."
+        )
+
+    data = new_odata
+
+    return columnNames, data
 
 
 def validate_unique_list(values: Sequence) -> bool:
