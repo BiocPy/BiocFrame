@@ -73,8 +73,8 @@ class BiocFrame:
     def __str__(self) -> str:
         pattern = (
             f"Class BiocFrame with {self.dims[0]} rows and {self.dims[1]} columns\n"
-            f"  columnNames: {self.columnNames}\n"
-            f"  contains rowNames?: {self.rowNames is None}"
+            f"  columnNames: {self.columnNames if len(self.columnNames) > 1 else None}\n"
+            f"  contains rowNames?: {self.rowNames is not None}"
         )
         return pattern
 
@@ -320,8 +320,17 @@ class BiocFrame:
             new_data[col] = self._data[col]
 
         # slice the rows of the data
+        new_numberOfRows = None
         if rowIndicesOrNames is not None:
             new_row_indices = rowIndicesOrNames
+
+            if isinstance(new_row_indices, slice):
+                new_numberOfRows = len(range(new_row_indices.stop)[new_row_indices])
+            elif isinstance(new_row_indices, Sequence):
+                new_numberOfRows = len(new_row_indices)
+            else:
+                raise TypeError("Row slice: unknown slice type")
+
             if self._rowNames is not None:
                 new_row_indices = match_to_indices(self._rowNames, rowIndicesOrNames)
 
@@ -330,21 +339,30 @@ class BiocFrame:
                 elif isinstance(new_row_indices, Sequence):
                     new_rowNames = [new_rowNames[i] for i in new_row_indices]
                 else:
-                    raise TypeError("Row Slice: Unknown match_to_indices type")
+                    raise TypeError("Row slice: unknown `match_to_indices` type.")
 
             # since row names are not set, the
             # only option here is to slice by index
             if isinstance(new_row_indices, slice):
                 for k, v in new_data.items():
                     new_data[k] = v[new_row_indices]
+
             elif all([isinstance(k, int) for k in new_row_indices]):
                 for k, v in new_data.items():
                     new_data[k] = [v[idx] for idx in new_row_indices]
             else:
-                raise TypeError("Row Slice: not all row slices are integers")
+                raise TypeError("Row slice: not all row slices are integers!")
+        else:
+            new_numberOfRows = self._numberOfRows
+
+        if new_numberOfRows is None:
+            raise Exception("this should not happen. Please file an issue!")
 
         return BiocFrame(
-            data=new_data, rowNames=new_rowNames, columnNames=new_columnNames
+            data=new_data,
+            numberOfRows=new_numberOfRows,
+            rowNames=new_rowNames,
+            columnNames=new_columnNames,
         )
 
     # TODO: implement inplace, view

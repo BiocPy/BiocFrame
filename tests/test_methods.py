@@ -283,3 +283,13 @@ def test_bframe_iter():
         iterCount += 1
 
     assert iterCount == bframe.dims[0]
+
+def test_slice_empty_obj():
+    bframe = BiocFrame({}, numberOfRows=100)
+    assert bframe is not None
+
+    sliced_bframe = bframe[10:30, :]
+    assert sliced_bframe is not None
+
+    print(sliced_bframe)
+    assert sliced_bframe.shape != (20, 0)
