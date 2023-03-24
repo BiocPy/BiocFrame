@@ -291,5 +291,4 @@ def test_slice_empty_obj():
     sliced_bframe = bframe[10:30, :]
     assert sliced_bframe is not None
 
-    print(sliced_bframe)
-    assert sliced_bframe.shape != (20, 0)
+    assert sliced_bframe.shape == (20, 0)
