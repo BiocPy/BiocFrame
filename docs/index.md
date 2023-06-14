@@ -1,6 +1,6 @@
 # BiocFrame
 
-BioFrame provides a base `Dataframe` class, intended to be more flexible that supports nested structures compared to Pandas `DataFrame`.
+This package implements a lite weight data frame like class (comparable to Pandas `DataFrame`) but supports more flexible column types, e.g: nested columns.
 
 ## Install
 

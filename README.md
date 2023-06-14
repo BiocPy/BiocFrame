@@ -14,7 +14,7 @@
 
 # BiocFrame
 
-BiocFrame provides a base `BiocFrame` class, intended to be a flexible data structure compared to Pandas `DataFrame` This would be interoperable with pandas but will support usecases in genomics.
+This package implements a lite weight data frame like class (comparable to Pandas `DataFrame`) but supports more flexible column types, e.g: nested columns.
 
 ## Install
 
@@ -83,7 +83,7 @@ bframe["score"] = range(200, 400)
 
 ### Slice the `BiocFrame`
 
-Currently slicing is only supported by indices or names (column names or row names). A future version may implement pandas query like operations.
+Currently slicing is only supported by indices or names (column names or row names). A future version may implement pandas query-like operations.
 
 ```python
 sliced_bframe = bframe[3:7, 2:5]
