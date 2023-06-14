@@ -28,7 +28,7 @@ class BiocFrameIter:
     def __next__(self):
         if self._current_index < len(self._bframe):
             iter_row_index = (
-                self._bframe.rowNames[self._iterIdx]
+                self._bframe.rowNames[self._current_index]
                 if self._bframe.rowNames is not None
                 else None
             )
