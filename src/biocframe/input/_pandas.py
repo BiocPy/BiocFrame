@@ -30,4 +30,3 @@ def fromPandas(data: pd.DataFrame) -> BiocFrame:
         rindex = data.index.to_list()
 
     return BiocFrame(data=rdata, rowNames=rindex, columnNames=data.columns.to_list())
-

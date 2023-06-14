@@ -1,6 +1,5 @@
-from typing import Any, Union, MutableMapping, Sequence
 from collections import OrderedDict
-
+from typing import Any, MutableMapping, Sequence, Union
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -12,13 +11,13 @@ def validate_rows(
     rowNames: Sequence[str],
     data: MutableMapping[str, Union[Sequence[Any], MutableMapping]],
 ) -> int:
-    """Validate rows of BiocFrame object.
+    """Validate rows of `BiocFrame` object.
 
     Args:
         numberOfRows (int, optional): Number of rows. Defaults to None.
         rowNames (Sequence[str], optional): Row index values . Defaults to None.
-        data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional): 
-            a dictionary of colums and their values. all columns must have the 
+        data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional):
+            a dictionary of columns and their values. all columns must have the
             same length. Defaults to {}.
 
     Raises:
@@ -43,7 +42,6 @@ def validate_rows(
         )
 
     if rowNames is not None:
-
         if not validate_unique_list(rowNames):
             raise ValueError("rowNames must be unique!")
 
@@ -60,17 +58,18 @@ def validate_cols(
     columnNames: Sequence[str],
     data: MutableMapping[str, Union[Sequence[Any], MutableMapping]],
 ) -> Sequence[str]:
-    """Validate columns of a BiocFrame object.
+    """Validate columns of a `BiocFrame` object.
 
     Args:
-        columnNames (Sequence[str], optional): column names, if not provided, 
+        columnNames (Sequence[str], optional): column names, if not provided,
             its automatically inferred from data. Defaults to None.
-        data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional): 
-            a dictionary of colums and their values. all columns must have the 
+        data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional):
+            a dictionary of columns and their values. all columns must have the
             same length. Defaults to {}.. Defaults to {}.
 
     Raises:
         ValueError: when `columnNames` and `data` do not agree.
+        TypeError: incorrect column type.
 
     Returns:
         Sequence[str]: list of columns names.
@@ -85,7 +84,7 @@ def validate_cols(
 
     # Technically should throw an error but
     # lets just fix it
-    # colnames and dict order should be the same
+    # column names and dict order should be the same
     incorrect_types = []
     new_odata = OrderedDict()
     for k in columnNames:
@@ -100,7 +99,8 @@ def validate_cols(
     if len(incorrect_types) > 0:
         raise TypeError(
             "All columns in data must support `len` and "
-            f"`slice` operations. Columns: {incorrect_types} do not."
+            f"`slice` operations. columns: {incorrect_types} "
+            f"do not support these methods."
         )
 
     data = new_odata
@@ -115,6 +115,6 @@ def validate_unique_list(values: Sequence) -> bool:
         values (Sequence): list of values to check.
 
     Returns:
-        bool : True if all values are unique else False.
+        bool: True if all values are unique else False.
     """
     return len(set(values)) == len(values)
