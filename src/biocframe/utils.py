@@ -1,5 +1,4 @@
-from typing import Any, Union, Sequence
-
+from typing import Any, Sequence, Union
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -9,15 +8,15 @@ __license__ = "MIT"
 def match_to_indices(
     data: Sequence[Any], indices: Union[Sequence[int], slice, Sequence[str]]
 ) -> Union[slice, Sequence[Any]]:
-    """slice an array
+    """Utility function to map various ways in which a slice can be defined.
 
     Args:
-        data (Sequence[Any]): input data array to slice
+        data (Sequence[Any]): input data array to slice.
         indices (Union[Sequence[int], slice, Sequence[str]): either a slice or 
-            a list of indices to keep
+            a list of indices to keep.
 
     Returns:
-        Union[slice, Sequence[Any]]: either a slice or list of indices
+        Union[slice, Sequence[Any]]: either a slice or list of indices.
     """
 
     if isinstance(indices, slice):
