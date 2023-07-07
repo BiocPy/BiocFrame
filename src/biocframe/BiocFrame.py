@@ -615,6 +615,15 @@ class BiocFrame:
         """
         return self.columnNames
 
+    @property
+    def index(self) -> Optional[Sequence[str]]:
+        """**Alias to rowNames.**
+
+        Returns:
+            (Sequence[str], optional): list of row index names.
+        """
+        return self.rowNames
+
     # compatibility with R interfaces
     @property
     def rownames(self) -> Optional[Sequence[str]]:
