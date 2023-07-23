@@ -3,6 +3,8 @@ from typing import Any, MutableMapping, Optional, Sequence, Tuple, Union
 
 import pandas as pd
 
+from ._type_checks import is_list_of_type
+from ._types import SlicerArgTypes, SlicerTypes
 from ._validators import validate_cols, validate_rows, validate_unique_list
 from .utils import match_to_indices
 
@@ -357,15 +359,15 @@ class BiocFrame:
 
     def _slice(
         self,
-        rowIndicesOrNames: Optional[Union[Sequence[int], Sequence[str], slice]] = None,
-        colIndicesOrNames: Optional[Union[Sequence[int], Sequence[str], slice]] = None,
+        rowIndicesOrNames: Optional[SlicerTypes] = None,
+        colIndicesOrNames: Optional[SlicerTypes] = None,
     ) -> "BiocFrame":
         """Internal method to slice by index or values.
 
         Args:
-            rowIndicesOrVals (Union[Sequence[int], Sequence[str], slice], optional):
+            rowIndicesOrVals (SlicerTypes, optional):
                 row indices or names to keep. Defaults to None.
-            colIndicesOrVals (Union[Sequence[int], Sequence[str], slice], optional):
+            colIndicesOrVals (SlicerTypes, optional):
                 column indices or names to keep. Defaults to None.
 
         Returns:
@@ -395,13 +397,6 @@ class BiocFrame:
         if rowIndicesOrNames is not None:
             new_row_indices = rowIndicesOrNames
 
-            if isinstance(new_row_indices, slice):
-                new_numberOfRows = len(range(new_row_indices.stop)[new_row_indices])
-            elif isinstance(new_row_indices, Sequence):
-                new_numberOfRows = len(new_row_indices)
-            else:
-                raise TypeError("Row slice: unknown slice type")
-
             if self.rowNames is not None:
                 new_row_indices = match_to_indices(self.rowNames, rowIndicesOrNames)
 
@@ -412,12 +407,29 @@ class BiocFrame:
                 else:
                     raise TypeError("row slice: unknown slice type.")
 
+            if isinstance(new_row_indices, slice):
+                new_numberOfRows = len(range(new_row_indices.stop)[new_row_indices])
+            elif is_list_of_type(new_row_indices, bool):
+                new_row_indices = [
+                    i for i in range(len(new_row_indices)) if new_row_indices[i] is True
+                ]
+                new_numberOfRows = len(new_row_indices)
+            elif isinstance(new_row_indices, Sequence):
+                new_numberOfRows = len(new_row_indices)
+            else:
+                raise TypeError("Row slice: unknown slice type")
+
+            if is_list_of_type(new_row_indices, bool):
+                new_row_indices = [
+                    i for i in range(len(new_row_indices)) if new_row_indices[i] is True
+                ]
+
             # since row names are not set, the
             # only option here is to slice by index
             if isinstance(new_row_indices, slice):
                 for k, v in new_data.items():
                     new_data[k] = v[new_row_indices]
-            elif all([isinstance(k, int) for k in new_row_indices]):
+            elif is_list_of_type(new_row_indices, int):
                 for k, v in new_data.items():
                     new_data[k] = [v[idx] for idx in new_row_indices]
             else:
@@ -441,10 +453,7 @@ class BiocFrame:
     # TODO: implement in-place or views
     def __getitem__(
         self,
-        args: Union[
-            Sequence[str],
-            Tuple[Union[Sequence[int], slice], Optional[Union[Sequence[int], slice]]],
-        ],
+        args: SlicerArgTypes,
     ) -> "BiocFrame":
         """Subset by index names or indices.
 
@@ -460,9 +469,9 @@ class BiocFrame:
                 biocframe[<List of column names>]
 
         Args:
-            args (Union[Sequence[str], Tuple[Union[Sequence[int], slice], Optional[Union[Sequence[int], slice]]]]): indices to slice.
+            args (SlicerArgTypes): indices to slice.
                 - Sequence[str]: Slice by column names.
-                - Tuple[Union[Sequence[int], slice], Optional[Union[Sequence[int], slice]]]: slice by indices along the row and column axes.
+                - list of indices or a boolean vector: slice by indices along the row and column axes.
 
         Raises:
             ValueError: Too many slices provided.
@@ -494,6 +503,9 @@ class BiocFrame:
 
         # tuple
         if isinstance(args, tuple):
+            if len(args) == 0:
+                raise ValueError("Arguments must contain atleast one slice")
+
             if len(args) == 1:
                 return self._slice(args[0], None)
             elif len(args) == 2:
