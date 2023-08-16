@@ -431,7 +431,6 @@ class BiocFrame:
                     new_data[k] = v[new_row_indices]
             elif is_list_of_type(new_row_indices, int):
                 for k, v in new_data.items():
-                    print(k, v)
                     if hasattr(v, "shape") and len(v.shape) > 1:
                         new_data[k] = v[new_row_indices, :]
                     else:
