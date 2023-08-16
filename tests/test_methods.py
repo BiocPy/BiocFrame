@@ -259,6 +259,7 @@ def test_nested_biocFrame_slice():
     assert slice.dims == (2, 2)
 
     slice_nbframe = slice.column("nested")
+    assert isinstance(slice_nbframe, BiocFrame)
     assert len(slice_nbframe.dims) == 2
     assert slice_nbframe.dims == (2, 3)
 

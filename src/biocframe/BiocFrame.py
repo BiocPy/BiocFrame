@@ -431,7 +431,12 @@ class BiocFrame:
                     new_data[k] = v[new_row_indices]
             elif is_list_of_type(new_row_indices, int):
                 for k, v in new_data.items():
-                    new_data[k] = [v[idx] for idx in new_row_indices]
+                    print(k, v)
+                    if hasattr(v, "shape") and len(v.shape) > 1:
+                        new_data[k] = v[new_row_indices, :]
+                    else:
+                        new_data[k] = [v[idx] for idx in new_row_indices]
+
             else:
                 raise TypeError("row slice: not all row slices are integers!")
         else:
