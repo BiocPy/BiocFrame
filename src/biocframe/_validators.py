@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, MutableMapping, Sequence, Union
+from typing import Any, MutableMapping, Optional, Sequence, Union
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -7,79 +7,83 @@ __license__ = "MIT"
 
 
 def validate_rows(
-    numberOfRows: int,
-    rowNames: Sequence[str],
     data: MutableMapping[str, Union[Sequence[Any], MutableMapping]],
+    number_of_rows: Optional[int],
+    row_names: Optional[Sequence[str]],
 ) -> int:
-    """Validate rows of `BiocFrame` object.
+    """Validate rows of :py:class:`biocframe.BiocFrame` object.
 
     Args:
-        numberOfRows (int, optional): Number of rows. Defaults to None.
-        rowNames (Sequence[str], optional): Row index values . Defaults to None.
         data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional):
-            a dictionary of columns and their values. all columns must have the
+            Dictionary of columns and their values. all columns must have the
             same length. Defaults to {}.
+        number_of_rows (int, optional): Number of rows.
+        row_names (Sequence[str], optional): Row index values.
+
 
     Raises:
-        ValueError: when `numberOfRows` and `data` do not agree.
+        ValueError: when ``number_of_rows`` and ``data`` do not agree.
 
     Returns:
-        int: validated number of rows in data.
+        int: Validated number of rows in ``data``.
     """
     incorrect_len_keys = []
     for k, v in data.items():
         tmpLen = len(v)
 
-        if numberOfRows is None:
-            numberOfRows = tmpLen
-        elif numberOfRows != tmpLen:
+        if number_of_rows is None:
+            number_of_rows = tmpLen
+        elif number_of_rows != tmpLen:
             incorrect_len_keys.append(k)
 
     if len(incorrect_len_keys) > 0:
         raise ValueError(
-            "Expected all objects in `data` to be equal"
-            f"length, these columns: {incorrect_len_keys} do not"
+            "`BiocFrame` expects all column in ``data`` to be equal"
+            f"length, these columns: {incorrect_len_keys} do not."
         )
 
-    if rowNames is not None:
-        if not validate_unique_list(rowNames):
-            raise ValueError("rowNames must be unique!")
+    if row_names is not None:
+        if not validate_unique_list(row_names):
+            raise ValueError("`row_names` must be unique!")
 
-        if numberOfRows is None:
-            numberOfRows = len(rowNames)
+        if number_of_rows is None:
+            number_of_rows = len(row_names)
         else:
-            if len(rowNames) != numberOfRows:
-                raise ValueError("length of `rowNames` and `numberOfRows` do not match")
+            if len(row_names) != number_of_rows:
+                raise ValueError(
+                    "Length of `row_names` and `number_of_rows` do not match, "
+                    f"l{len(row_names)} != {number_of_rows}"
+                )
 
-    return numberOfRows
+    return number_of_rows
 
 
 def validate_cols(
-    columnNames: Sequence[str],
+    column_names: Sequence[str],
     data: MutableMapping[str, Union[Sequence[Any], MutableMapping]],
 ) -> Sequence[str]:
-    """Validate columns of a `BiocFrame` object.
+    """Validate columns of a :py:class:`biocframe.BiocFrame` object.
 
     Args:
-        columnNames (Sequence[str], optional): column names, if not provided,
+        column_names (Sequence[str], optional): Column names, if not provided,
             its automatically inferred from data. Defaults to None.
         data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional):
             a dictionary of columns and their values. all columns must have the
             same length. Defaults to {}.. Defaults to {}.
 
     Raises:
-        ValueError: when `columnNames` and `data` do not agree.
+        ValueError: when `column_names` and `data` do not agree.
         TypeError: incorrect column type.
 
     Returns:
         Sequence[str]: list of columns names.
     """
-    if columnNames is None:
-        columnNames = list(data.keys())
+    if column_names is None:
+        column_names = list(data.keys())
     else:
-        if len(columnNames) != len(data.keys()):
+        if len(column_names) != len(data.keys()):
             raise ValueError(
-                "Number of columns mismatch between `columnNames` and `data`"
+                "Number of columns mismatch between `column_names` and `data`"
             )
 
     # Technically should throw an error but
@@ -87,7 +91,7 @@ def validate_cols(
     # column names and dict order should be the same
     incorrect_types = []
     new_odata = OrderedDict()
-    for k in columnNames:
+    for k in column_names:
         # check for types
         col_value = data[k]
 
@@ -105,7 +109,7 @@ def validate_cols(
 
     data = new_odata
 
-    return columnNames, data
+    return column_names, data
 
 
 def validate_unique_list(values: Sequence) -> bool:
