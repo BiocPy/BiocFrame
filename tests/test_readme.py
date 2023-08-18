@@ -1,5 +1,6 @@
-from biocframe.BiocFrame import BiocFrame
 from random import random
+
+from biocframe.BiocFrame import BiocFrame
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -7,7 +8,6 @@ __license__ = "MIT"
 
 
 def test_bframe():
-
     obj = {
         "seqnames": [
             "chr1",

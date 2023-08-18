@@ -106,7 +106,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "BiocFrame"
-copyright = "2022, jkanche"
+copyright = "2023, jkanche"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
