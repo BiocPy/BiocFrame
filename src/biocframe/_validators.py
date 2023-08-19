@@ -11,7 +11,7 @@ def validate_rows(
     number_of_rows: Optional[int],
     row_names: Optional[Sequence[str]],
 ) -> int:
-    """Validate rows of :py:class:`biocframe.BiocFrame` object.
+    """Validate rows of :py:class:`~biocframe.BiocFrame.BiocFrame` object.
 
     Args:
         data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional):
