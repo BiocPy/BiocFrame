@@ -166,6 +166,14 @@ pygments_style = "sphinx"
 # If this is True, todo emits a warning for each TODO entries. The default is False.
 todo_emit_warnings = True
 
+autodoc_default_options = {
+    # 'members': 'var1, var2',
+    # 'member-order': 'bysource',
+    'special-members': True,
+    'undoc-members': True,
+    'exclude-members': '__weakref__, __dict__, __str__, __module__, __init__'
+}
+
 
 # -- Options for HTML output -------------------------------------------------
 

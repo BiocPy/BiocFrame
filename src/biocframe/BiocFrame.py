@@ -44,7 +44,7 @@ class BiocFrameIter:
 
 
 class BiocFrame:
-    """`BiocFrame` is an alternative to :class:`pandas.DataFrame`, with
+    """`BiocFrame` is an alternative to :class:`~pandas.DataFrame`, with
     support for nested column types.
 
     Columns may extend :class:`~collections.abc.Sequence`,
@@ -54,8 +54,7 @@ class BiocFrame:
 
     Typical usage example:
 
-    To create a BiocFrame object, simply pass in the column representation of the
-    dataframe.
+    To create a **BiocFrame** object, simply pass in the column representation as a dictionary.
 
     .. code-block:: python
 
@@ -464,17 +463,17 @@ class BiocFrame:
         self,
         args: SlicerArgTypes,
     ) -> "BiocFrame":
-        """Subset the object.
+        """Subset the data frame.
 
         This operation returns a new object with the same type as caller.
         If you need to access specific rows or columns, use the
-        :py:class:meth:`~biocframe.BiocFrame.BiocFrame.row` or
-        :py:class:meth:`~biocframe.BiocFrame.BiocFrame.column`
+        :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or
+        :py:meth:`~biocframe.BiocFrame.BiocFrame.column`
         methods.
 
         Usage:
 
-            .. code-block:: python
+        .. code-block:: python
 
             # made up chromosome locations and ensembl ids.
             obj = {
@@ -496,35 +495,28 @@ class BiocFrame:
 
         Args:
             args (SlicerArgTypes): A Tuple of slicer arguments to subset rows and
-                columns.
+                columns. An element in ``args`` may be,
 
-                An element in ``args`` may be,
-
-                - List of booleans, True to keep the
-                row/column, False to remove. The length of the boolean vector must
-                be the same as number of rows/columns.
+                - List of booleans, True to keep the row/column, False to remove.
+                    The length of the boolean vector must be the same as number of rows/columns.
 
                 - List of integer positions along rows/columns to keep.
 
-                - A :py:func:`slice` object specifying the list of
-                positions to keep.
+                - A :py:class:`slice` object specifying the list of positions to keep.
 
                 - A list of index names to keep. For rows, the object must contain unique
-                :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` and for columns must
-                contain unique
-                :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`
+                    :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` and for columns must
+                    contain unique :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
-                - a scalar integer to subset either a single row or column position.
-                Alternatively, you might want to use
-                :py:class:meth:`~biocframe.BiocFrame.BiocFrame.row` or
-                :py:class:meth:`~biocframe.BiocFrame.BiocFrame.column`
-                methods.
+                - A scalar integer to subset either a single row or column position.
+                    Alternatively, you might want to use
+                    :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or
+                    :py:meth:`~biocframe.BiocFrame.BiocFrame.column` methods.
 
-                - a singular string to subset either a single row or column label/index.
-                Alternatively, you might want to use
-                :py:class:meth:`~biocframe.BiocFrame.BiocFrame.row` or
-                :py:class:meth:`~biocframe.BiocFrame.BiocFrame.column`
-                methods.
+                - A singular string to subset either a single row or column label/index.
+                    Alternatively, you might want to use
+                    :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or
+                    :py:meth:`~biocframe.BiocFrame.BiocFrame.column` methods.
 
         Raises:
             ValueError: Too many slices provided.
@@ -572,6 +564,24 @@ class BiocFrame:
     def __setitem__(self, name: str, value: Sequence):
         """Add or re-assign a value to a column.
 
+        Usage:
+
+        .. code-block:: python
+
+            # made up chromosome locations and ensembl ids.
+            obj = {
+                "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
+                "symbol": ["MAP1A", "BIN1", "ESR1"],
+                "ranges": BiocFrame({
+                    "chr": ["chr1", "chr2", "chr3"]
+                    "start": [1000, 1100, 5000],
+                    "end": [1100, 4000, 5500]
+                ),
+            }
+            bframe = BiocFrame(obj)
+
+            bframe["symbol"] = ["gene_a", "gene_b", "gene_c"]
+
         Args:
             name (str): Name of the column.
             value (Sequence): New value to set.
@@ -594,6 +604,24 @@ class BiocFrame:
     # TODO: implement in-place or view
     def __delitem__(self, name: str):
         """Remove column.
+
+        Usage:
+
+        .. code-block:: python
+
+            # made up chromosome locations and ensembl ids.
+            obj = {
+                "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
+                "symbol": ["MAP1A", "BIN1", "ESR1"],
+                "ranges": BiocFrame({
+                    "chr": ["chr1", "chr2", "chr3"]
+                    "start": [1000, 1100, 5000],
+                    "end": [1100, 4000, 5500]
+                ),
+            }
+            bframe = BiocFrame(obj)
+
+            delete bframe["symbol"]
 
         Args:
             name (str): Name of the column.
@@ -638,9 +666,9 @@ class BiocFrame:
 
         Usage:
 
-            .. code-block:: python
+        .. code-block:: python
 
-                np.sqrt(biocframe)
+            np.sqrt(biocframe)
 
         Raises:
             TypeError: If ``input`` is not a :py:class:`~biocframe.BiocFrame.BiocFrame`

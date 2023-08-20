@@ -1,6 +1,7 @@
 # BiocFrame
 
-This package implements a lite weight data frame like class (comparable to Pandas `DataFrame`) but supports more flexible column types, e.g: nested columns.
+This package provides a data-frame representation similar to a pandas `DataFrame`, with
+support for nested column types.
 
 ## Install
 
@@ -16,18 +17,19 @@ pip install biocframe
 :maxdepth: 2
 
 Overview <readme>
+Getting Started <getting_started>
+Module Reference <api/modules>
 Contributions & Help <contributing>
 License <license>
 Authors <authors>
 Changelog <changelog>
-Module Reference <api/modules>
 ```
 
 ## Indices and tables
 
-* {ref}`genindex`
-* {ref}`modindex`
-* {ref}`search`
+- {ref}`genindex`
+- {ref}`modindex`
+- {ref}`search`
 
 [Sphinx]: http://www.sphinx-doc.org/
 [Markdown]: https://daringfireball.net/projects/markdown/

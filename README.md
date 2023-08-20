@@ -11,10 +11,14 @@
 -->
 
 [![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
+[![PyPI-Server](https://img.shields.io/pypi/v/BiocFrame.svg)](https://pypi.org/project/BiocFrame/)
+![Unit tests](https://github.com/BiocPy/BiocFrame/actions/workflows/pypi-test.yml/badge.svg)
 
 # BiocFrame
 
-This package implements a lite weight data frame like class (comparable to Pandas `DataFrame`) but supports more flexible column types, e.g: nested columns.
+This package provides a data-frame representation similar to a pandas `DataFrame`, with
+support for nested column types.
+
 
 ## Install
 
@@ -96,5 +100,5 @@ For more use cases including subset, checkout the [documentation](https://biocpy
 
 ## Note
 
-This project has been set up using PyScaffold 4.3. For details and usage
+This project has been set up using PyScaffold 4.5. For details and usage
 information on PyScaffold see https://pyscaffold.org/.
