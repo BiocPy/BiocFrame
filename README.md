@@ -16,7 +16,7 @@
 
 # BiocFrame
 
-This package provides a data-frame representation similar to a pandas `DataFrame`, with
+This package provides a data frame representation similar to a pandas `DataFrame`, with
 support for nested column types.
 
 
