@@ -32,11 +32,11 @@ def test_bframe():
     bframe = BiocFrame(obj)
 
     assert bframe is not None
-    assert len(bframe.columnNames) == 6
+    assert len(bframe.column_names) == 6
     assert (
         len(
             list(
-                set(bframe.columnNames).difference(
+                set(bframe.column_names).difference(
                     ["seqnames", "starts", "ends", "strand", "score", "GC"]
                 )
             )
@@ -48,13 +48,13 @@ def test_bframe():
     assert bframe.dims == (200, 6)
 
     # assign new columns
-    bframe.columnNames = ["chr", "start", "end", "strands", "scores", "GCs"]
+    bframe.column_names = ["chr", "start", "end", "strands", "scores", "GCs"]
 
     sliced_df = bframe[3:7, 2:5]
 
     assert sliced_df is not None
     assert sliced_df.dims == (4, 3)
     assert (
-        len(list(set(sliced_df.columnNames).difference(["end", "strands", "scores"])))
+        len(list(set(sliced_df.column_names).difference(["end", "strands", "scores"])))
         == 0
     )

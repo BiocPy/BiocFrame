@@ -57,7 +57,7 @@ def test_initialize_pandas():
         }
     )
 
-    bframe = biocframe.fromPandas(df_gr)
+    bframe = biocframe.from_pandas(df_gr)
     assert bframe is not None
 
 
@@ -67,7 +67,7 @@ def test_empty_obj():
 
 
 def test_empty_obj_with_size():
-    bframe = BiocFrame({}, numberOfRows=100)
+    bframe = BiocFrame({}, number_of_rows=100)
     assert bframe is not None
 
 
@@ -91,7 +91,7 @@ def test_should_fail():
             }
         )
 
-        biocframe.fromPandas(df_gr)
+        biocframe.from_pandas(df_gr)
 
 
 def test_nested_biocFrame():

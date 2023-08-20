@@ -30,4 +30,4 @@ def from_pandas(input: DataFrame) -> BiocFrame:
     if input.index is not None:
         rindex = input.index.to_list()
 
-    return BiocFrame(data=rdata, rowNames=rindex, columnNames=input.columns.to_list())
+    return BiocFrame(data=rdata, row_names=rindex, column_names=input.columns.to_list())

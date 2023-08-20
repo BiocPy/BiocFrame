@@ -32,11 +32,11 @@ def test_bframe_basic_ops():
     bframe = BiocFrame(obj)
 
     assert bframe is not None
-    assert len(bframe.columnNames) == 3
+    assert len(bframe.column_names) == 3
     assert (
         len(
             list(
-                set(bframe.columnNames).difference(
+                set(bframe.column_names).difference(
                     [
                         "column1",
                         "nested",
@@ -51,10 +51,10 @@ def test_bframe_basic_ops():
     assert len(bframe.dims) == 2
     assert bframe.dims == (3, 3)
 
-    assert bframe.rowNames is None
+    assert bframe.row_names is None
 
-    assert bframe.columnNames is not None
-    assert len(bframe.columnNames) == 3
+    assert bframe.column_names is not None
+    assert len(bframe.column_names) == 3
 
     assert bframe.metadata is None
 
@@ -87,19 +87,19 @@ def test_bframe_setters():
 
     assert bframe is not None
 
-    assert bframe.rowNames is None
+    assert bframe.row_names is None
 
-    bframe.rowNames = ["row1", "row2", "row3"]
-    assert bframe.rowNames is not None
-    assert len(bframe.rowNames) == 3
+    bframe.row_names = ["row1", "row2", "row3"]
+    assert bframe.row_names is not None
+    assert len(bframe.row_names) == 3
 
-    assert bframe.columnNames is not None
-    assert len(bframe.columnNames) == 3
+    assert bframe.column_names is not None
+    assert len(bframe.column_names) == 3
 
-    bframe.columnNames = ["col1", "col2", "col3"]
+    bframe.column_names = ["col1", "col2", "col3"]
 
-    assert bframe.columnNames is not None
-    assert len(bframe.columnNames) == 3
+    assert bframe.column_names is not None
+    assert len(bframe.column_names) == 3
 
     assert bframe.metadata is None
 
@@ -146,16 +146,16 @@ def test_bframe_setters_should_fail():
 
     assert bframe is not None
 
-    assert bframe.rowNames is None
+    assert bframe.row_names is None
 
     with pytest.raises(Exception):
-        bframe.rowNames = ["row1", "row2"]
+        bframe.row_names = ["row1", "row2"]
 
     with pytest.raises(Exception):
-        bframe.columnNames = ["col2", "col3"]
+        bframe.column_names = ["col2", "col3"]
 
-    assert bframe.columnNames is not None
-    assert len(bframe.columnNames) == 3
+    assert bframe.column_names is not None
+    assert len(bframe.column_names) == 3
 
     with pytest.raises(Exception):
         bframe["new_col"] = [2, 3]
@@ -199,8 +199,8 @@ def test_bframe_slice():
     slice = bframe[0:2, 0:2]
 
     assert slice is not None
-    assert len(slice.columnNames) == 2
-    assert len(list(set(slice.columnNames).difference(["column1", "nested"]))) == 0
+    assert len(slice.column_names) == 2
+    assert len(list(set(slice.column_names).difference(["column1", "nested"]))) == 0
 
     assert len(slice.dims) == 2
     assert slice.dims == (2, 2)
@@ -208,9 +208,9 @@ def test_bframe_slice():
     sliced_list = bframe[[0, 2], 0:2]
 
     assert sliced_list is not None
-    assert len(sliced_list.columnNames) == 2
+    assert len(sliced_list.column_names) == 2
     assert (
-        len(list(set(sliced_list.columnNames).difference(["column1", "nested"]))) == 0
+        len(list(set(sliced_list.column_names).difference(["column1", "nested"]))) == 0
     )
 
     assert len(sliced_list.dims) == 2
@@ -295,8 +295,8 @@ def test_nested_biocFrame_slice():
     slice = bframe[0:2, 0:2]
 
     assert slice is not None
-    assert len(slice.columnNames) == 2
-    assert len(list(set(slice.columnNames).difference(["column1", "nested"]))) == 0
+    assert len(slice.column_names) == 2
+    assert len(list(set(slice.column_names).difference(["column1", "nested"]))) == 0
 
     assert len(slice.dims) == 2
     assert slice.dims == (2, 2)
@@ -339,7 +339,7 @@ def test_bframe_iter():
 
 
 def test_slice_empty_obj():
-    bframe = BiocFrame({}, numberOfRows=100)
+    bframe = BiocFrame({}, number_of_rows=100)
     assert bframe is not None
 
     sliced_bframe = bframe[10:30, :]

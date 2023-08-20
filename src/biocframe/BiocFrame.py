@@ -129,7 +129,7 @@ class BiocFrame:
         """
 
         self._number_of_rows = validate_rows(
-            self._number_of_rows, self._row_names, self._data
+            self._data, self._number_of_rows, self._row_names
         )
         self._column_names, self._data = validate_cols(self._column_names, self._data)
 
@@ -148,13 +148,13 @@ class BiocFrame:
 
     @property
     def shape(self) -> Tuple[int, int]:
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.dims`.
+        """Get shape of the data frame.
 
         Returns:
             Tuple[int, int]: A tuple  (m, n),
             where `m` is the number of rows, and `n` is the number of columns.
         """
-        return self.dims
+        return (self._number_of_rows, self._number_of_columns)
 
     @property
     def row_names(self) -> Optional[List]:
@@ -664,7 +664,7 @@ class BiocFrame:
     # compatibility with Pandas
     @property
     def columns(self) -> List:
-        """Alias to "py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
         Returns:
             List: List of column names.
@@ -673,7 +673,7 @@ class BiocFrame:
 
     @property
     def index(self) -> Optional[List]:
-        """Alias to "py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
 
         Returns:
             (List, optional): List of row names.
@@ -683,7 +683,7 @@ class BiocFrame:
     # compatibility with R interfaces
     @property
     def rownames(self) -> Optional[List]:
-        """Alias to "py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
 
         Returns:
             (List, optional): List of row index names.
@@ -692,7 +692,7 @@ class BiocFrame:
 
     @rownames.setter
     def rownames(self, names: List):
-        """Alias to "py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
 
         Args:
             names (List): new row index.
@@ -701,7 +701,7 @@ class BiocFrame:
 
     @property
     def colnames(self) -> List:
-        """Alias to "py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
         Returns:
             List: list of column names.
@@ -710,9 +710,19 @@ class BiocFrame:
 
     @colnames.setter
     def colnames(self, names: List):
-        """Alias to "py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
         Args:
             names (List): new column names.
         """
         self.colNames = names
+
+    @property
+    def dims(self) -> Tuple[int, int]:
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.shape`.
+
+        Returns:
+            Tuple[int, int]: A tuple  (m, n),
+            where `m` is the number of rows, and `n` is the number of columns.
+        """
+        return self.shape
