@@ -16,4 +16,4 @@ finally:
     del version, PackageNotFoundError
 
 from .BiocFrame import BiocFrame
-from .input import from_pandas
+from .io import from_pandas

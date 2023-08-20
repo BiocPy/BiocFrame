@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, MutableMapping, Optional, Sequence, Union
+from typing import MutableMapping, Optional, Sequence, Union
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -7,14 +7,14 @@ __license__ = "MIT"
 
 
 def validate_rows(
-    data: MutableMapping[str, Union[Sequence[Any], MutableMapping]],
+    data: MutableMapping[str, Union[Sequence, MutableMapping]],
     number_of_rows: Optional[int],
     row_names: Optional[Sequence[str]],
 ) -> int:
     """Validate rows of :py:class:`~biocframe.BiocFrame.BiocFrame` object.
 
     Args:
-        data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional):
+        data (MutableMapping[str, Union[Sequence, MutableMapping]], optional):
             Dictionary of columns and their values. all columns must have the
             same length. Defaults to {}.
         number_of_rows (int, optional): Number of rows.
@@ -22,7 +22,8 @@ def validate_rows(
 
 
     Raises:
-        ValueError: when ``number_of_rows`` and ``data`` do not agree.
+        ValueError: When ``number_of_rows`` does the match the length of
+            columns in ``data``.
 
     Returns:
         int: Validated number of rows in ``data``.
@@ -60,23 +61,23 @@ def validate_rows(
 
 def validate_cols(
     column_names: Sequence[str],
-    data: MutableMapping[str, Union[Sequence[Any], MutableMapping]],
+    data: MutableMapping[str, Union[Sequence, MutableMapping]],
 ) -> Sequence[str]:
     """Validate columns of a :py:class:`biocframe.BiocFrame` object.
 
     Args:
         column_names (Sequence[str], optional): Column names, if not provided,
             its automatically inferred from data. Defaults to None.
-        data (MutableMapping[str, Union[Sequence[Any], MutableMapping]], optional):
+        data (MutableMapping[str, Union[Sequence, MutableMapping]], optional):
             a dictionary of columns and their values. all columns must have the
-            same length. Defaults to {}.. Defaults to {}.
+            same length. Defaults to {}. Defaults to {}.
 
     Raises:
-        ValueError: when `column_names` and `data` do not agree.
-        TypeError: incorrect column type.
+        ValueError: When ``column_names`` do not match the keys from ``data``.
+        TypeError: Incorrect column type.
 
     Returns:
-        Sequence[str]: list of columns names.
+        Sequence[str]: List of columns names.
     """
     if column_names is None:
         column_names = list(data.keys())
@@ -84,6 +85,16 @@ def validate_cols(
         if len(column_names) != len(data.keys()):
             raise ValueError(
                 "Number of columns mismatch between `column_names` and `data`"
+            )
+
+        if len(set(column_names).difference(data.keys())) > 0:
+            raise ValueError(
+                "Not all columns from `column_names` are present in `data`"
+            )
+
+        if len(set(data.keys()).difference(column_names)) > 0:
+            raise ValueError(
+                "Not all columns from `data` are present in `column_names`"
             )
 
     # Technically should throw an error but
@@ -102,7 +113,7 @@ def validate_cols(
 
     if len(incorrect_types) > 0:
         raise TypeError(
-            "All columns in data must support `len` and "
+            "`data` only accepts columns that supports `len` and "
             f"`slice` operations. columns: {incorrect_types} "
             f"do not support these methods."
         )
@@ -113,12 +124,12 @@ def validate_cols(
 
 
 def validate_unique_list(values: Sequence) -> bool:
-    """Validate if a list has unique values.
+    """Validate if ``values`` contains unique values.
 
     Args:
-        values (Sequence): list of values to check.
+        values (Sequence): List to check.
 
     Returns:
-        bool: True if all values are unique else False.
+        bool: `True` if all values are unique else False.
     """
     return len(set(values)) == len(values)
