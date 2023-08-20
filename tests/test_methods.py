@@ -1,6 +1,7 @@
-from biocframe.BiocFrame import BiocFrame
-import pytest
 import numpy as np
+import pytest
+
+from biocframe.BiocFrame import BiocFrame
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -8,7 +9,6 @@ __license__ = "MIT"
 
 
 def test_bframe_basic_ops():
-
     obj = {
         "column1": [1, 2, 3],
         "nested": [
@@ -17,8 +17,14 @@ def test_bframe_basic_ops():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
-            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
         ],
         "column2": ["b", "n", "m"],
     }
@@ -26,19 +32,29 @@ def test_bframe_basic_ops():
     bframe = BiocFrame(obj)
 
     assert bframe is not None
-    assert len(bframe.columnNames) == 3
+    assert len(bframe.column_names) == 3
     assert (
-        len(list(set(bframe.columnNames).difference(["column1", "nested", "column2",])))
+        len(
+            list(
+                set(bframe.column_names).difference(
+                    [
+                        "column1",
+                        "nested",
+                        "column2",
+                    ]
+                )
+            )
+        )
         == 0
     )
 
     assert len(bframe.dims) == 2
     assert bframe.dims == (3, 3)
 
-    assert bframe.rowNames is None
+    assert bframe.row_names is None
 
-    assert bframe.columnNames is not None
-    assert len(bframe.columnNames) == 3
+    assert bframe.column_names is not None
+    assert len(bframe.column_names) == 3
 
     assert bframe.metadata is None
 
@@ -47,7 +63,6 @@ def test_bframe_basic_ops():
 
 
 def test_bframe_setters():
-
     obj = {
         "column1": [1, 2, 3],
         "nested": [
@@ -56,8 +71,14 @@ def test_bframe_setters():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
-            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
         ],
         "column2": ["b", "n", "m"],
     }
@@ -66,19 +87,19 @@ def test_bframe_setters():
 
     assert bframe is not None
 
-    assert bframe.rowNames is None
+    assert bframe.row_names is None
 
-    bframe.rowNames = ["row1", "row2", "row3"]
-    assert bframe.rowNames is not None
-    assert len(bframe.rowNames) == 3
+    bframe.row_names = ["row1", "row2", "row3"]
+    assert bframe.row_names is not None
+    assert len(bframe.row_names) == 3
 
-    assert bframe.columnNames is not None
-    assert len(bframe.columnNames) == 3
+    assert bframe.column_names is not None
+    assert len(bframe.column_names) == 3
 
-    bframe.columnNames = ["col1", "col2", "col3"]
+    bframe.column_names = ["col1", "col2", "col3"]
 
-    assert bframe.columnNames is not None
-    assert len(bframe.columnNames) == 3
+    assert bframe.column_names is not None
+    assert len(bframe.column_names) == 3
 
     assert bframe.metadata is None
 
@@ -101,7 +122,6 @@ def test_bframe_setters():
 
 
 def test_bframe_setters_should_fail():
-
     obj = {
         "column1": [1, 2, 3],
         "nested": [
@@ -110,8 +130,14 @@ def test_bframe_setters_should_fail():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
-            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
         ],
         "column2": ["b", "n", "m"],
     }
@@ -120,16 +146,16 @@ def test_bframe_setters_should_fail():
 
     assert bframe is not None
 
-    assert bframe.rowNames is None
+    assert bframe.row_names is None
 
     with pytest.raises(Exception):
-        bframe.rowNames = ["row1", "row2"]
+        bframe.row_names = ["row1", "row2"]
 
     with pytest.raises(Exception):
-        bframe.columnNames = ["col2", "col3"]
+        bframe.column_names = ["col2", "col3"]
 
-    assert bframe.columnNames is not None
-    assert len(bframe.columnNames) == 3
+    assert bframe.column_names is not None
+    assert len(bframe.column_names) == 3
 
     with pytest.raises(Exception):
         bframe["new_col"] = [2, 3]
@@ -149,7 +175,6 @@ def test_bframe_setters_should_fail():
 
 
 def test_bframe_slice():
-
     obj = {
         "column1": [1, 2, 3],
         "nested": [
@@ -158,8 +183,14 @@ def test_bframe_slice():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
-            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
         ],
         "column2": ["b", "n", "m"],
     }
@@ -168,17 +199,19 @@ def test_bframe_slice():
     slice = bframe[0:2, 0:2]
 
     assert slice is not None
-    assert len(slice.columnNames) == 2
-    assert len(list(set(slice.columnNames).difference(["column1", "nested"]))) == 0
+    assert len(slice.column_names) == 2
+    assert len(list(set(slice.column_names).difference(["column1", "nested"]))) == 0
 
     assert len(slice.dims) == 2
     assert slice.dims == (2, 2)
 
-    sliced_list = bframe[[0,2], 0:2]
+    sliced_list = bframe[[0, 2], 0:2]
 
     assert sliced_list is not None
-    assert len(sliced_list.columnNames) == 2
-    assert len(list(set(sliced_list.columnNames).difference(["column1", "nested"]))) == 0
+    assert len(sliced_list.column_names) == 2
+    assert (
+        len(list(set(sliced_list.column_names).difference(["column1", "nested"]))) == 0
+    )
 
     assert len(sliced_list.dims) == 2
     assert sliced_list.dims == (2, 2)
@@ -189,7 +222,6 @@ def test_bframe_slice():
 
 
 def test_bframe_delete():
-
     obj = {
         "column1": [1, 2, 3],
         "nested": [
@@ -198,8 +230,14 @@ def test_bframe_delete():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
-            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
         ],
         "column2": ["b", "n", "m"],
     }
@@ -212,7 +250,6 @@ def test_bframe_delete():
 
 
 def test_bframe_ufuncs():
-
     obj = {
         "column1": [1, 2, 3],
         "nested": [
@@ -221,8 +258,14 @@ def test_bframe_ufuncs():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
-            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
         ],
         "column2": ["b", "n", "m"],
     }
@@ -232,8 +275,8 @@ def test_bframe_ufuncs():
     new_bframe = np.sqrt(bframe)
     assert new_bframe is not None
 
-def test_nested_biocFrame_slice():
 
+def test_nested_biocFrame_slice():
     obj = {
         "column1": [1, 2, 3],
         "nested": BiocFrame(
@@ -252,8 +295,8 @@ def test_nested_biocFrame_slice():
     slice = bframe[0:2, 0:2]
 
     assert slice is not None
-    assert len(slice.columnNames) == 2
-    assert len(list(set(slice.columnNames).difference(["column1", "nested"]))) == 0
+    assert len(slice.column_names) == 2
+    assert len(list(set(slice.column_names).difference(["column1", "nested"]))) == 0
 
     assert len(slice.dims) == 2
     assert slice.dims == (2, 2)
@@ -263,8 +306,8 @@ def test_nested_biocFrame_slice():
     assert len(slice_nbframe.dims) == 2
     assert slice_nbframe.dims == (2, 3)
 
-def test_bframe_iter():
 
+def test_bframe_iter():
     obj = {
         "column1": [1, 2, 3],
         "nested": [
@@ -273,8 +316,14 @@ def test_bframe_iter():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
-            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
         ],
         "column2": ["b", "n", "m"],
     }
@@ -283,13 +332,14 @@ def test_bframe_iter():
     assert bframe is not None
 
     iterCount = 0
-    for k,v in bframe:
+    for k, v in bframe:
         iterCount += 1
 
     assert iterCount == bframe.dims[0]
 
+
 def test_slice_empty_obj():
-    bframe = BiocFrame({}, numberOfRows=100)
+    bframe = BiocFrame({}, number_of_rows=100)
     assert bframe is not None
 
     sliced_bframe = bframe[10:30, :]

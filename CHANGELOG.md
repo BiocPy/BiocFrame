@@ -1,5 +1,7 @@
 # Changelog
 
+## Version 0.3 (development)
+- pythonify the entire code base.
 
 ## Version 0.2
 - refactor DataFrame as BiocFrame

@@ -1,7 +1,8 @@
-from biocframe.BiocFrame import BiocFrame
 import pandas as pd
 import pytest
+
 import biocframe
+from biocframe.BiocFrame import BiocFrame
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -17,8 +18,14 @@ def test_initialize_obj():
                 "ncol2": ["a", "b", "c"],
                 "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
             },
-            {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
-            {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
         ],
         "column2": ["b", "n", "m"],
     }
@@ -37,14 +44,20 @@ def test_initialize_pandas():
                     "ncol2": ["a", "b", "c"],
                     "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
                 },
-                {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
-                {"ncol1": [5, 6], "ncol2": ["b", "c"],},
+                {
+                    "ncol2": ["a"],
+                    "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+                },
+                {
+                    "ncol1": [5, 6],
+                    "ncol2": ["b", "c"],
+                },
             ],
             "column2": ["b", "n", "m"],
         }
     )
 
-    bframe = biocframe.fromPandas(df_gr)
+    bframe = biocframe.from_pandas(df_gr)
     assert bframe is not None
 
 
@@ -54,7 +67,7 @@ def test_empty_obj():
 
 
 def test_empty_obj_with_size():
-    bframe = BiocFrame({}, numberOfRows=100)
+    bframe = BiocFrame({}, number_of_rows=100)
     assert bframe is not None
 
 
@@ -69,17 +82,19 @@ def test_should_fail():
                         "ncol2": ["a", "b", "c"],
                         "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
                     },
-                    {"ncol2": ["a"], "deep": {"dcol1": ["j"], "dcol2": ["a"]},},
+                    {
+                        "ncol2": ["a"],
+                        "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+                    },
                 ],
                 "column2": ["b", "n", "m"],
             }
         )
 
-        biocframe.fromPandas(df_gr)
+        biocframe.from_pandas(df_gr)
 
 
 def test_nested_biocFrame():
-
     obj = {
         "column1": [1, 2, 3],
         "nested": BiocFrame(
