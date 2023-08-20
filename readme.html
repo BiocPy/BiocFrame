@@ -1,12 +1,12 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="./">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Contributing" href="contributing.html" /><link rel="prev" title="BiocFrame" href="index.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Tutorial" href="getting_started.html" /><link rel="prev" title="BiocFrame" href="index.html" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2023.07.26 -->
-        <title>BiocFrame - BiocFrame 0.2.16 documentation</title>
+    <!-- Generated with Sphinx 7.2.2 and Furo 2023.08.19 -->
+        <title>BiocFrame - BiocFrame 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.2.16 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.3.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.2.16 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -156,17 +156,18 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/modules.html">Module Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="api/biocframe.html">biocframe package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of biocframe package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/biocframe.io.html">biocframe.io package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributions &amp; Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api/modules.html">Module Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="api/biocframe.html">biocframe package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of biocframe package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/biocframe.input.html">biocframe.input package</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 
 </div>
@@ -212,21 +213,25 @@
 [![Monthly Downloads](https://pepy.tech/badge/BiocFrame/month)](https://pepy.tech/project/BiocFrame)
 [![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter)](https://twitter.com/BiocFrame)
 -->
-<p><a class="reference external" href="https://pyscaffold.org/"><img alt="Project generated with PyScaffold" src="https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold" /></a></p>
+<p><a class="reference external" href="https://pyscaffold.org/"><img alt="Project generated with PyScaffold" src="https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold" /></a>
+<a class="reference external" href="https://pypi.org/project/BiocFrame/"><img alt="PyPI-Server" src="https://img.shields.io/pypi/v/BiocFrame.svg" /></a>
+<img alt="Unit tests" src="https://github.com/BiocPy/BiocFrame/actions/workflows/pypi-test.yml/badge.svg" /></p>
 <section class="tex2jax_ignore mathjax_ignore" id="biocframe">
-<h1>BiocFrame<a class="headerlink" href="#biocframe" title="Permalink to this heading">#</a></h1>
-<p>This package implements a lite weight data frame like class (comparable to Pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>) but supports more flexible column types, e.g: nested columns.</p>
+<h1>BiocFrame<a class="headerlink" href="#biocframe" title="Link to this heading">#</a></h1>
+<p>This package provides a data frame representation similar to a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>, with
+support for nested column types.</p>
 <section id="install">
-<h2>Install<a class="headerlink" href="#install" title="Permalink to this heading">#</a></h2>
+<h2>Install<a class="headerlink" href="#install" title="Link to this heading">#</a></h2>
 <p>Package is published to <a class="reference external" href="https://pypi.org/project/biocframe/">PyPI</a></p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>biocframe
 </pre></div>
 </div>
 </section>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <p>Lets create a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> from a dictionary</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
 
 <span class="n">bframe</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
@@ -253,22 +258,22 @@
 </pre></div>
 </div>
 <section id="access-properties">
-<h3>Access Properties<a class="headerlink" href="#access-properties" title="Permalink to this heading">#</a></h3>
+<h3>Access Properties<a class="headerlink" href="#access-properties" title="Link to this heading">#</a></h3>
 <p>Accessor methods/properties are available to access column names, row names and dims.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># find the dimensions</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
 
 <span class="c1"># get the column names</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">columnNames</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="setters">
-<h3>Setters<a class="headerlink" href="#setters" title="Permalink to this heading">#</a></h3>
+<h3>Setters<a class="headerlink" href="#setters" title="Link to this heading">#</a></h3>
 <p>Using the Pythonic way to set properties</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set new column names</span>
-<span class="n">bframe</span><span class="o">.</span><span class="n">columnNames</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span> <span class="n">new</span> <span class="n">colnames</span> <span class="o">...</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">columnNames</span><span class="p">)</span>
+<span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">new_column_names</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
 
 <span class="c1"># add or reassign columns</span>
 
@@ -277,7 +282,7 @@
 </div>
 </section>
 <section id="slice-the-biocframe">
-<h3>Slice the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code><a class="headerlink" href="#slice-the-biocframe" title="Permalink to this heading">#</a></h3>
+<h3>Slice the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code><a class="headerlink" href="#slice-the-biocframe" title="Link to this heading">#</a></h3>
 <p>Currently slicing is only supported by indices or names (column names or row names). A future version may implement pandas query-like operations.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sliced_bframe</span> <span class="o">=</span> <span class="n">bframe</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
@@ -287,8 +292,8 @@
 </section>
 </section>
 <section id="note">
-<h2>Note<a class="headerlink" href="#note" title="Permalink to this heading">#</a></h2>
-<p>This project has been set up using PyScaffold 4.3. For details and usage
+<h2>Note<a class="headerlink" href="#note" title="Link to this heading">#</a></h2>
+<p>This project has been set up using PyScaffold 4.5. For details and usage
 information on PyScaffold see <a class="reference external" href="https://pyscaffold.org/">https://pyscaffold.org/</a>.</p>
 </section>
 </section>
@@ -298,12 +303,12 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="contributing.html">
+          <a class="next-page" href="getting_started.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Contributing</div>
+                <div class="title">Tutorial</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -322,7 +327,7 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, jkanche
+                Copyright &#169; 2023, jkanche
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -368,9 +373,9 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
       
     </aside>
   </div>
-</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=9a643dbe"></script>
+</div><script src="_static/documentation_options.js?v=e259d695"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
     </body>
 </html>

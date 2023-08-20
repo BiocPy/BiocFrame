@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Changelog" href="changelog.html" /><link rel="prev" title="License" href="license.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="biocframe" href="api/modules.html" /><link rel="prev" title="BiocFrame" href="readme.html" />
 
     <!-- Generated with Sphinx 7.2.2 and Furo 2023.08.19 -->
-        <title>Contributors - BiocFrame 0.3.0 documentation</title>
+        <title>Tutorial - BiocFrame 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -134,7 +134,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -156,7 +156,7 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Getting Started</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/modules.html">Module Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="api/biocframe.html">biocframe package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of biocframe package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/biocframe.io.html">biocframe.io package</a></li>
@@ -166,7 +166,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributions &amp; Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 </ul>
 
@@ -196,17 +196,72 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="contributors">
-<h1>Contributors<a class="headerlink" href="#contributors" title="Link to this heading">#</a></h1>
-<ul class="simple">
-<li><p>jkanche <a class="reference external" href="mailto:jayaram&#46;kancherla&#37;&#52;&#48;gmail&#46;com">jayaram<span>&#46;</span>kancherla<span>&#64;</span>gmail<span>&#46;</span>com</a></p></li>
-</ul>
+          <section class="tex2jax_ignore mathjax_ignore" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading">#</a></h1>
+<p>To create a <strong>BiocFrame</strong> object, simply pass in the column representation as a dictionary.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
+
+<span class="n">bframe</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;seqnames&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;chr1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chr2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chr2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chr2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chr1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chr1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chr3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chr3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chr3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;chr3&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="o">*</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s2">&quot;starts&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
+        <span class="s2">&quot;ends&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">310</span><span class="p">),</span>
+        <span class="s2">&quot;strand&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+        <span class="s2">&quot;GC&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">random</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="access-properties">
+<h2>Access Properties<a class="headerlink" href="#access-properties" title="Link to this heading">#</a></h2>
+<p>Accessor methods/properties are available to access column names, row names and dims.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># find the dimensions</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+
+<span class="c1"># get the column names</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="setters">
+<h2>Setters<a class="headerlink" href="#setters" title="Link to this heading">#</a></h2>
+<p>Using the Pythonic way to set properties</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set new column names</span>
+<span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">column_names</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
+
+<span class="c1"># add or reassign columns</span>
+
+<span class="n">bframe</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="slice-the-biocframe">
+<h2>Slice the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code><a class="headerlink" href="#slice-the-biocframe" title="Link to this heading">#</a></h2>
+<p>Currently slicing is only supported by indices or names (column names or row names). A future version may implement pandas query-like operations.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sliced_bframe</span> <span class="o">=</span> <span class="n">bframe</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
 </section>
 
         </article>
@@ -214,23 +269,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="changelog.html">
+          <a class="next-page" href="api/modules.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Changelog</div>
+                <div class="title">biocframe</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="license.html">
+          <a class="prev-page" href="readme.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">License</div>
+                <div class="title">BiocFrame</div>
                 
               </div>
             </a>
@@ -252,8 +307,29 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Tutorial</a><ul>
+<li><a class="reference internal" href="#access-properties">Access Properties</a></li>
+<li><a class="reference internal" href="#setters">Setters</a></li>
+<li><a class="reference internal" href="#slice-the-biocframe">Slice the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

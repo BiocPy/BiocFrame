@@ -1,12 +1,12 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="biocframe package" href="biocframe.html" /><link rel="prev" title="Changelog" href="../changelog.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="biocframe package" href="biocframe.html" /><link rel="prev" title="Tutorial" href="../getting_started.html" />
 
-    <!-- Generated with Sphinx 7.1.2 and Furo 2023.07.26 -->
-        <title>biocframe - BiocFrame 0.2.16 documentation</title>
+    <!-- Generated with Sphinx 7.2.2 and Furo 2023.08.19 -->
+        <title>biocframe - BiocFrame 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">BiocFrame 0.2.16 documentation</div></a>
+      <a href="../index.html"><div class="brand">BiocFrame 0.3.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.2.16 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -156,17 +156,18 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Module Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="biocframe.html">biocframe package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of biocframe package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="biocframe.io.html">biocframe.io package</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributions &amp; Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Module Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="biocframe.html">biocframe package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of biocframe package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="biocframe.input.html">biocframe.input package</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 
 </div>
@@ -202,46 +203,58 @@
         </div>
         <article role="main">
           <section id="biocframe">
-<h1>biocframe<a class="headerlink" href="#biocframe" title="Permalink to this heading">#</a></h1>
+<h1>biocframe<a class="headerlink" href="#biocframe" title="Link to this heading">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="biocframe.html">biocframe package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="biocframe.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="biocframe.input.html">biocframe.input package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="biocframe.input.html#module-biocframe.input">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="biocframe.io.html">biocframe.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.io.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.io.html#biocframe-io-from-pandas-module">biocframe.io.from_pandas module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.io.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="biocframe.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="biocframe.html#module-biocframe.BiocFrame">biocframe.BiocFrame module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="biocframe.html#biocframe-biocframe-module">biocframe.BiocFrame module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame"><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.data"><code class="docutils literal notranslate"><span class="pre">BiocFrame.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.number_of_rows"><code class="docutils literal notranslate"><span class="pre">BiocFrame.number_of_rows</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.row_names"><code class="docutils literal notranslate"><span class="pre">BiocFrame.row_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.column_names"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.metadata"><code class="docutils literal notranslate"><span class="pre">BiocFrame.metadata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.__array_ufunc__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__array_ufunc__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.__delitem__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__delitem__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.__getitem__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__getitem__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.__iter__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__iter__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.__len__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__len__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.__setitem__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__setitem__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.colnames"><code class="docutils literal notranslate"><span class="pre">BiocFrame.colnames</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.columnNames"><code class="docutils literal notranslate"><span class="pre">BiocFrame.columnNames</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#id0"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column_names</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.columns</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.data"><code class="docutils literal notranslate"><span class="pre">BiocFrame.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#id1"><code class="docutils literal notranslate"><span class="pre">BiocFrame.data</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.dims"><code class="docutils literal notranslate"><span class="pre">BiocFrame.dims</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.hasColumn"><code class="docutils literal notranslate"><span class="pre">BiocFrame.hasColumn()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.has_column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.has_column()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.index"><code class="docutils literal notranslate"><span class="pre">BiocFrame.index</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.metadata"><code class="docutils literal notranslate"><span class="pre">BiocFrame.metadata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#id2"><code class="docutils literal notranslate"><span class="pre">BiocFrame.metadata</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.row"><code class="docutils literal notranslate"><span class="pre">BiocFrame.row()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.rowNames"><code class="docutils literal notranslate"><span class="pre">BiocFrame.rowNames</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#id3"><code class="docutils literal notranslate"><span class="pre">BiocFrame.row_names</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.rownames"><code class="docutils literal notranslate"><span class="pre">BiocFrame.rownames</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.shape"><code class="docutils literal notranslate"><span class="pre">BiocFrame.shape</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.toPandas"><code class="docutils literal notranslate"><span class="pre">BiocFrame.toPandas()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.to_pandas"><code class="docutils literal notranslate"><span class="pre">BiocFrame.to_pandas()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrameIter"><code class="docutils literal notranslate"><span class="pre">BiocFrameIter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrameIter"><code class="docutils literal notranslate"><span class="pre">BiocFrameIter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrameIter.__iter__"><code class="docutils literal notranslate"><span class="pre">BiocFrameIter.__iter__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrameIter.__next__"><code class="docutils literal notranslate"><span class="pre">BiocFrameIter.__next__()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="biocframe.html#module-biocframe.utils">biocframe.utils module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="biocframe.html#biocframe.utils.match_to_indices"><code class="docutils literal notranslate"><span class="pre">match_to_indices()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="biocframe.html#module-biocframe">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="biocframe.html#biocframe-utils-module">biocframe.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="biocframe.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -262,14 +275,14 @@
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="../changelog.html">
+          <a class="prev-page" href="../getting_started.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Changelog</div>
+                <div class="title">Tutorial</div>
                 
               </div>
             </a>
@@ -277,7 +290,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, jkanche
+                Copyright &#169; 2023, jkanche
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -297,9 +310,9 @@
       
     </aside>
   </div>
-</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9a643dbe"></script>
+</div><script src="../_static/documentation_options.js?v=e259d695"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
     </body>
 </html>
