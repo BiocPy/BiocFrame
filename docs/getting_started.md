@@ -39,7 +39,7 @@ Accessor methods/properties are available to access column names, row names and 
 print(bframe.dims)
 
 # get the column names
-print(bframe.columnNames)
+print(bframe.column_names)
 ```
 
 ## Setters
@@ -48,8 +48,8 @@ Using the Pythonic way to set properties
 
 ```python
 # set new column names
-bframe.columnNames = [... new colnames ...]
-print(bframe.columnNames)
+bframe.column_names = [..., column_names, ...]
+print(bframe.column_names)
 
 # add or reassign columns
 
