@@ -33,6 +33,7 @@ pip install biocframe
 Lets create a `BiocFrame` from a dictionary
 
 ```python
+from random import random
 from biocframe import BiocFrame
 
 bframe = BiocFrame(

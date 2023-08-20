@@ -3,6 +3,8 @@ from typing import Dict, List, MutableMapping, Optional, Sequence, Tuple, Union
 
 from pandas import DataFrame, Series
 from pandas.api.types import is_numeric_dtype
+from rich.console import Console
+from rich.table import Table
 
 from ._type_checks import is_list_of_type
 from ._types import SlicerArgTypes, SlicerTypes
@@ -138,12 +140,35 @@ class BiocFrame:
             self._number_of_rows = 0
 
     def __str__(self) -> str:
-        pattern = (
-            f"Class BiocFrame with {self.dims[0]} X {self.dims[1]} (rows, columns)\n"
-            f"  column names: {self.column_names if self._number_of_columns > 0 else None}\n"
-            f"  contains row index?: {self.row_names is not None}"
+        table = Table(
+            title=f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns",
+            caption=f"contains row names?: {self.row_names is not None}",
+            show_header=True,
+            header_style="bold",
         )
-        return pattern
+        for col in self.column_names:
+            table.add_column(str(col))
+
+        # first three rows
+        for r in range(3):
+            _row = self.row(r)
+            vals = list(_row.values())
+            res = [str(v) for v in vals]
+            table.add_row(*res)
+
+        # add ...
+        table.add_row(*["..." for _ in range(len(self.column_names))])
+
+        # last three rows
+        for r in range(len(self) - 3, len(self)):
+            _row = self.row(r)
+            vals = list(_row.values())
+            res = [str(v) for v in vals]
+            table.add_row(*res)
+
+        Console().print(table)
+        return ""
+        # return pattern
 
     @property
     def shape(self) -> Tuple[int, int]:
