@@ -174,6 +174,9 @@ autodoc_default_options = {
     'exclude-members': '__weakref__, __dict__, __str__, __module__, __init__'
 }
 
+autosummary_generate = True
+autosummary_imported_members = True
+
 
 # -- Options for HTML output -------------------------------------------------
 
