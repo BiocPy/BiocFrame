@@ -8,8 +8,7 @@ __license__ = "MIT"
 
 
 def from_pandas(input: DataFrame) -> BiocFrame:
-    """Construct a new :py:class:`~biocframe.BiocFrame.BiocFrame` from
-    :py:class:`~pandas.DataFrame` object.
+    """Construct a new :py:class:`~biocframe.BiocFrame.BiocFrame` from :py:class:`~pandas.DataFrame` object.
 
     Args:
         input (DataFrame): Input data.
