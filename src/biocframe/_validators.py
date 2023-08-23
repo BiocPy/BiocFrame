@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import MutableMapping, Optional, Sequence, Union
+from typing import MutableMapping, Optional, Sequence, Union, List, Dict, Tuple
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -62,7 +62,7 @@ def validate_rows(
 def validate_cols(
     column_names: Sequence[str],
     data: MutableMapping[str, Union[Sequence, MutableMapping]],
-) -> Sequence[str]:
+) -> Tuple[List[str], Dict[str, Union[Sequence, MutableMapping]]]:
     """Validate columns of a :py:class:`biocframe.BiocFrame` object.
 
     Args:
