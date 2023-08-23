@@ -46,8 +46,7 @@ class BiocFrameIter:
 
 
 class BiocFrame:
-    """`BiocFrame` is an alternative to :class:`~pandas.DataFrame`, with support for
-    nested column types.
+    """`BiocFrame` is an alternative to :class:`~pandas.DataFrame`, with support for nested column types.
 
     Columns may extend :class:`~collections.abc.Sequence`,
     and must implement the length (``__len__``) and slice (``__getitem__``) dunder
@@ -674,8 +673,7 @@ class BiocFrame:
         return BiocFrameIter(self)
 
     def to_pandas(self) -> DataFrame:
-        """Convert :py:class:`~biocframe.BiocFrame.BiocFrame` to a
-        :py:class:`~pandas.DataFrame` object.
+        """Convert :py:class:`~biocframe.BiocFrame.BiocFrame` to a :py:class:`~pandas.DataFrame` object.
 
         Returns:
             DataFrame: a :py:class:`~pandas.DataFrame` object.
