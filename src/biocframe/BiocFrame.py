@@ -729,7 +729,7 @@ class BiocFrame:
         Returns:
             (List, optional): List of row names.
         """
-        return self.rowNames
+        return self.row_names
 
     # compatibility with R interfaces
     @property
@@ -739,7 +739,7 @@ class BiocFrame:
         Returns:
             (List, optional): List of row index names.
         """
-        return self.rowNames
+        return self.row_names
 
     @rownames.setter
     def rownames(self, names: List):
@@ -757,7 +757,7 @@ class BiocFrame:
         Returns:
             List: list of column names.
         """
-        return self.columnNames
+        return self.column_names
 
     @colnames.setter
     def colnames(self, names: List):
