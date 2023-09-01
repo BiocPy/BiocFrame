@@ -4,7 +4,7 @@ __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
-SlicerTypes = Union[Sequence[int], Sequence[bool], Sequence[str], slice]
+SlicerTypes = Union[Sequence[int], Sequence[bool], Sequence[str], slice, int]
 SlicerArgTypes = Union[
     Sequence[str],
     Tuple[SlicerTypes, Optional[SlicerTypes]],

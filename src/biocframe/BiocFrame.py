@@ -3,8 +3,7 @@ from typing import Dict, List, MutableMapping, Optional, Sequence, Tuple, Union
 
 from pandas import DataFrame, Series
 from pandas.api.types import is_numeric_dtype
-from rich.console import Console
-from rich.table import Table
+from prettytable import PrettyTable
 
 from ._type_checks import is_list_of_type
 from ._types import SlicerArgTypes, SlicerTypes
@@ -138,36 +137,47 @@ class BiocFrame:
         if self._number_of_rows is None:
             self._number_of_rows = 0
 
-    def __str__(self) -> str:
-        table = Table(
-            title=f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns",
-            caption=f"contains row names?: {self.row_names is not None}",
-            show_header=True,
-            header_style="bold",
-        )
-        for col in self.column_names:
-            table.add_column(str(col))
+    def __repr__(self) -> str:
+        table = PrettyTable(padding_width=2)
+        table.field_names = [str(col) for col in self.column_names]
 
-        # first three rows
-        for r in range(3):
+        _rows = []
+        rows_to_show = 2
+        _top = self.shape[0]
+        if _top > rows_to_show:
+            _top = rows_to_show
+
+        # top three rows
+        for r in range(_top):
             _row = self.row(r)
             vals = list(_row.values())
             res = [str(v) for v in vals]
-            table.add_row(*res)
+            _rows.append(res)
 
-        # add ...
-        table.add_row(*["..." for _ in range(len(self.column_names))])
+        if self.shape[0] > 2 * rows_to_show:
+            # add ...
+            _rows.append(["..." for _ in range(len(self.column_names))])
+
+        _last = self.shape[0] - rows_to_show
+        if _last <= rows_to_show:
+            _last = self.shape[0] - _top
 
         # last three rows
-        for r in range(len(self) - 3, len(self)):
+        for r in range(_last, len(self)):
             _row = self.row(r)
             vals = list(_row.values())
             res = [str(v) for v in vals]
-            table.add_row(*res)
+            _rows.append(res)
 
-        Console().print(table)
-        return ""
-        # return pattern
+        table.add_rows(_rows)
+
+        pattern = (
+            f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns \n"
+            f"contains row names?: {self.row_names is not None} \n"
+            f"{table.get_string()}"
+        )
+
+        return pattern
 
     @property
     def shape(self) -> Tuple[int, int]:
@@ -227,7 +237,7 @@ class BiocFrame:
         """Access column names.
 
         Returns:
-            Listequence[str]: A list containing column names.
+            List[str]: A list containing column names.
         """
         return self._column_names
 
@@ -376,7 +386,11 @@ class BiocFrame:
 
         row = OrderedDict()
         for k in self.column_names:
-            row[k] = self._data[k][rindex]
+            v = self._data[k]
+            if hasattr(v, "shape") and len(v.shape) > 1:
+                row[k] = v[rindex, :]
+            else:
+                row[k] = v[rindex]
 
         return row
 
@@ -576,9 +590,14 @@ class BiocFrame:
                 raise ValueError("`args` must contain at least one slice.")
 
             if len(args) == 1:
+                if isinstance(args[0], int):
+                    return self._slice([args[0]], None)
                 return self._slice(args[0], None)
             elif len(args) == 2:
-                return self._slice(args[0], args[1])
+                return self._slice(
+                    [args[0]] if isinstance(args[0], int) else args[0],
+                    [args[1]] if isinstance(args[1], int) else args[1],
+                )
 
             raise ValueError("Length of `args` is more than 2.")
 
