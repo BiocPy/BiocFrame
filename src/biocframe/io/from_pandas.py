@@ -1,5 +1,3 @@
-from pandas import DataFrame
-
 from ..BiocFrame import BiocFrame
 
 __author__ = "jkanche"
@@ -7,21 +5,23 @@ __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
-def from_pandas(input: DataFrame) -> BiocFrame:
-    """Construct a new :py:class:`~biocframe.BiocFrame.BiocFrame` from :py:class:`~pandas.DataFrame` object.
+def from_pandas(input: "DataFrame") -> BiocFrame:
+    """Read a :py:class:`~biocframe.BiocFrame.BiocFrame` from :py:class:`~pandas.DataFrame` object.
 
     Args:
-        input (DataFrame): Input data.
+        input (:py:class:`~pandas.DataFrame`): Input data.
 
     Raises:
         TypeError: If ``input`` is not a :py:class:`~pandas.DataFrame`.
 
     Returns:
-        BiocFrame: a new :py:class:`~biocframe.BiocFrame.BiocFrame` object.
+        BiocFrame: A :py:class:`~biocframe.BiocFrame.BiocFrame` object.
     """
 
+    from pandas import DataFrame
+
     if not isinstance(input, DataFrame):
-        raise TypeError("data is not a pandas DataFrame object")
+        raise TypeError("data is not a pandas `DataFrame` object.")
 
     rdata = input.to_dict("list")
     rindex = None
