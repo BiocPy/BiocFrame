@@ -9,7 +9,7 @@ def is_list_of_type(x: Any, target_type: Callable) -> bool:
     """Checks if ``x`` is a list, and whether all elements of the list are of the same type.
 
     Args:
-        x (Any): Any list.
+        x (Any): Any list-like object.
         target_type (callable): Type to check for, e.g. ``str``, ``int``.
 
     Returns:
