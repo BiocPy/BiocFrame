@@ -19,11 +19,11 @@ class BiocFrameIter:
     """An iterator to a :py:class:`~biocframe.BiocFrame.BiocFrame` object.
 
     Args:
-        biocframe (BiocFrame): Source object to iterate.
+        obj (BiocFrame): Source object to iterate.
     """
 
-    def __init__(self, biocframe: "BiocFrame") -> None:
-        self._bframe = biocframe
+    def __init__(self, obj: "BiocFrame") -> None:
+        self._bframe = obj
         self._current_index = 0
 
     def __iter__(self):
@@ -343,7 +343,7 @@ class BiocFrame:
                 "Unknown Type for `index_or_name`, must be either `string` or `integer`"
             )
 
-    def row(self, index_or_name: Union[str, int]) -> OrderedDict:
+    def row(self, index_or_name: Union[str, int]) -> dict:
         """Access a row by integer position or row name.
 
         Args:
@@ -360,7 +360,7 @@ class BiocFrame:
             TypeError: if ``index_or_name`` is neither a string nor an integer.
 
         Returns:
-            OrderedDict: A dictionary with keys as column names and their values.
+            dict: A dictionary with keys as column names and their values.
         """
 
         rindex = None
@@ -398,7 +398,7 @@ class BiocFrame:
         self,
         row_indices_or_names: Optional[SlicerTypes] = None,
         column_indices_or_names: Optional[SlicerTypes] = None,
-    ):
+    ) -> Union["BiocFrame", dict, list]:
         """Internal method to slice by index or values.
 
         Args:
@@ -411,7 +411,10 @@ class BiocFrame:
                 Defaults to None.
 
         Returns:
-            The same type as caller with the subsetted rows and columns.
+            Union["BiocFrame", dict, list]:
+            - If a single row is sliced, returns a :py:class:`dict`.
+            - If a single column is sliced, returns a :py:class:`list`.
+            - For all other scenarios, returns the same type as caller with the subsetted rows and columns.
         """
 
         new_data = OrderedDict()
@@ -500,7 +503,7 @@ class BiocFrame:
     def __getitem__(
         self,
         args: SlicerArgTypes,
-    ) -> "BiocFrame":
+    ) -> Union["BiocFrame", dict, list]:
         """Subset the data frame.
 
         This operation returns a new object with the same type as caller.
@@ -540,18 +543,18 @@ class BiocFrame:
 
                 - List of integer positions along rows/columns to keep.
 
-                - A :py:class:`slice` object specifying the list of positions to keep.
+                - A :py:class:`slice` object specifying the list of indices to keep.
 
                 - A list of index names to keep. For rows, the object must contain unique
                     :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` and for columns must
                     contain unique :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
-                - A scalar integer to subset either a single row or column position.
+                - An integer to subset either a single row or column index.
                     Alternatively, you might want to use
                     :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or
                     :py:meth:`~biocframe.BiocFrame.BiocFrame.column` methods.
 
-                - A singular string to subset either a single row or column label/index.
+                - A string to subset either a single row or column by label.
                     Alternatively, you might want to use
                     :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or
                     :py:meth:`~biocframe.BiocFrame.BiocFrame.column` methods.
@@ -561,7 +564,10 @@ class BiocFrame:
             TypeError: If provided ``args`` are not an expected type.
 
         Returns:
-            The same type as caller with the subsetted rows and columns.
+            Union["BiocFrame", dict, list]:
+            - If a single row is sliced, returns a :py:class:`dict`.
+            - If a single column is sliced, returns a :py:class:`list`.
+            - For all other scenarios, returns the same type as caller with the subsetted rows and columns.
         """
 
         # not an array, single str, slice by column
