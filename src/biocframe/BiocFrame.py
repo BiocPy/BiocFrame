@@ -420,6 +420,8 @@ class BiocFrame:
         new_data = OrderedDict()
         new_row_names = self.row_names
         new_column_names = self.column_names
+        is_row_unary = False
+        is_col_unary = False
 
         # slice the columns and data
         if column_indices_or_names is not None:
@@ -433,6 +435,9 @@ class BiocFrame:
                 new_column_names = [new_column_names[i] for i in new_column_indices]
             else:
                 raise TypeError("Unknown type for column slice!")
+
+            if len(new_column_names) == 1:
+                is_col_unary = True
 
         for col in new_column_names:
             new_data[col] = self._data[col]
@@ -466,6 +471,9 @@ class BiocFrame:
             else:
                 raise TypeError("Unknown type for row slice!")
 
+            if new_number_of_rows == 1:
+                is_row_unary = True
+
             if is_list_of_type(new_row_indices, bool):
                 new_row_indices = [
                     i for i in range(len(new_row_indices)) if new_row_indices[i] is True
@@ -490,6 +498,14 @@ class BiocFrame:
 
         if new_number_of_rows is None:
             raise Exception("This should not happen!")
+
+        if (is_row_unary is True and is_col_unary is True) or is_row_unary is True:
+            rdata = {}
+            for col in new_column_names:
+                rdata[col] = new_data[col][0]
+            return rdata
+        elif is_col_unary is True:
+            return new_data[new_column_names[0]]
 
         current_class_const = type(self)
         return current_class_const(

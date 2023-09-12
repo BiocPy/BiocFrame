@@ -216,9 +216,49 @@ def test_bframe_slice():
     assert len(sliced_list.dims) == 2
     assert sliced_list.dims == (2, 2)
 
-    sliced_list = bframe[[True, False, True], [True, False, False]]
-    assert sliced_list is not None
-    assert sliced_list.dims == (2, 1)
+
+def test_bframe_unary_slice():
+    obj = {
+        "column1": [1, 2, 3],
+        "nested": [
+            {
+                "ncol1": [4, 5, 6],
+                "ncol2": ["a", "b", "c"],
+                "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
+            },
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
+        ],
+        "column2": ["b", "n", "m"],
+    }
+
+    bframe = BiocFrame(obj)
+
+    unary_col = bframe[[True, False, True], [True, False, False]]
+    assert unary_col is not None
+    assert isinstance(unary_col, list)
+    assert len(unary_col) == 2
+
+    unary_row = bframe[[1], :]
+    assert unary_row is not None
+    assert isinstance(unary_row, dict)
+    assert len(unary_row.keys()) == 3
+
+    unary_row = bframe[1, :]
+    assert unary_row is not None
+    assert isinstance(unary_row, dict)
+    assert len(unary_row.keys()) == 3
+
+    unary_col = bframe[[True, False, True], 2]
+    assert unary_col is not None
+    assert isinstance(unary_col, list)
+    assert len(unary_col) == 2
 
 
 def test_bframe_delete():
