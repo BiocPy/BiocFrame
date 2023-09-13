@@ -63,6 +63,7 @@ def _match_to_indices(
 
     return resolved_indices, is_unary
 
+
 def _slice_or_index(data: Sequence, query: Union[slice, List[int]]):
     sliced_data = None
     if isinstance(query, slice):
@@ -71,5 +72,5 @@ def _slice_or_index(data: Sequence, query: Union[slice, List[int]]):
         sliced_data = [data[i] for i in query]
     else:
         raise TypeError("Cannot match column indices to a known operation!")
-    
+
     return sliced_data
