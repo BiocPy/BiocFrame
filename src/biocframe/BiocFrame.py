@@ -374,6 +374,8 @@ class BiocFrame:
         new_data = OrderedDict()
         new_row_names = self.row_names
         new_column_names = self.column_names
+        is_row_unary = False
+        is_col_unary = False
 
         # slice the columns and data
         if column_indices_or_names is not None:
