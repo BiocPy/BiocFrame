@@ -7,7 +7,7 @@ from prettytable import PrettyTable
 from ._type_checks import is_list_of_type
 from ._validators import validate_cols, validate_rows, validate_unique_list
 from .types import SlicerArgTypes, SlicerTypes
-from .utils import _match_to_indices
+from .utils import _match_to_indices, _slice_or_index
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -383,7 +383,7 @@ class BiocFrame:
                 self.column_names, column_indices_or_names
             )
 
-            new_column_names = [new_column_names[i] for i in new_column_indices]
+            new_column_names = _slice_or_index(new_column_names, new_column_indices)
 
         for col in new_column_names:
             new_data[col] = self._data[col]
@@ -399,14 +399,14 @@ class BiocFrame:
                 temp_row_names, row_indices_or_names
             )
 
-            new_row_names = [temp_row_names[i] for i in new_row_indices]
+            new_row_names = _slice_or_index(new_row_names, new_row_indices)
             new_number_of_rows = len(new_row_indices)
 
             for k, v in new_data.items():
                 if hasattr(v, "shape") and len(v.shape) > 1:
                     new_data[k] = v[new_row_indices, :]
                 else:
-                    new_data[k] = [v[idx] for idx in new_row_indices]
+                    new_data[k] = _slice_or_index(v, new_row_indices)
         else:
             new_number_of_rows = self.shape[0]
 

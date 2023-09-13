@@ -1,4 +1,4 @@
-from typing import List, Sequence, Tuple
+from typing import List, Sequence, Tuple, Union
 from warnings import warn
 
 from ._type_checks import is_list_of_type
@@ -9,7 +9,9 @@ __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
-def _match_to_indices(data: Sequence, query: SlicerTypes) -> Tuple[List[int], bool]:
+def _match_to_indices(
+    data: Sequence, query: SlicerTypes
+) -> Tuple[Union[slice, List[int]], bool]:
     """Utility function to make slicer arguments more palatable.
 
     Args:
@@ -18,7 +20,7 @@ def _match_to_indices(data: Sequence, query: SlicerTypes) -> Tuple[List[int], bo
             a list of indices to keep.
 
     Returns:
-        Tuple[List[int], bool]: Resolved list of indices and if its a unary slice.
+        Tuple[Union[slice, List[int]], bool]: Resolved list of indices and if its a unary slice.
     """
 
     resolved_indices = None
@@ -33,7 +35,8 @@ def _match_to_indices(data: Sequence, query: SlicerTypes) -> Tuple[List[int], bo
         resolved_indices = [query]
         is_unary = True
     elif isinstance(query, slice):
-        resolved_indices = list(range(len(data))[query])
+        # resolved_indices = list(range(len(data))[query])
+        resolved_indices = query
     elif isinstance(query, list) or isinstance(query, tuple):
         if is_list_of_type(query, bool):
             print("bools??")
@@ -59,3 +62,14 @@ def _match_to_indices(data: Sequence, query: SlicerTypes) -> Tuple[List[int], bo
         raise TypeError("`indices` is unsupported!")
 
     return resolved_indices, is_unary
+
+def _slice_or_index(data: Sequence, query: Union[slice, List[int]]):
+    sliced_data = None
+    if isinstance(query, slice):
+        sliced_data = data[query]
+    elif isinstance(query, list):
+        sliced_data = [data[i] for i in query]
+    else:
+        raise TypeError("Cannot match column indices to a known operation!")
+    
+    return sliced_data
