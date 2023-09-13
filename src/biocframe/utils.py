@@ -1,8 +1,6 @@
-from functools import singledispatch
 from typing import Any, List, Sequence, Tuple, Union
 from warnings import warn
 
-from numpy import ndarray
 
 from ._type_checks import is_list_of_type
 from .types import SlicerTypes
@@ -75,7 +73,7 @@ def _slice_or_index(data: Any, query: Union[slice, List[int]]):
         if not isinstance(data, list):
             try:
                 return data[query]
-            except Exception as e:
+            except Exception:
                 pass
 
         sliced_data = [data[i] for i in query]
