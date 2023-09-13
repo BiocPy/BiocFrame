@@ -386,3 +386,27 @@ def test_slice_empty_obj():
     assert sliced_bframe is not None
 
     assert sliced_bframe.shape == (20, 0)
+
+
+def test_nested_biocFrame_preserve_types():
+    obj = {
+        "column1": [1, 2, 3],
+        "nested": BiocFrame(
+            {
+                "ncol1": [4, 5, 6],
+                "ncol2": ["a", "b", "c"],
+                "deep": ["j", "k", "l"],
+            }
+        ),
+        "column2": np.array([1, 2, 3]),
+    }
+
+    bframe = BiocFrame(obj)
+    assert bframe is not None
+
+    sliced = bframe[0:2, :]
+
+    assert isinstance(sliced, BiocFrame)
+    assert isinstance(sliced.column("nested"), BiocFrame)
+    assert isinstance(sliced.row(0), dict)
+    assert isinstance(sliced.column("column2"), np.ndarray)
