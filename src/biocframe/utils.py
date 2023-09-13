@@ -1,5 +1,8 @@
-from typing import List, Sequence, Tuple, Union
+from functools import singledispatch
+from typing import Any, List, Sequence, Tuple, Union
 from warnings import warn
+
+from numpy import ndarray
 
 from ._type_checks import is_list_of_type
 from .types import SlicerTypes
@@ -64,11 +67,17 @@ def _match_to_indices(
     return resolved_indices, is_unary
 
 
-def _slice_or_index(data: Sequence, query: Union[slice, List[int]]):
+def _slice_or_index(data: Any, query: Union[slice, List[int]]):
     sliced_data = None
     if isinstance(query, slice):
         sliced_data = data[query]
     elif isinstance(query, list):
+        if not isinstance(data, list):
+            try:
+                return data[query]
+            except Exception as e:
+                pass
+
         sliced_data = [data[i] for i in query]
     else:
         raise TypeError("Cannot match column indices to a known operation!")

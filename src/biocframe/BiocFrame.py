@@ -403,8 +403,10 @@ class BiocFrame:
             new_number_of_rows = len(new_row_names)
 
             for k, v in new_data.items():
-                if hasattr(v, "shape") and len(v.shape) > 1:
-                    new_data[k] = v[new_row_indices, :]
+                if hasattr(v, "shape"):
+                    tmp = [slice(None)] * len(v.shape)
+                    tmp[0] = new_row_indices
+                    new_data[k] = v[(*tmp,)]
                 else:
                     new_data[k] = _slice_or_index(v, new_row_indices)
         else:
