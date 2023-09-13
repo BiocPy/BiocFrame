@@ -242,13 +242,13 @@ def test_bframe_unary_slice():
 
     unary_col = bframe[[True, False, True], [True, False, False]]
     assert unary_col is not None
-    assert isinstance(unary_col, list)
+    assert isinstance(unary_col, BiocFrame)
     assert len(unary_col) == 2
 
     unary_row = bframe[[1], :]
     assert unary_row is not None
-    assert isinstance(unary_row, dict)
-    assert len(unary_row.keys()) == 3
+    assert isinstance(unary_row, BiocFrame)
+    assert len(unary_row) == 1
 
     unary_row = bframe[1, :]
     assert unary_row is not None

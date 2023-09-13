@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import MutableMapping, Optional, Sequence, Union, List, Dict, Tuple
+from typing import Dict, List, MutableMapping, Optional, Sequence, Tuple, Union
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -39,8 +39,8 @@ def validate_rows(
 
     if len(incorrect_len_keys) > 0:
         raise ValueError(
-            "`BiocFrame` expects all column in ``data`` to be equal"
-            f"length, these columns: {incorrect_len_keys} do not."
+            "`BiocFrame` expects all columns in ``data`` to be of equal"
+            f"length, these columns do not: {', '.join(incorrect_len_keys)}."
         )
 
     if row_names is not None:
@@ -84,17 +84,17 @@ def validate_cols(
     else:
         if len(column_names) != len(data.keys()):
             raise ValueError(
-                "Number of columns mismatch between `column_names` and `data`"
+                "Number of columns mismatch between `column_names` and `data`."
             )
 
         if len(set(column_names).difference(data.keys())) > 0:
             raise ValueError(
-                "Not all columns from `column_names` are present in `data`"
+                "Not all columns from `column_names` are present in `data`."
             )
 
         if len(set(data.keys()).difference(column_names)) > 0:
             raise ValueError(
-                "Not all columns from `data` are present in `column_names`"
+                "Not all columns from `data` are present in `column_names`."
             )
 
     # Technically should throw an error but
@@ -114,8 +114,8 @@ def validate_cols(
     if len(incorrect_types) > 0:
         raise TypeError(
             "`data` only accepts columns that supports `len` and "
-            f"`slice` operations. columns: {incorrect_types} "
-            f"do not support these methods."
+            "`slice` operations. these columns do not support these methods: "
+            f"{', '.join(incorrect_types)}."
         )
 
     data = new_odata
