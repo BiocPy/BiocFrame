@@ -1,43 +1,61 @@
-from typing import Sequence, Union
+from typing import List, Sequence, Tuple
+from warnings import warn
 
 from ._type_checks import is_list_of_type
-from ._types import SlicerTypes
+from .types import SlicerTypes
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
-def _match_to_indices(data: Sequence, indices: SlicerTypes) -> Union[slice, Sequence]:
+def _match_to_indices(data: Sequence, query: SlicerTypes) -> Tuple[List[int], bool]:
     """Utility function to make slicer arguments more palatable.
 
     Args:
-        data (Sequence): input data array to slice.
-        indices (SlicerTypes): either a slice or
+        data (Sequence): Input data array to slice.
+        query (SlicerTypes): Either a slice or
             a list of indices to keep.
 
     Returns:
-        Union[slice, Sequence]: either a slice or list of indices.
+        Tuple[List[int], bool]: Resolved list of indices and if its a unary slice.
     """
 
-    if is_list_of_type(indices, str):
-        diff = list(set(indices).difference(set(data)))
-        if len(diff) > 0:
-            raise ValueError(
-                f"Cannot slice by value since {diff} do not exist in {data}"
-            )
+    resolved_indices = None
+    is_unary = False
 
-        return [i for i in range(len(indices)) if indices[i] in data]
-    elif is_list_of_type(indices, bool):
-        if len(indices) != len(data):
-            raise ValueError(
-                "Indices is a boolean vector, length should match the size of the data."
-            )
+    if isinstance(query, str):
+        resolved_indices = [data.index(query)]
+        is_unary = True
+    elif isinstance(query, int):
+        if abs(query) > len(data):
+            raise ValueError("Integer index is greater than the shape.")
+        resolved_indices = [query]
+        is_unary = True
+    elif isinstance(query, slice):
+        resolved_indices = list(range(len(data))[query])
+    elif isinstance(query, list) or isinstance(query, tuple):
+        if is_list_of_type(query, bool):
+            print("bools??")
+            if len(query) != len(data):
+                warn(
+                    "`indices` is a boolean vector, length should match the size of the data."
+                )
 
-        return [
-            i for i in range(len(indices)) if (indices[i] is True or indices[i] == 1)
-        ]
-    elif isinstance(indices, slice) or is_list_of_type(indices, int):
-        return indices
+            resolved_indices = [i for i in range(len(query)) if query[i] is True]
+        elif is_list_of_type(query, int):
+            resolved_indices = query
+        elif is_list_of_type(query, str):
+            diff = list(set(query).difference(set(data)))
+            if len(diff) > 0:
+                raise ValueError(
+                    "`indices` is a string vector, not all values are present in data."
+                )
 
-    raise TypeError("`indices` is not a supported type!")
+            resolved_indices = [data.index(i) for i in query]
+        else:
+            raise TypeError("`indices` is a list of unsupported types!")
+    else:
+        raise TypeError("`indices` is unsupported!")
+
+    return resolved_indices, is_unary
