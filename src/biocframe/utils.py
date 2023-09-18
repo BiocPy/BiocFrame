@@ -40,7 +40,6 @@ def _match_to_indices(
         resolved_indices = query
     elif isinstance(query, list) or isinstance(query, tuple):
         if is_list_of_type(query, bool):
-            print("bools??")
             if len(query) != len(data):
                 warn(
                     "`indices` is a boolean vector, length should match the size of the data."
