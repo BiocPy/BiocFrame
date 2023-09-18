@@ -157,12 +157,12 @@ class BiocFrame:
             # add ...
             _rows.append(["..." for _ in range(len(self.column_names))])
 
-        _last = self.shape[0] - rows_to_show
+        _last = self.shape[0] - _top
         if _last <= rows_to_show:
             _last = self.shape[0] - _top
 
         # last three rows
-        for r in range(_last, len(self)):
+        for r in range(_last + 1, len(self)):
             _row = self.row(r)
             vals = list(_row.values())
             res = [str(v) for v in vals]
