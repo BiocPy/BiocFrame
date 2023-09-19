@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import List, MutableMapping, Optional, Sequence, Tuple, Union
+from typing import Any, List, MutableMapping, Optional, Sequence, Tuple, Union
 
 from pandas.api.types import is_numeric_dtype
 from prettytable import PrettyTable
@@ -88,7 +88,7 @@ class BiocFrame:
         sliced_bframe = bframe[1:2, [True, False, False]]
 
     Attributes:
-        data (MutableMapping[str, Union[Sequence, MutableMapping]], optional):
+        data (MutableMapping[str, Any], optional):
             Dictionary of column names as `keys` and their values. all columns must have
             the same length. Defaults to None.
         number_of_rows (int, optional): Number of rows. Defaults to None.
@@ -103,7 +103,7 @@ class BiocFrame:
 
     def __init__(
         self,
-        data: Optional[MutableMapping[str, Union[Sequence, MutableMapping]]] = None,
+        data: Optional[MutableMapping[str, Any]] = None,
         number_of_rows: Optional[int] = None,
         row_names: Optional[Sequence[str]] = None,
         column_names: Optional[Sequence[str]] = None,
@@ -222,11 +222,11 @@ class BiocFrame:
         self._row_names = names
 
     @property
-    def data(self) -> MutableMapping[str, Union[Sequence, MutableMapping]]:
+    def data(self) -> MutableMapping[str, Any]:
         """Access data as :py:class:`dict`.
 
         Returns:
-            MutableMapping[str, Union[Sequence, MutableMapping]]:
+            MutableMapping[str, Any]:
                 Dictionary of columns and their values.
         """
         return self._data
@@ -306,7 +306,7 @@ class BiocFrame:
         """
         return name in self.column_names
 
-    def column(self, index_or_name: Union[str, int]) -> Union[Sequence, MutableMapping]:
+    def column(self, index_or_name: Union[str, int]) -> Any:
         """Access a column by integer position or column label.
 
         Args:
@@ -322,7 +322,7 @@ class BiocFrame:
             TypeError: if ``index_or_name`` is neither a string nor an integer.
 
         Returns:
-            Union[Sequence, MutableMapping]: Column with its original type preserved.
+            Any: Column with its original type preserved.
         """
 
         return self[:, index_or_name]
