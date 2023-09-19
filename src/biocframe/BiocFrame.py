@@ -113,7 +113,7 @@ class BiocFrame:
         self._row_names = row_names
         self._data = {} if data is None else data
         self._column_names = column_names
-        self._metadata = metadata
+        self._metadata = {} if metadata is None else metadata
 
         self._validate()
 
