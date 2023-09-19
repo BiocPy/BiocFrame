@@ -1,3 +1,5 @@
+from pandas import DataFrame
+
 from ..BiocFrame import BiocFrame
 
 __author__ = "jkanche"
@@ -17,7 +19,6 @@ def from_pandas(input: "DataFrame") -> BiocFrame:
     Returns:
         BiocFrame: A :py:class:`~biocframe.BiocFrame.BiocFrame` object.
     """
-
     from pandas import DataFrame
 
     if not isinstance(input, DataFrame):
@@ -29,4 +30,6 @@ def from_pandas(input: "DataFrame") -> BiocFrame:
     if input.index is not None:
         rindex = input.index.to_list()
 
-    return BiocFrame(data=rdata, row_names=rindex, column_names=input.columns.to_list())
+    return BiocFrame(
+        data=rdata, row_names=rindex, column_names=input.columns.to_list()
+    )

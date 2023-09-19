@@ -12,12 +12,17 @@ line-length = 120
 src = ["src"]
 exclude = ["tests"]
 extend-ignore = ["F821"]
+select = ["E", "F", "I", "D", "PLC", "A", "RUF"]
+ignore = ["E501", "D203", "D213", "A003"]
+unfixable = ["F401", "F841"]
 
 [tool.ruff.pydocstyle]
 convention = "google"
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["E402", "F401"]
+
+"**/__init__.py" = ["PLC0414"]
 
 [tool.black]
 force-exclude = "__init__.py"
