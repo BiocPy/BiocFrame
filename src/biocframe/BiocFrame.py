@@ -153,7 +153,7 @@ class BiocFrame:
             column_names, self._data
         )
         self._number_of_columns = len(self._column_names)
-        self._metadata = metadata
+        self._metadata = {} if metadata is None else metadata
 
     def __repr__(self) -> str:
         """Get a machine-readable string representation of the object."""
@@ -284,7 +284,7 @@ class BiocFrame:
         }
 
     @property
-    def metadata(self) -> Optional[Dict[str, Any]]:
+    def metadata(self) -> Dict[str, Any]:
         """Get/set the metadata.
 
         Args:
@@ -296,7 +296,7 @@ class BiocFrame:
         return self._metadata
 
     @metadata.setter
-    def metadata(self, metadata: Optional[Dict[str, Any]]):
+    def metadata(self, metadata: Dict[str, Any]):
         self._metadata = metadata
 
     def has_column(self, name: str) -> bool:
