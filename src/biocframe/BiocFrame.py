@@ -31,8 +31,8 @@ from .types import (
 from .utils import match_to_indices, slice_or_index
 
 try:
-    from pandas import DataFrame
-except Exception:
+    from pandas import DataFrame, Series
+except ImportError:
     pass
 
 __author__ = "jkanche"
@@ -50,6 +50,11 @@ class BiocFrameIter:
     """
 
     def __init__(self, obj: "BiocFrame") -> None:
+        """Initialize the iterator.
+
+        Args:
+            obj (BiocFrame): source object to iterate.
+        """
         self._bframe = obj
         self._current_index = 0
 
@@ -74,14 +79,13 @@ class BiocFrameIter:
 class BiocFrame:
     """`BiocFrame` is an alternative to :class:`~pandas.DataFrame`.
 
-    Columns may extend :class:`~collections.abc.List`,
-    and must implement the length (``__len__``) and slice (``__getitem__``) dunder
+    Columns are required to implement the length (``__len__``) and slice (``__getitem__``) dunder
     methods. This allows :py:class:`~biocframe.BiocFrame.BiocFrame` to accept nested
     `BiocFrame` objects as columns.
 
     Typical usage example:
 
-    To create a **BiocFrame** object, simply pass in the column representation as a dictionary.
+    To create a **BiocFrame** object, simply provide the data as a dictionary.
 
     .. code-block:: python
 
@@ -92,7 +96,7 @@ class BiocFrame:
         }
         bframe = BiocFrame(obj)
 
-    Alternatively, you can also specify a :py:class:`~biocframe.BiocFrame.BiocFrame` class
+    Alternatively, you can specify :py:class:`~biocframe.BiocFrame.BiocFrame` class
     as a column.
 
     .. code-block:: python
@@ -109,7 +113,7 @@ class BiocFrame:
         }
         bframe = BiocFrame(obj)
 
-    or slice the object
+    Methods are also available to slice the object
 
     .. code-block:: python
 
@@ -137,7 +141,8 @@ class BiocFrame:
             metadata (Dict, optional): Additional metadata. Defaults to None.
 
         Raises:
-            ValueError: if rows or columns mismatch from data.
+            ValueError: If all columns do not contain the same number of rows.
+            ValueError: If row names are not unique.
         """
         self._data: DataType = {} if data is None else data
         self._row_names = row_names
@@ -216,8 +221,8 @@ class BiocFrame:
             (List, optional): Row names if available, else None.
 
         Raises:
-            ValueError: Length of ``names`` does not match number of rows.
-            ValueError: ``names`` is not unique.
+            ValueError: If the length of ``names`` does not match the number of rows.
+            ValueError: If ``names`` is not unique.
         """
         return self._row_names
 
@@ -256,8 +261,9 @@ class BiocFrame:
             list: A list of column names.
 
         Raises:
-            ValueError: Length of ``names`` does not match number of columns.
-            ValueError: ``names`` is not unique.
+            ValueError:
+                If the length of ``names`` does not match the number of columns.
+                If ``names`` is not unique.
         """
         return self._column_names
 
@@ -285,7 +291,7 @@ class BiocFrame:
             metadata (Dict, Optional): New metadata object.
 
         Returns:
-            (dict, optional): Metadata if available.
+            dict: Metadata object.
         """
         return self._metadata
 
@@ -300,7 +306,7 @@ class BiocFrame:
             name (str): Name to check.
 
         Returns:
-            bool: True if column exists, else False.
+            bool: True if the column exists, otherwise False.
         """
         return name in self.column_names
 
@@ -328,19 +334,17 @@ class BiocFrame:
         """Internal method to slice by index or values.
 
         Args:
-            row_indices_or_names (SlicerTypes, optional):
-                row indices (integer positions) or index labels to slice.
-                Defaults to None.
+            row_indices_or_names (SlicerTypes, optional): Row indices (integer positions)
+                or row names (string) to slice. Defaults to None.
 
-            column_indices_or_names (SlicerTypes, optional):
-                column indices (integer positions) or column names to slice.
-                Defaults to None.
+            column_indices_or_names (SlicerTypes, optional): Column indices (integer positions)
+                or column names (string) to slice. Defaults to None.
 
         Returns:
             Union["BiocFrame", dict, list]:
-            - If a single row is sliced, returns a :py:class:`dict`.
-            - If a single column is sliced, returns a :py:class:`list`.
-            - For all other scenarios, returns the same type as caller with the subsetted rows and columns.
+                - If a single row is sliced, returns a :py:class:`dict`.
+                - If a single column is sliced, returns a :py:class:`list`.
+                - For all other scenarios, returns the same type as the caller with the subsetted rows and columns.
         """
         new_row_names = self.row_names
         new_column_names = self.column_names
@@ -423,7 +427,7 @@ class BiocFrame:
     def __getitem__(self, __key: AllSlice) -> ItemType:
         """Subset the data frame.
 
-        This operation returns a new object with the same type as caller.
+        This operation returns a new object with the same type as the caller.
         If you need to access specific rows or columns, use the
         :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or
         :py:meth:`~biocframe.BiocFrame.BiocFrame.column`
@@ -438,32 +442,32 @@ class BiocFrame:
                 "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
                 "symbol": ["MAP1A", "BIN1", "ESR1"],
                 "ranges": BiocFrame({
-                    "chr": ["chr1", "chr2", "chr3"]
+                    "chr": ["chr1", "chr2", "chr3"],
                     "start": [1000, 1100, 5000],
                     "end": [1100, 4000, 5500]
-                ),
+                }),
             }
             bframe = BiocFrame(obj)
 
-            # different ways to slice.
+            # Different ways to slice.
 
-            biocframe[0:2, 0:2]
-            biocframe[[0,2], [True, False, False]]
-            biocframe[<List of column names>]
+            bframe[0:2, 0:2]
+            bframe[[0, 2], [True, False, False]]
+            bframe[<List of column names>]
 
         Args:
             args (SlicerArgTypes): A Tuple of slicer arguments to subset rows and
                 columns. An element in ``args`` may be,
 
                 - List of booleans, True to keep the row/column, False to remove.
-                    The length of the boolean vector must be the same as number of rows/columns.
+                    The length of the boolean vector must be the same as the number of rows/columns.
 
                 - List of integer positions along rows/columns to keep.
 
                 - A :py:class:`slice` object specifying the list of indices to keep.
 
                 - A list of index names to keep. For rows, the object must contain unique
-                    :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` and for columns must
+                    :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names`, and for columns must
                     contain unique :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
                 - An integer to subset either a single row or column index.
@@ -477,14 +481,14 @@ class BiocFrame:
                     :py:meth:`~biocframe.BiocFrame.BiocFrame.column` methods.
 
         Raises:
-            ValueError: Too many slices provided.
-            TypeError: If provided ``args`` are not an expected type.
+            ValueError: If too many slices are provided.
+            TypeError: If the provided ``args`` are not of the expected type.
 
         Returns:
             Union["BiocFrame", dict, list]:
             - If a single row is sliced, returns a :py:class:`dict`.
             - If a single column is sliced, returns a :py:class:`list`.
-            - For all other scenarios, returns the same type as caller with the subsetted rows and columns.
+            - For all other scenarios, returns the same type as the caller with the subsetted rows and columns.
         """
         # not an array, single str, slice by column
         if isinstance(__key, str):
@@ -567,15 +571,15 @@ class BiocFrame:
 
         .. code-block:: python
 
-            # made up chromosome locations and ensembl ids.
+            # Made-up chromosome locations and ensembl ids.
             obj = {
                 "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
                 "symbol": ["MAP1A", "BIN1", "ESR1"],
                 "ranges": BiocFrame({
-                    "chr": ["chr1", "chr2", "chr3"]
+                    "chr": ["chr1", "chr2", "chr3"],
                     "start": [1000, 1100, 5000],
                     "end": [1100, 4000, 5500]
-                ),
+                }),
             }
             bframe = BiocFrame(obj)
 
@@ -586,7 +590,7 @@ class BiocFrame:
             value (List): New value to set.
 
         Raises:
-            ValueError: If length of ``value`` does not match the number of rows.
+            ValueError: If the length of ``value`` does not match the number of rows.
         """
         if len(__value) != self.shape[0]:
             raise ValueError(
@@ -609,25 +613,24 @@ class BiocFrame:
 
         .. code-block:: python
 
-            # made up chromosome locations and ensembl ids.
+            # made-up chromosome locations and ensembl ids.
             obj = {
                 "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
                 "symbol": ["MAP1A", "BIN1", "ESR1"],
                 "ranges": BiocFrame({
-                    "chr": ["chr1", "chr2", "chr3"]
+                    "chr": ["chr1", "chr2", "chr3"],
                     "start": [1000, 1100, 5000],
                     "end": [1100, 4000, 5500]
-                ),
+                }),
             }
             bframe = BiocFrame(obj)
-
             delete bframe["symbol"]
 
         Args:
             name (str): Name of the column.
 
         Raises:
-            ValueError: If column does not exist.
+            ValueError: If `name` is not a valid column.
         """
         if name not in self.column_names:
             raise ValueError(f"Column: '{name}' does not exist.")
@@ -648,7 +651,7 @@ class BiocFrame:
         """
         return self.shape[0]
 
-    def __iter__(self) -> "BiocFrameIter":
+    def __iter__(self) -> BiocFrameIter:
         """Iterator over rows."""
         return BiocFrameIter(self)
 
@@ -656,7 +659,7 @@ class BiocFrame:
         """Convert :py:class:`~biocframe.BiocFrame.BiocFrame` to a :py:class:`~pandas.DataFrame` object.
 
         Returns:
-            DataFrame: a :py:class:`~pandas.DataFrame` object.
+            DataFrame: A :py:class:`~pandas.DataFrame` object.
         """
         return DataFrame(
             data=self._data, index=self._row_names, columns=self._column_names
@@ -664,7 +667,6 @@ class BiocFrame:
 
     # TODO: very primitive implementation, needs very robust testing
     # TODO: implement in-place, view
-
     def __array_ufunc__(
         self, ufunc: Any, method: str, *inputs: Any, **kwargs: Any
     ) -> "BiocFrame":
@@ -681,10 +683,8 @@ class BiocFrame:
             object.
 
         Returns:
-            An object with the same type as caller.
+            An object with the same type as the caller.
         """
-        from pandas import Series
-
         _input = inputs[0]
         if not isinstance(_input, BiocFrame):
             raise TypeError("Input is not a `BiocFrame` object.")
@@ -712,7 +712,7 @@ class BiocFrame:
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
 
         Returns:
-            (list, optional): List of row names if available.
+            (list, optional): List of row names if available, otherwise None.
         """
         return self.row_names
 
@@ -723,7 +723,7 @@ class BiocFrame:
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
 
         Returns:
-            (list, optional): List of row names, if available.
+            (list, optional): List of row names if available, otherwise None.
         """
         return self.row_names
 
@@ -732,7 +732,7 @@ class BiocFrame:
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
 
         Args:
-            names (list): New row index.
+            names (list): New row names.
         """
         self.row_names = names
 
