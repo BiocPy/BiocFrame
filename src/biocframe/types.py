@@ -2,8 +2,8 @@
 
 from typing import (
     Any,
-    Dict,
     List,
+    Mapping,
     Protocol,
     Sequence,
     Tuple,
@@ -18,15 +18,12 @@ __license__ = "MIT"
 SimpleSlice = Union[slice, Sequence[int]]
 
 AtomicSlice = Union[int, str]
-ListSlice = List[Union[AtomicSlice, bool]]
-RangeSlice = Union[
-    ListSlice,
-    slice,
-    Tuple[
-        Union[ListSlice, slice],
-        Union[ListSlice, slice, None],
-    ],
+SeqSlice = Sequence[Union[AtomicSlice, bool]]
+TupleSlice = Tuple[
+    Union[SeqSlice, slice],
+    Union[SeqSlice, slice, None],
 ]
+RangeSlice = Union[SeqSlice, slice, TupleSlice]
 RowSlice = Tuple[AtomicSlice, "AllSlice"]
 ColSlice = Tuple["AllSlice", AtomicSlice]
 AllSlice = Union[RangeSlice, AtomicSlice, RowSlice, ColSlice]
@@ -37,7 +34,7 @@ class BiocCol(Protocol):
     """The protocol for data types."""
 
     @property
-    def shape(self) -> List[int]:
+    def shape(self) -> Sequence[int]:
         """Return the shape of the data."""
         ...
 
@@ -50,10 +47,11 @@ class BiocCol(Protocol):
         ...
 
 
-ColType = Union[Dict[str, Any], List[Any], BiocCol]
+# Mapping is necessary as it is covariant which MutableMapping, etc. are not.
+ColType = Union[Mapping[str, Any], List[Any], BiocCol]
 DataType = Union[
-    Dict[str, ColType],
-    Dict[str, Dict[str, Any]],
-    Dict[str, List[Any]],
-    Dict[str, BiocCol],
+    Mapping[str, ColType],
+    Mapping[str, Mapping[str, Any]],
+    Mapping[str, List[Any]],
+    Mapping[str, BiocCol],
 ]

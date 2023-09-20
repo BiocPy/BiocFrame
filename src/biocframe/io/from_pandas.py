@@ -1,17 +1,24 @@
-from pandas import DataFrame
+"""A function for converting from pandas.DataFrame to BiocFrame."""
+
+from typing import Any, Dict, List, Optional
 
 from ..BiocFrame import BiocFrame
+
+try:
+    from pandas import DataFrame, RangeIndex
+except Exception:
+    pass
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
-def from_pandas(input: "DataFrame") -> BiocFrame:
+def from_pandas(df: "DataFrame") -> "BiocFrame":
     """Read a :py:class:`~biocframe.BiocFrame.BiocFrame` from :py:class:`~pandas.DataFrame` object.
 
     Args:
-        input (:py:class:`~pandas.DataFrame`): Input data.
+        df (:py:class:`~pandas.DataFrame`): Input data.
 
     Raises:
         TypeError: If ``input`` is not a :py:class:`~pandas.DataFrame`.
@@ -19,17 +26,10 @@ def from_pandas(input: "DataFrame") -> BiocFrame:
     Returns:
         BiocFrame: A :py:class:`~biocframe.BiocFrame.BiocFrame` object.
     """
-    from pandas import DataFrame
+    r_data: Dict[str, List[Any]] = df.to_dict("list")  # type: ignore
+    r_index: Optional[List[str]] = None
 
-    if not isinstance(input, DataFrame):
-        raise TypeError("data is not a pandas `DataFrame` object.")
+    if df.index is not RangeIndex:  # type: ignore
+        r_index = df.index.to_list()  # type: ignore
 
-    rdata = input.to_dict("list")
-    rindex = None
-
-    if input.index is not None:
-        rindex = input.index.to_list()
-
-    return BiocFrame(
-        data=rdata, row_names=rindex, column_names=input.columns.to_list()
-    )
+    return BiocFrame(data=r_data, row_names=r_index)

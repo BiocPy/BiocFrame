@@ -32,16 +32,22 @@ def validate_rows(
         int: Validated number of rows in ``data``.
     """
     lengths = {k: len(v) for k, v in data.items()}
-    mean_len = sum(lengths.values()) / len(lengths.values())
+    mean_len = (
+        sum(lengths.values()) / len(lengths.values())
+        if len(lengths) > 0
+        else 0
+    )
     int_mean_len = int(mean_len)
 
-    if int_mean_len != mean_len or (
+    if int_mean_len == 0:
+        number_of_rows = number_of_rows if number_of_rows is not None else 0
+    elif int_mean_len != mean_len or (
         number_of_rows is not None and int_mean_len != number_of_rows
     ):
-        number_of_rows = (
+        expected_num_rows = (
             int_mean_len if number_of_rows is None else number_of_rows
         )
-        bad_rows = [k for k, v in lengths.items() if v != number_of_rows]
+        bad_rows = [k for k, v in lengths.items() if v != expected_num_rows]
         raise ValueError(
             "`BiocFrame` expects all columns in ``data`` to be of equal"
             f"length, but these are not: {bad_rows}."

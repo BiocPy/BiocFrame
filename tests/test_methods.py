@@ -200,7 +200,10 @@ def test_bframe_slice():
 
     assert slice is not None
     assert len(slice.column_names) == 2
-    assert len(list(set(slice.column_names).difference(["column1", "nested"]))) == 0
+    assert (
+        len(list(set(slice.column_names).difference(["column1", "nested"])))
+        == 0
+    )
 
     assert len(slice.dims) == 2
     assert slice.dims == (2, 2)
@@ -210,7 +213,12 @@ def test_bframe_slice():
     assert sliced_list is not None
     assert len(sliced_list.column_names) == 2
     assert (
-        len(list(set(sliced_list.column_names).difference(["column1", "nested"]))) == 0
+        len(
+            list(
+                set(sliced_list.column_names).difference(["column1", "nested"])
+            )
+        )
+        == 0
     )
 
     assert len(sliced_list.dims) == 2
@@ -336,7 +344,10 @@ def test_nested_biocFrame_slice():
 
     assert slice is not None
     assert len(slice.column_names) == 2
-    assert len(list(set(slice.column_names).difference(["column1", "nested"]))) == 0
+    assert (
+        len(list(set(slice.column_names).difference(["column1", "nested"])))
+        == 0
+    )
 
     assert len(slice.dims) == 2
     assert slice.dims == (2, 2)
@@ -372,7 +383,7 @@ def test_bframe_iter():
     assert bframe is not None
 
     iterCount = 0
-    for k, v in bframe:
+    for _ in bframe:
         iterCount += 1
 
     assert iterCount == bframe.dims[0]

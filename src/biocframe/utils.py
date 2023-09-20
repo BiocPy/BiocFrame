@@ -1,14 +1,35 @@
 """Utility functions for biocframe."""
 
-from typing import Any, List, Tuple, cast
+from typing import Any, List, Sequence, Tuple, Union, cast, overload
 from warnings import warn
 
 from ._type_checks import is_list_of_type
-from .types import AllSlice, SimpleSlice
+from .types import (
+    AllSlice,
+    AtomicSlice,
+    ColSlice,
+    RowSlice,
+    SeqSlice,
+    SimpleSlice,
+    TupleSlice,
+)
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
+
+
+@overload
+def match_to_indices(data: List[Any], query: slice) -> Tuple[slice, bool]:
+    ...
+
+
+@overload
+def match_to_indices(
+    data: List[Any],
+    query: Union[SeqSlice, TupleSlice, AtomicSlice, RowSlice, ColSlice],
+) -> Tuple[Sequence[int], bool]:
+    ...
 
 
 def match_to_indices(

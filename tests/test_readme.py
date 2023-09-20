@@ -22,10 +22,10 @@ def test_bframe():
             "chr3",
         ]
         * 20,
-        "starts": range(100, 300),
-        "ends": range(110, 310),
+        "starts": list(range(100, 300)),
+        "ends": list(range(110, 310)),
         "strand": ["-", "+", "+", "*", "*", "+", "+", "+", "-", "-"] * 20,
-        "score": range(0, 200),
+        "score": list(range(0, 200)),
         "GC": [random() for _ in range(10)] * 20,
     }
 
@@ -55,6 +55,12 @@ def test_bframe():
     assert sliced_df is not None
     assert sliced_df.dims == (4, 3)
     assert (
-        len(list(set(sliced_df.column_names).difference(["end", "strands", "scores"])))
+        len(
+            list(
+                set(sliced_df.column_names).difference(
+                    ["end", "strands", "scores"]
+                )
+            )
+        )
         == 0
     )

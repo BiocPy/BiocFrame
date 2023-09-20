@@ -23,14 +23,15 @@ from .types import (
     ColSlice,
     ColType,
     DataType,
-    RangeSlice,
     RowSlice,
+    SeqSlice,
     SimpleSlice,
+    TupleSlice,
 )
 from .utils import match_to_indices, slice_or_index
 
 try:
-    from pandas import DataFrame, RangeIndex
+    from pandas import DataFrame
 except Exception:
     pass
 
@@ -148,27 +149,6 @@ class BiocFrame:
         )
         self._number_of_columns = len(self._column_names)
         self._metadata = metadata
-
-    @classmethod
-    def from_pandas(cls, df: "DataFrame") -> "BiocFrame":
-        """Read a :py:class:`~biocframe.BiocFrame.BiocFrame` from :py:class:`~pandas.DataFrame` object.
-
-        Args:
-            df (:py:class:`~pandas.DataFrame`): Input data.
-
-        Raises:
-            TypeError: If ``input`` is not a :py:class:`~pandas.DataFrame`.
-
-        Returns:
-            BiocFrame: A :py:class:`~biocframe.BiocFrame.BiocFrame` object.
-        """
-        r_data: Dict[str, List[Any]] = df.to_dict("list")  # type: ignore
-        r_index: Optional[List[str]] = None
-
-        if df.index is not RangeIndex:  # type: ignore
-            r_index = df.index.to_list()  # type: ignore
-
-        return BiocFrame(data=r_data, row_names=r_index)
 
     def __repr__(self) -> str:
         """Get a machine-readable string representation of the object."""
@@ -426,13 +406,17 @@ class BiocFrame:
         )
 
     @overload
-    def __getitem__(self, __key: Union[RangeSlice, ColSlice]) -> ItemType:
+    def __getitem__(self, __key: Union[SeqSlice, slice, ColSlice]) -> ItemType:
         ...
 
     @overload
     def __getitem__(
         self, __key: Union[AtomicSlice, RowSlice]
     ) -> Dict[str, Any]:
+        ...
+
+    @overload
+    def __getitem__(self, __key: TupleSlice) -> "BiocFrame":
         ...
 
     # TODO: implement in-place or views
@@ -576,7 +560,7 @@ class BiocFrame:
         return self[index_or_name, :]
 
     # TODO: implement in-place or views
-    def __setitem__(self, name: str, value: ColType) -> None:
+    def __setitem__(self, __key: str, __value: ColType) -> None:
         """Add or re-assign a value to a column.
 
         Usage:
@@ -604,18 +588,18 @@ class BiocFrame:
         Raises:
             ValueError: If length of ``value`` does not match the number of rows.
         """
-        if len(value) != self.shape[0]:
+        if len(__value) != self.shape[0]:
             raise ValueError(
                 "Length of `value`, does not match the number of the rows,"
-                f"need to be {self.shape[0]} but provided {len(value)}."
+                f"need to be {self.shape[0]} but provided {len(__value)}."
             )
 
-        if name not in self.column_names:
-            self._column_names.append(name)
+        if __key not in self.column_names:
+            self._column_names.append(__key)
             self._number_of_columns += 1
 
         # Dunno how to fix this one...
-        self._data[name] = value  # type: ignore
+        self._data[__key] = __value  # type: ignore
 
     # TODO: implement in-place or view
     def __delitem__(self, name: str):
@@ -648,7 +632,11 @@ class BiocFrame:
         if name not in self.column_names:
             raise ValueError(f"Column: '{name}' does not exist.")
 
-        del self._data[name]
+        try:
+            del self._data[name]  # type: ignore
+        except Exception:
+            self._data = {k: v for k, v in self._data.items() if k != name}
+
         self._column_names.remove(name)
         self._number_of_columns -= 1
 
@@ -670,15 +658,16 @@ class BiocFrame:
         Returns:
             DataFrame: a :py:class:`~pandas.DataFrame` object.
         """
-        from pandas import DataFrame
-
         return DataFrame(
             data=self._data, index=self._row_names, columns=self._column_names
         )
 
     # TODO: very primitive implementation, needs very robust testing
     # TODO: implement in-place, view
-    def __array_ufunc__(self, func, method, *inputs, **kwargs) -> "BiocFrame":
+
+    def __array_ufunc__(
+        self, ufunc: Any, method: str, *inputs: Any, **kwargs: Any
+    ) -> "BiocFrame":
         """Interface with NumPy array methods.
 
         Usage:
@@ -696,16 +685,16 @@ class BiocFrame:
         """
         from pandas import Series
 
-        input = inputs[0]
-        if not isinstance(input, BiocFrame):
+        _input = inputs[0]
+        if not isinstance(_input, BiocFrame):
             raise TypeError("Input is not a `BiocFrame` object.")
 
         for col in self.column_names:
-            if is_numeric_dtype(Series(input.column(col))):
-                new_col = getattr(func, method)(input.column(col), **kwargs)
-                input[col] = new_col
+            if is_numeric_dtype(Series(_input.column(col))):  # type: ignore
+                new_col = getattr(ufunc, method)(_input.column(col), **kwargs)
+                _input[col] = new_col
 
-        return input
+        return _input
 
     ###########################################################################
     # compatibility with Pandas
