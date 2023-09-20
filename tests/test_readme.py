@@ -55,12 +55,6 @@ def test_bframe():
     assert sliced_df is not None
     assert sliced_df.dims == (4, 3)
     assert (
-        len(
-            list(
-                set(sliced_df.column_names).difference(
-                    ["end", "strands", "scores"]
-                )
-            )
-        )
+        len(list(set(sliced_df.column_names).difference(["end", "strands", "scores"])))
         == 0
     )

@@ -32,9 +32,7 @@ def match_to_indices(
     ...
 
 
-def match_to_indices(
-    data: List[Any], query: AllSlice
-) -> Tuple[SimpleSlice, bool]:
+def match_to_indices(data: List[Any], query: AllSlice) -> Tuple[SimpleSlice, bool]:
     """Utility function to make slicer arguments more palatable.
 
     Args:
@@ -68,9 +66,7 @@ def match_to_indices(
                     "`indices` is a boolean vector, length should match the size of the data."
                 )
 
-            resolved_indices = [
-                i for i in range(len(query)) if query[i] is True
-            ]
+            resolved_indices = [i for i in range(len(query)) if query[i] is True]
         elif is_list_of_type(query, int):
             resolved_indices = cast(List[int], query)
         elif is_list_of_type(query, str):

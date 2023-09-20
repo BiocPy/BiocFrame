@@ -149,9 +149,7 @@ class BiocFrame:
         self._number_of_rows = validate_rows(
             self._data, number_of_rows, self._row_names
         )
-        self._column_names, self._data = validate_cols(
-            column_names, self._data
-        )
+        self._column_names, self._data = validate_cols(column_names, self._data)
         self._number_of_columns = len(self._column_names)
         self._metadata = {} if metadata is None else metadata
 
@@ -279,9 +277,7 @@ class BiocFrame:
             raise ValueError("Column names must be unique!")
 
         self._column_names = names
-        self._data = {
-            names[i]: v for i, (_, v) in enumerate(self.data.items())
-        }
+        self._data = {names[i]: v for i, (_, v) in enumerate(self.data.items())}
 
     @property
     def metadata(self) -> Dict[str, Any]:
@@ -414,9 +410,7 @@ class BiocFrame:
         ...
 
     @overload
-    def __getitem__(
-        self, __key: Union[AtomicSlice, RowSlice]
-    ) -> Dict[str, Any]:
+    def __getitem__(self, __key: Union[AtomicSlice, RowSlice]) -> Dict[str, Any]:
         ...
 
     @overload
