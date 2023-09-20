@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>biocframe.BiocFrame - BiocFrame 0.3.8 documentation</title>
+        <title>biocframe.BiocFrame - BiocFrame 0.3.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">BiocFrame 0.3.8 documentation</div></a>
+      <a href="../../index.html"><div class="brand">BiocFrame 0.3.9 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.8 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.9 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -202,15 +202,19 @@
         <article role="main">
           <h1>Source code for biocframe.BiocFrame</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">pandas.api.types</span> <span class="kn">import</span> <span class="n">is_numeric_dtype</span>
 <span class="kn">from</span> <span class="nn">prettytable</span> <span class="kn">import</span> <span class="n">PrettyTable</span>
 
 <span class="kn">from</span> <span class="nn">._type_checks</span> <span class="kn">import</span> <span class="n">is_list_of_type</span>
 <span class="kn">from</span> <span class="nn">._validators</span> <span class="kn">import</span> <span class="n">validate_cols</span><span class="p">,</span> <span class="n">validate_rows</span><span class="p">,</span> <span class="n">validate_unique_list</span>
 <span class="kn">from</span> <span class="nn">.types</span> <span class="kn">import</span> <span class="n">SlicerArgTypes</span><span class="p">,</span> <span class="n">SlicerTypes</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_match_to_indices</span><span class="p">,</span> <span class="n">_slice_or_index</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;jkanche&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;jkanche&quot;</span>
@@ -227,6 +231,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the iterator.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            obj (BiocFrame): source object to iterate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_bframe</span> <span class="o">=</span> <span class="n">obj</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_index</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -260,14 +269,13 @@
 <span class="k">class</span> <span class="nc">BiocFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;`BiocFrame` is an alternative to :class:`~pandas.DataFrame`.</span>
 
-<span class="sd">    Columns may extend :class:`~collections.abc.Sequence`,</span>
-<span class="sd">    and must implement the length (``__len__``) and slice (``__getitem__``) dunder</span>
+<span class="sd">    Columns are required to implement the length (``__len__``) and slice (``__getitem__``) dunder</span>
 <span class="sd">    methods. This allows :py:class:`~biocframe.BiocFrame.BiocFrame` to accept nested</span>
 <span class="sd">    `BiocFrame` objects as columns.</span>
 
 <span class="sd">    Typical usage example:</span>
 
-<span class="sd">    To create a **BiocFrame** object, simply pass in the column representation as a dictionary.</span>
+<span class="sd">    To create a **BiocFrame** object, simply provide the data as a dictionary.</span>
 
 <span class="sd">    .. code-block:: python</span>
 
@@ -278,7 +286,7 @@
 <span class="sd">        }</span>
 <span class="sd">        bframe = BiocFrame(obj)</span>
 
-<span class="sd">    Alternatively, you can also specify a :py:class:`~biocframe.BiocFrame.BiocFrame` class</span>
+<span class="sd">    Alternatively, you can specify :py:class:`~biocframe.BiocFrame.BiocFrame` class</span>
 <span class="sd">    as a column.</span>
 
 <span class="sd">    .. code-block:: python</span>
@@ -295,34 +303,44 @@
 <span class="sd">        }</span>
 <span class="sd">        bframe = BiocFrame(obj)</span>
 
-<span class="sd">    or slice the object</span>
+<span class="sd">    Methods are also available to slice the object</span>
 
 <span class="sd">    .. code-block:: python</span>
 
 <span class="sd">        sliced_bframe = bframe[1:2, [True, False, False]]</span>
 
 <span class="sd">    Attributes:</span>
-<span class="sd">        data (MutableMapping[str, Any], optional):</span>
-<span class="sd">            Dictionary of column names as `keys` and their values. all columns must have</span>
-<span class="sd">            the same length. Defaults to None.</span>
-<span class="sd">        number_of_rows (int, optional): Number of rows. Defaults to None.</span>
-<span class="sd">        row_names (Sequence, optional): Row index names. Defaults to None.</span>
-<span class="sd">        column_names (Sequence[str], optional): Column names, if not provided,</span>
-<span class="sd">            is automatically inferred from data. Defaults to None.</span>
-<span class="sd">        metadata (MutableMapping, optional): Additional metadata. Defaults to None.</span>
+<span class="sd">        data (Dict[str, Any], optional): Dictionary of column names as `keys` and</span>
+<span class="sd">            their values. All columns must have the same length. Defaults to {}.</span>
+<span class="sd">        number_of_rows (int, optional): Number of rows.</span>
+<span class="sd">        row_names (List, optional): Row index names.</span>
+<span class="sd">        column_names (List[str], optional): Column names, if not provided,</span>
+<span class="sd">            they are automatically inferred from the data.</span>
+<span class="sd">        metadata (dict): Additional metadata. Defaults to {}.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        ValueError: if rows or columns mismatch from data.</span>
+<span class="sd">        ValueError: If there is a mismatch in the number of rows or columns in the data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">number_of_rows</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">row_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">column_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MutableMapping</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">row_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">column_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a `BiocFrame` object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (Dict[str, Any], optional): Dictionary of column names as `keys` and</span>
+<span class="sd">            their values. All columns must have the same length. Defaults to None.</span>
+<span class="sd">            number_of_rows (int, optional): Number of rows. Defaults to None.</span>
+<span class="sd">            row_names (List, optional): Row index names. Defaults to None.</span>
+<span class="sd">            column_names (List[str], optional): Column names, if not provided,</span>
+<span class="sd">                they are automatically inferred from the data. Defaults to None.</span>
+<span class="sd">            metadata (dict, optional): Additional metadata. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_number_of_rows</span> <span class="o">=</span> <span class="n">number_of_rows</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span> <span class="o">=</span> <span class="n">row_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">data</span>
@@ -332,12 +350,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal method to validate the object.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal method used to validate the object.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: When all columns does not contain the</span>
-<span class="sd">                same number of rows.</span>
-<span class="sd">            ValueError: When row index is not unique.</span>
+<span class="sd">            ValueError: If all columns do not contain the same number of rows.</span>
+<span class="sd">            ValueError: If row names are not unique.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_number_of_rows</span> <span class="o">=</span> <span class="n">validate_rows</span><span class="p">(</span>
@@ -407,23 +424,23 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">row_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Access row index (names).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Access row names.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            (List, optional): Row names if available, else None.</span>
+<span class="sd">            (List, optional): Row names if available, otherwise None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span>
 
     <span class="nd">@row_names</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">row_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">]):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set new row index. All values in ``names`` must be unique.</span>
+    <span class="k">def</span> <span class="nf">row_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set a new row index. All values in ``names`` must be unique.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            names (Sequence, optional): A list of unique values.</span>
+<span class="sd">            names (List[str], optional): A list of unique values.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: Length of ``names`` does not match number of rows.</span>
-<span class="sd">            ValueError: ``names`` is not unique.</span>
+<span class="sd">            ValueError: If the length of ``names`` does not match the number of rows.</span>
+<span class="sd">            ValueError: If ``names`` is not unique.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -439,34 +456,34 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span> <span class="o">=</span> <span class="n">names</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Access data as :py:class:`dict`.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            MutableMapping[str, Any]:</span>
-<span class="sd">                Dictionary of columns and their values.</span>
+<span class="sd">            Dict[str, Any]: Dictionary of columns and their values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Access column names.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: A list of column names.</span>
+<span class="sd">            List[str]: A list of column names.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span>
 
     <span class="nd">@column_names</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="nf">column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set new column names. New names must be unique.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            names (Sequence[str]): A list of unique values.</span>
+<span class="sd">            names (List[str]): A list of unique values.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: Length of ``names`` does not match number of columns.</span>
-<span class="sd">            ValueError: ``names`` is not unique.</span>
+<span class="sd">            ValueError:</span>
+<span class="sd">                If the length of ``names`` does not match the number of columns.</span>
+<span class="sd">                If ``names`` is not unique.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -489,26 +506,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">new_data</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Access metadata.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            (dict, optional): Metadata if available.</span>
+<span class="sd">            dict: Metadata object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span>
 
     <span class="nd">@metadata</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">MutableMapping</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set new metadata.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            metadata (MutableMapping, Optional): New metadata object.</span>
+<span class="sd">            metadata (dict): New metadata object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;`metadata` must be a dictionary, provided </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;`metadata` must be a dictionary, provided </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_metadata</span> <span class="o">=</span> <span class="n">metadata</span>
 
@@ -521,7 +537,7 @@
 <span class="sd">            name (str): Name to check.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            bool: True if column exists, else False.</span>
+<span class="sd">            bool: True if the column exists, otherwise False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_names</span></div>
 
@@ -532,20 +548,26 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Access a column by integer position or column label.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            index_or_name (Union[str, int]): Name of the column, must be present in</span>
+<span class="sd">            index_or_name (Union[str, int]): Name of the column, which must a valid name in</span>
 <span class="sd">                :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.</span>
 
-<span class="sd">                Alternatively, you may provide the integer index of the column to</span>
-<span class="sd">                access.</span>
+<span class="sd">                Alternatively, you may provide the integer index of the column to access.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: if ``index_or_name`` is not in column names.</span>
-<span class="sd">            ValueError: if integer index is greater than number of columns.</span>
-<span class="sd">            TypeError: if ``index_or_name`` is neither a string nor an integer.</span>
+<span class="sd">            ValueError:</span>
+<span class="sd">                If ``index_or_name`` is not in column names.</span>
+<span class="sd">                If the integer index is greater than the number of columns.</span>
+<span class="sd">            TypeError:</span>
+<span class="sd">                If ``index_or_name`` is neither a string nor an integer.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Any: Column with its original type preserved.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index_or_name</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;`index_or_name` must be either an integer index or column name.&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="p">[:,</span> <span class="n">index_or_name</span><span class="p">]</span></div>
 
@@ -559,17 +581,23 @@
 <span class="sd">            index_or_name (Union[str, int]): Integer index of the row to access.</span>
 
 <span class="sd">                Alternatively, you may provide a string specifying the row to access,</span>
-<span class="sd">                only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are</span>
-<span class="sd">                available.</span>
+<span class="sd">                only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are available.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: if ``index_or_name`` not in row names.</span>
-<span class="sd">            ValueError: if integer index greater than number of rows.</span>
-<span class="sd">            TypeError: if ``index_or_name`` is neither a string nor an integer.</span>
+<span class="sd">            ValueError:</span>
+<span class="sd">                If ``index_or_name`` is not in row names.</span>
+<span class="sd">                If the integer index is greater than the number of rows.</span>
+<span class="sd">            TypeError:</span>
+<span class="sd">                If ``index_or_name`` is neither a string nor an integer.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            dict: A dictionary with keys as column names and their values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index_or_name</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;`index_or_name` must be either an integer index or row name.&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">index_or_name</span><span class="p">,</span> <span class="p">:]</span></div>
 
@@ -582,19 +610,17 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal method to slice by index or values.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            row_indices_or_names (SlicerTypes, optional):</span>
-<span class="sd">                row indices (integer positions) or index labels to slice.</span>
-<span class="sd">                Defaults to None.</span>
+<span class="sd">            row_indices_or_names (SlicerTypes, optional): Row indices (integer positions)</span>
+<span class="sd">                or row names (string) to slice. Defaults to None.</span>
 
-<span class="sd">            column_indices_or_names (SlicerTypes, optional):</span>
-<span class="sd">                column indices (integer positions) or column names to slice.</span>
-<span class="sd">                Defaults to None.</span>
+<span class="sd">            column_indices_or_names (SlicerTypes, optional): Column indices (integer positions)</span>
+<span class="sd">                or column names (string) to slice. Defaults to None.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Union[&quot;BiocFrame&quot;, dict, list]:</span>
-<span class="sd">            - If a single row is sliced, returns a :py:class:`dict`.</span>
-<span class="sd">            - If a single column is sliced, returns a :py:class:`list`.</span>
-<span class="sd">            - For all other scenarios, returns the same type as caller with the subsetted rows and columns.</span>
+<span class="sd">                - If a single row is sliced, returns a :py:class:`dict`.</span>
+<span class="sd">                - If a single column is sliced, returns a :py:class:`list`.</span>
+<span class="sd">                - For all other scenarios, returns the same type as the caller with the subsetted rows and columns.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">new_data</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
@@ -663,7 +689,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;BiocFrame&quot;</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Subset the data frame.</span>
 
-<span class="sd">        This operation returns a new object with the same type as caller.</span>
+<span class="sd">        This operation returns a new object with the same type as the caller.</span>
 <span class="sd">        If you need to access specific rows or columns, use the</span>
 <span class="sd">        :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or</span>
 <span class="sd">        :py:meth:`~biocframe.BiocFrame.BiocFrame.column`</span>
@@ -678,32 +704,32 @@
 <span class="sd">                &quot;ensembl&quot;: [&quot;ENS00001&quot;, &quot;ENS00002&quot;, &quot;ENS00002&quot;],</span>
 <span class="sd">                &quot;symbol&quot;: [&quot;MAP1A&quot;, &quot;BIN1&quot;, &quot;ESR1&quot;],</span>
 <span class="sd">                &quot;ranges&quot;: BiocFrame({</span>
-<span class="sd">                    &quot;chr&quot;: [&quot;chr1&quot;, &quot;chr2&quot;, &quot;chr3&quot;]</span>
+<span class="sd">                    &quot;chr&quot;: [&quot;chr1&quot;, &quot;chr2&quot;, &quot;chr3&quot;],</span>
 <span class="sd">                    &quot;start&quot;: [1000, 1100, 5000],</span>
 <span class="sd">                    &quot;end&quot;: [1100, 4000, 5500]</span>
-<span class="sd">                ),</span>
+<span class="sd">                }),</span>
 <span class="sd">            }</span>
 <span class="sd">            bframe = BiocFrame(obj)</span>
 
-<span class="sd">            # different ways to slice.</span>
+<span class="sd">            # Different ways to slice.</span>
 
-<span class="sd">            biocframe[0:2, 0:2]</span>
-<span class="sd">            biocframe[[0,2], [True, False, False]]</span>
-<span class="sd">            biocframe[&lt;List of column names&gt;]</span>
+<span class="sd">            bframe[0:2, 0:2]</span>
+<span class="sd">            bframe[[0, 2], [True, False, False]]</span>
+<span class="sd">            bframe[&lt;List of column names&gt;]</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            args (SlicerArgTypes): A Tuple of slicer arguments to subset rows and</span>
 <span class="sd">                columns. An element in ``args`` may be,</span>
 
 <span class="sd">                - List of booleans, True to keep the row/column, False to remove.</span>
-<span class="sd">                    The length of the boolean vector must be the same as number of rows/columns.</span>
+<span class="sd">                    The length of the boolean vector must be the same as the number of rows/columns.</span>
 
 <span class="sd">                - List of integer positions along rows/columns to keep.</span>
 
 <span class="sd">                - A :py:class:`slice` object specifying the list of indices to keep.</span>
 
 <span class="sd">                - A list of index names to keep. For rows, the object must contain unique</span>
-<span class="sd">                    :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` and for columns must</span>
+<span class="sd">                    :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names`, and for columns must</span>
 <span class="sd">                    contain unique :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.</span>
 
 <span class="sd">                - An integer to subset either a single row or column index.</span>
@@ -717,14 +743,14 @@
 <span class="sd">                    :py:meth:`~biocframe.BiocFrame.BiocFrame.column` methods.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: Too many slices provided.</span>
-<span class="sd">            TypeError: If provided ``args`` are not an expected type.</span>
+<span class="sd">            ValueError: If too many slices are provided.</span>
+<span class="sd">            TypeError: If the provided ``args`` are not of the expected type.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Union[&quot;BiocFrame&quot;, dict, list]:</span>
 <span class="sd">            - If a single row is sliced, returns a :py:class:`dict`.</span>
 <span class="sd">            - If a single column is sliced, returns a :py:class:`list`.</span>
-<span class="sd">            - For all other scenarios, returns the same type as caller with the subsetted rows and columns.</span>
+<span class="sd">            - For all other scenarios, returns the same type as the caller with the subsetted rows and columns.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># not an array, single str, slice by column</span>
@@ -768,22 +794,22 @@
     <span class="c1"># TODO: implement in-place or views</span>
 <div class="viewcode-block" id="BiocFrame.__setitem__">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.__setitem__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add or re-assign a value to a column.</span>
 
 <span class="sd">        Usage:</span>
 
 <span class="sd">        .. code-block:: python</span>
 
-<span class="sd">            # made up chromosome locations and ensembl ids.</span>
+<span class="sd">            # Made-up chromosome locations and ensembl ids.</span>
 <span class="sd">            obj = {</span>
 <span class="sd">                &quot;ensembl&quot;: [&quot;ENS00001&quot;, &quot;ENS00002&quot;, &quot;ENS00002&quot;],</span>
 <span class="sd">                &quot;symbol&quot;: [&quot;MAP1A&quot;, &quot;BIN1&quot;, &quot;ESR1&quot;],</span>
 <span class="sd">                &quot;ranges&quot;: BiocFrame({</span>
-<span class="sd">                    &quot;chr&quot;: [&quot;chr1&quot;, &quot;chr2&quot;, &quot;chr3&quot;]</span>
+<span class="sd">                    &quot;chr&quot;: [&quot;chr1&quot;, &quot;chr2&quot;, &quot;chr3&quot;],</span>
 <span class="sd">                    &quot;start&quot;: [1000, 1100, 5000],</span>
 <span class="sd">                    &quot;end&quot;: [1100, 4000, 5500]</span>
-<span class="sd">                ),</span>
+<span class="sd">                }),</span>
 <span class="sd">            }</span>
 <span class="sd">            bframe = BiocFrame(obj)</span>
 
@@ -791,10 +817,10 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            name (str): Name of the column.</span>
-<span class="sd">            value (Sequence): New value to set.</span>
+<span class="sd">            value (List): New value to set.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: If length of ``value`` does not match the number of rows.</span>
+<span class="sd">            ValueError: If the length of ``value`` does not match the number of rows.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -819,25 +845,24 @@
 
 <span class="sd">        .. code-block:: python</span>
 
-<span class="sd">            # made up chromosome locations and ensembl ids.</span>
+<span class="sd">            # made-up chromosome locations and ensembl ids.</span>
 <span class="sd">            obj = {</span>
 <span class="sd">                &quot;ensembl&quot;: [&quot;ENS00001&quot;, &quot;ENS00002&quot;, &quot;ENS00002&quot;],</span>
 <span class="sd">                &quot;symbol&quot;: [&quot;MAP1A&quot;, &quot;BIN1&quot;, &quot;ESR1&quot;],</span>
 <span class="sd">                &quot;ranges&quot;: BiocFrame({</span>
-<span class="sd">                    &quot;chr&quot;: [&quot;chr1&quot;, &quot;chr2&quot;, &quot;chr3&quot;]</span>
+<span class="sd">                    &quot;chr&quot;: [&quot;chr1&quot;, &quot;chr2&quot;, &quot;chr3&quot;],</span>
 <span class="sd">                    &quot;start&quot;: [1000, 1100, 5000],</span>
 <span class="sd">                    &quot;end&quot;: [1100, 4000, 5500]</span>
-<span class="sd">                ),</span>
+<span class="sd">                }),</span>
 <span class="sd">            }</span>
 <span class="sd">            bframe = BiocFrame(obj)</span>
-
 <span class="sd">            delete bframe[&quot;symbol&quot;]</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name (str): Name of the column.</span>
 
 <span class="sd">        Raises:</span>
-<span class="sd">            ValueError: If column does not exist.</span>
+<span class="sd">            ValueError: If `name` is not a valid column.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Column: &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; does not exist.&quot;</span><span class="p">)</span>
@@ -860,18 +885,18 @@
 
 <div class="viewcode-block" id="BiocFrame.__iter__">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.__iter__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiocFrameIter&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BiocFrameIter</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterator over rows.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">BiocFrameIter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="BiocFrame.to_pandas">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.to_pandas">[docs]</a>
-    <span class="k">def</span> <span class="nf">to_pandas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DataFrame&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">to_pandas</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert :py:class:`~biocframe.BiocFrame.BiocFrame` to a :py:class:`~pandas.DataFrame` object.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            DataFrame: a :py:class:`~pandas.DataFrame` object.</span>
+<span class="sd">            DataFrame: A :py:class:`~pandas.DataFrame` object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 
@@ -898,10 +923,11 @@
 <span class="sd">            object.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            An object with the same type as caller.</span>
+<span class="sd">            An object with the same type as the caller.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">Series</span>
+        <span class="kn">from</span> <span class="nn">pandas.api.types</span> <span class="kn">import</span> <span class="n">is_numeric_dtype</span>
 
         <span class="nb">input</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">BiocFrame</span><span class="p">):</span>
@@ -930,7 +956,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            (list, optional): List of row names if available.</span>
+<span class="sd">            (list, optional): List of row names if available, otherwise None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_names</span>
 
@@ -940,7 +966,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            (list, optional): List of row names, if available.</span>
+<span class="sd">            (list, optional): List of row names if available, otherwise None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_names</span>
 
@@ -949,7 +975,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            names (list): New row index.</span>
+<span class="sd">            names (list): New row names.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">row_names</span> <span class="o">=</span> <span class="n">names</span>
 
@@ -1013,7 +1039,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=c1cae59a"></script>
+</div><script src="../../_static/documentation_options.js?v=65b26183"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>
