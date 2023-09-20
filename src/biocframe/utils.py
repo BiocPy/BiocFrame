@@ -1,6 +1,5 @@
-from typing import Any, List, Sequence, Tuple, Union
+from typing import Any, List, Tuple, Union
 from warnings import warn
-
 
 from ._type_checks import is_list_of_type
 from .types import SlicerTypes
@@ -11,12 +10,12 @@ __license__ = "MIT"
 
 
 def _match_to_indices(
-    data: Sequence, query: SlicerTypes
+    data: List, query: SlicerTypes
 ) -> Tuple[Union[slice, List[int]], bool]:
     """Utility function to make slicer arguments more palatable.
 
     Args:
-        data (Sequence): Input data array to slice.
+        data (List): Input data array to slice.
         query (SlicerTypes): Either a slice or
             a list of indices to keep.
 

@@ -1,8 +1,8 @@
-from typing import Optional, Sequence, Tuple, Union
+from typing import Optional, List, Tuple, Union
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
-SlicerTypes = Union[Sequence[int], Sequence[bool], Sequence[str], slice, int, str]
-SlicerArgTypes = Union[Sequence[str], Tuple[SlicerTypes, Optional[SlicerTypes]]]
+SlicerTypes = Union[List[int], List[bool], List[str], slice, int, str]
+SlicerArgTypes = Union[List[str], Tuple[SlicerTypes, Optional[SlicerTypes]]]
