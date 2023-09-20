@@ -19,10 +19,12 @@ from ._validators import validate_cols, validate_rows, validate_unique_list
 from .types import (
     AllSlice,
     AtomicSlice,
-    BiocSeq,
+    BiocCol,
+    ColSlice,
     ColType,
     DataType,
     RangeSlice,
+    RowSlice,
     SimpleSlice,
 )
 from .utils import match_to_indices, slice_or_index
@@ -173,40 +175,39 @@ class BiocFrame:
         table = PrettyTable(padding_width=1)
         table.field_names = [str(col) for col in self._column_names]
 
-        _rows = []
-        rows_to_show = 2
-        _top = self.shape[0]
-        if _top > rows_to_show:
-            _top = rows_to_show
+        num_rows = self.shape[0]
+        # maximum number of top and bottom rows to show
+        max_shown_rows = 3
 
-        # top three rows
-        for r in range(_top):
-            _row = self.row(r)
-            vals = list(_row.values())
-            res = [str(v) for v in vals]
-            _rows.append(res)
+        max_top_row = max_shown_rows if num_rows > max_shown_rows else num_rows
 
-        if self.shape[0] > 2 * rows_to_show:
-            # add ...
-            _rows.append(["..." for _ in range(len(self._column_names))])
+        min_last_row = num_rows - max_shown_rows
+        if min_last_row <= 0:
+            min_last_row = None
+        elif min_last_row < max_top_row:
+            min_last_row = max_top_row
 
-        _last = self.shape[0] - _top
-        if _last <= rows_to_show:
-            _last = self.shape[0] - _top
+        rows: List[List[str]] = []
 
-        # last three rows
-        for r in range(_last + 1, len(self)):
-            _row = self.row(r)
-            vals = list(_row.values())
-            res = [str(v) for v in vals]
-            _rows.append(res)
+        # up to top three rows
+        for r in range(max_top_row):
+            rows.append([str(val) for val in self.row(r).values()])
 
-        table.add_rows(_rows)
+        if min_last_row is not None:
+            if num_rows > (max_shown_rows * 2):
+                # add ... to the middle row
+                rows.append(["..." for _ in range(len(self._column_names))])
+
+            # up to last three rows
+            for r in range(min_last_row, num_rows):
+                rows.append([str(val) for val in self.row(r).values()])
+
+        table.add_rows(rows)  # type: ignore
 
         pattern = (
-            f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns \n"
-            f"contains row names?: {self.row_names is not None} \n"
-            f"{table.get_string()}"
+            f"BiocFrame with {num_rows} rows & {self.dims[1]} columns \n"
+            f"with row names: {self.row_names is not None} \n"
+            f"{table.get_string()}"  # type: ignore
         )
 
         return pattern
@@ -326,24 +327,16 @@ class BiocFrame:
     @overload
     def _slice(
         self,
-        row_indices_or_names: Optional[AtomicSlice],
-        column_indices_or_names: Optional[AtomicSlice],
+        row_indices_or_names: AtomicSlice,
+        column_indices_or_names: None,
     ) -> Dict[str, Any]:
         ...
 
     @overload
     def _slice(
         self,
-        row_indices_or_names: Optional[RangeSlice],
-        column_indices_or_names: Optional[RangeSlice],
-    ) -> ItemType:
-        ...
-
-    @overload
-    def _slice(
-        self,
-        row_indices_or_names: Union[AtomicSlice, slice],
-        column_indices_or_names: Union[AtomicSlice, slice],
+        row_indices_or_names: Optional[AllSlice],
+        column_indices_or_names: Union[AllSlice, None],
     ) -> ItemType:
         ...
 
@@ -401,7 +394,7 @@ class BiocFrame:
             new_number_of_rows = len(new_row_names)
 
             for k, v in new_data.items():
-                if isinstance(v, BiocSeq):
+                if isinstance(v, BiocCol):
                     tmp: List[SimpleSlice] = [slice(None)] * len(v.shape)
                     tmp[0] = new_row_indices
                     new_data[k] = v[(*tmp,)]
@@ -433,11 +426,13 @@ class BiocFrame:
         )
 
     @overload
-    def __getitem__(self, __key: AtomicSlice) -> Dict[str, Any]:
+    def __getitem__(self, __key: Union[RangeSlice, ColSlice]) -> ItemType:
         ...
 
     @overload
-    def __getitem__(self, __key: RangeSlice) -> ItemType:
+    def __getitem__(
+        self, __key: Union[AtomicSlice, RowSlice]
+    ) -> Dict[str, Any]:
         ...
 
     # TODO: implement in-place or views
@@ -525,23 +520,20 @@ class BiocFrame:
             # column names if everything is a string
             if is_list_of_type(__key, str):
                 return self._slice(None, __key)
-            elif is_list_of_type(__key, int):
-                return self._slice(__key, None)
-            elif is_list_of_type(__key, bool):
-                return self._slice(__key, None)
-            else:
-                raise ValueError("`args` is not supported.")
 
-        # tuple
-        if len(__key) == 0:
-            raise ValueError("`args` must contain at least one slice.")
+            if is_list_of_type(__key, int):
+                return self._slice(__key, None)
 
-        if len(__key) == 1:
-            return self._slice(__key[0], None)
-        elif len(__key) == 2:
-            return self._slice(__key[0], __key[1])
-        else:
+            if is_list_of_type(__key, bool):
+                return self._slice(__key, None)
+
+            raise ValueError("`args` is not supported.")
+
+        # tuple of two elements
+        if len(__key) != 2:
             raise ValueError("Length of `args` is more than 2.")
+
+        return self._slice(__key[0], __key[1])
 
     def column(self, index_or_name: AtomicSlice) -> ItemType:
         """Access a column by integer position or column label.

@@ -1,23 +1,39 @@
 """Custom types for biocframe."""
 
-from typing import Any, Dict, List, Protocol, Tuple, Union, runtime_checkable
+from typing import (
+    Any,
+    Dict,
+    List,
+    Protocol,
+    Sequence,
+    Tuple,
+    Union,
+    runtime_checkable,
+)
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
-SimpleSlice = Union[slice, List[int]]
-AtomicSlice = Union[int, bool, str]
+SimpleSlice = Union[slice, Sequence[int]]
+
+AtomicSlice = Union[int, str]
+ListSlice = List[Union[AtomicSlice, bool]]
 RangeSlice = Union[
-    List[AtomicSlice],
+    ListSlice,
     slice,
-    Tuple[Union[AtomicSlice, slice], Union[AtomicSlice, slice, None]],
+    Tuple[
+        Union[ListSlice, slice],
+        Union[ListSlice, slice, None],
+    ],
 ]
-AllSlice = Union[RangeSlice, AtomicSlice]
+RowSlice = Tuple[AtomicSlice, "AllSlice"]
+ColSlice = Tuple["AllSlice", AtomicSlice]
+AllSlice = Union[RangeSlice, AtomicSlice, RowSlice, ColSlice]
 
 
 @runtime_checkable
-class BiocSeq(Protocol):
+class BiocCol(Protocol):
     """The protocol for data types."""
 
     @property
@@ -34,10 +50,10 @@ class BiocSeq(Protocol):
         ...
 
 
-ColType = Union[Dict[str, Any], List[Any], BiocSeq]
+ColType = Union[Dict[str, Any], List[Any], BiocCol]
 DataType = Union[
     Dict[str, ColType],
     Dict[str, Dict[str, Any]],
     Dict[str, List[Any]],
-    Dict[str, BiocSeq],
+    Dict[str, BiocCol],
 ]
