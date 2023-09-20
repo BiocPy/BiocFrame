@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Dict, List, MutableMapping, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -7,18 +7,18 @@ __license__ = "MIT"
 
 
 def validate_rows(
-    data: MutableMapping[str, Union[Sequence, MutableMapping]],
+    data: Dict[str, Any],
     number_of_rows: Optional[int],
-    row_names: Optional[Sequence[str]],
+    row_names: Optional[List[str]],
 ) -> int:
     """Validate rows of :py:class:`~biocframe.BiocFrame.BiocFrame` object.
 
     Args:
-        data (MutableMapping[str, Union[Sequence, MutableMapping]], optional):
+        data (Dict[str, Any], optional):
             Dictionary of columns and their values. all columns must have the
             same length. Defaults to {}.
         number_of_rows (int, optional): Number of rows.
-        row_names (Sequence[str], optional): Row index values.
+        row_names (List[str], optional): Row index values.
 
 
     Raises:
@@ -60,15 +60,15 @@ def validate_rows(
 
 
 def validate_cols(
-    column_names: Sequence[str],
-    data: MutableMapping[str, Union[Sequence, MutableMapping]],
-) -> Tuple[List[str], Dict[str, Union[Sequence, MutableMapping]]]:
+    column_names: List[str],
+    data: Dict[str, Any],
+) -> Tuple[List[str], Dict[str, Any]]:
     """Validate columns of a :py:class:`biocframe.BiocFrame` object.
 
     Args:
-        column_names (Sequence[str], optional): Column names, if not provided,
+        column_names (List[str], optional): Column names, if not provided,
             its automatically inferred from data. Defaults to None.
-        data (MutableMapping[str, Union[Sequence, MutableMapping]], optional):
+        data (Dict[str, Any], optional):
             a dictionary of columns and their values. all columns must have the
             same length. Defaults to {}. Defaults to {}.
 
@@ -77,7 +77,7 @@ def validate_cols(
         TypeError: Incorrect column type.
 
     Returns:
-        Sequence[str]: List of columns names.
+        List[str]: List of columns names.
     """
     if column_names is None:
         column_names = list(data.keys())
@@ -123,11 +123,11 @@ def validate_cols(
     return column_names, data
 
 
-def validate_unique_list(values: Sequence) -> bool:
+def validate_unique_list(values: List) -> bool:
     """Validate if ``values`` contains unique values.
 
     Args:
-        values (Sequence): List to check.
+        values (List): List to check.
 
     Returns:
         bool: `True` if all values are unique else False.

@@ -1,12 +1,17 @@
 from ..BiocFrame import BiocFrame
 
+try:
+    from pandas import DataFrame
+except ImportError:
+    pass
+
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
 def from_pandas(input: "DataFrame") -> BiocFrame:
-    """Read a :py:class:`~biocframe.BiocFrame.BiocFrame` from :py:class:`~pandas.DataFrame` object.
+    """Read a :py:class:`~biocframe.BiocFrame.BiocFrame` from a :py:class:`~pandas.DataFrame` object.
 
     Args:
         input (:py:class:`~pandas.DataFrame`): Input data.
