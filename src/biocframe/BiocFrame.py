@@ -146,15 +146,15 @@ class BiocFrame:
         """
         self._data: DataType = {} if data is None else data
         self._row_names = row_names
+        self._metadata = {} if metadata is None else metadata
         self._number_of_rows = validate_rows(
             self._data, number_of_rows, self._row_names
         )
         self._column_names, self._data = validate_cols(column_names, self._data)
         self._number_of_columns = len(self._column_names)
-        self._metadata = {} if metadata is None else metadata
 
-    def __repr__(self) -> str:
-        """Get a machine-readable string representation of the object."""
+    def _repr_table(self) -> str:
+        """Make the pretty table for the __repr__ method.."""
         table = PrettyTable(padding_width=1)
         table.field_names = [str(col) for col in self._column_names]
 
@@ -187,13 +187,15 @@ class BiocFrame:
 
         table.add_rows(rows)  # type: ignore
 
-        pattern = (
-            f"BiocFrame with {num_rows} rows & {self.dims[1]} columns \n"
-            f"with row names: {self.row_names is not None} \n"
-            f"{table.get_string()}"  # type: ignore
-        )
+        return table.get_string()
 
-        return pattern
+    def __repr__(self) -> str:
+        """Get a machine-readable string representation of the object."""
+        return (
+            f"BiocFrame with {self.shape[0]} rows & {self.dims[1]} columns \n"
+            f"with row names: {self.row_names is not None} \n"
+            f"{self._repr_table()}"  # type: ignore
+        )
 
     @property
     def shape(self) -> Tuple[int, int]:

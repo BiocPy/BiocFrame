@@ -46,12 +46,16 @@ class BiocCol(Protocol):
         """Return the length of the data."""
         ...
 
+    def __iter__(self) -> Any:
+        """Iterate over the data."""
+        ...
+
 
 # Mapping is necessary as it is covariant which MutableMapping, etc. are not.
-ColType = Union[Mapping[str, Any], List[Any], BiocCol]
+ColType = Union[Mapping[str, Any], Sequence[Any], BiocCol]
 DataType = Union[
     Mapping[str, ColType],
     Mapping[str, Mapping[str, Any]],
-    Mapping[str, List[Any]],
+    Mapping[str, Sequence[Any]],
     Mapping[str, BiocCol],
 ]
