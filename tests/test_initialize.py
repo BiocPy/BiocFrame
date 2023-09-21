@@ -109,3 +109,9 @@ def test_nested_biocFrame():
 
     bframe = BiocFrame(obj)
     assert bframe is not None
+
+    nested_col = bframe.column("nested")
+    assert nested_col is not None
+    assert isinstance(nested_col, BiocFrame)
+    assert nested_col.row_names is None
+    assert len(nested_col.column_names) == 3
