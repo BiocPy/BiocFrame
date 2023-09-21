@@ -347,7 +347,7 @@ class BiocFrame:
                 "`index_or_name` must be either an integer index or column name."
             )
 
-        return self[:, index_or_name]
+        return self[None, index_or_name]
 
     def row(self, index_or_name: Union[str, int]) -> dict:
         """Access a row by integer position or row name.
@@ -374,7 +374,7 @@ class BiocFrame:
                 "`index_or_name` must be either an integer index or row name."
             )
 
-        return self[index_or_name, :]
+        return self[index_or_name, None]
 
     def _slice(
         self,
