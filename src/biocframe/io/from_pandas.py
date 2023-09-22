@@ -1,10 +1,5 @@
 from ..BiocFrame import BiocFrame
 
-try:
-    from pandas import DataFrame
-except ImportError:
-    pass
-
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"

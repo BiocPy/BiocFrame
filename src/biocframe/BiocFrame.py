@@ -8,11 +8,6 @@ from ._validators import validate_cols, validate_rows, validate_unique_list
 from .types import SlicerArgTypes, SlicerTypes
 from .utils import _match_to_indices, _slice_or_index
 
-try:
-    from pandas import DataFrame
-except ImportError:
-    pass
-
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
@@ -649,7 +644,7 @@ class BiocFrame:
         """Iterator over rows."""
         return BiocFrameIter(self)
 
-    def to_pandas(self) -> DataFrame:
+    def to_pandas(self):
         """Convert :py:class:`~biocframe.BiocFrame.BiocFrame` to a :py:class:`~pandas.DataFrame` object.
 
         Returns:
