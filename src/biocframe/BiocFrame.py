@@ -645,7 +645,7 @@ class BiocFrame:
         return BiocFrameIter(self)
 
     def to_pandas(self):
-        """Convert :py:class:`~biocframe.BiocFrame.BiocFrame` to a :py:class:`~pandas.DataFrame` object.
+        """Coerce :py:class:`~biocframe.BiocFrame.BiocFrame` into :py:class:`~pandas.DataFrame` object.
 
         Returns:
             DataFrame: A :py:class:`~pandas.DataFrame` object.

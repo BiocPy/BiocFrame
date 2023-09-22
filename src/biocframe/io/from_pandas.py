@@ -5,7 +5,7 @@ __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
-def from_pandas(input: "DataFrame") -> BiocFrame:
+def from_pandas(input) -> BiocFrame:
     """Read a :py:class:`~biocframe.BiocFrame.BiocFrame` from a :py:class:`~pandas.DataFrame` object.
 
     Args:
@@ -21,7 +21,7 @@ def from_pandas(input: "DataFrame") -> BiocFrame:
     from pandas import DataFrame
 
     if not isinstance(input, DataFrame):
-        raise TypeError("data is not a pandas `DataFrame` object.")
+        raise TypeError("`data` is not a pandas `DataFrame` object.")
 
     rdata = input.to_dict("list")
     rindex = None
