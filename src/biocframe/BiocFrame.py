@@ -770,8 +770,8 @@ class BiocFrame:
 
         all_row_names = []
         all_num_rows = sum([len(x) for x in all_objects])
-        all_data = OrderedDict()
-        for obj in all_objects:
+        all_data = self.data.copy()
+        for obj in other:
             for ocol in all_unique_columns:
                 if ocol not in all_data:
                     all_data[ocol] = [None] * len(obj)
@@ -779,7 +779,7 @@ class BiocFrame:
                 if ocol not in obj.column_names:
                     all_data[ocol] = [None] * len(obj)
                 else:
-                    all_data[ocol] = combine(obj.column(ocol), all_data[ocol])
+                    all_data[ocol] = combine(all_data[ocol], obj.column(ocol))
 
                 rnames = obj.row_names
                 if rnames is None:
@@ -787,8 +787,11 @@ class BiocFrame:
 
                 all_row_names.extend(rnames)
 
-        if all(all_row_names) is False:
+        if all(all_row_names) is False or len(all_row_names) == 0:
             all_row_names = None
+
+        print("allrownames", all_row_names)
+        print(all_data)
 
         current_class_const = type(self)
         return current_class_const(
