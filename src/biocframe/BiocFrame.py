@@ -1,6 +1,8 @@
 from collections import OrderedDict
+from itertools import chain
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+from biocgenerics import combine
 from prettytable import PrettyTable
 
 from ._type_checks import is_list_of_type
@@ -754,3 +756,45 @@ class BiocFrame:
             where `m` is the number of rows, and `n` is the number of columns.
         """
         return self.shape
+
+    def combine(self, *other: "BiocFrame") -> "BiocFrame":
+        if not is_list_of_type(other, BiocFrame):
+            raise TypeError("All objects to combine must be BiocFrame objects.")
+
+        all_objects = [self] + list(other)
+
+        all_columns = [x.column_names for x in all_objects]
+        all_columns.append(self.column_names)
+        all_unique_columns = list(
+            set([item for sublist in all_columns for item in sublist])
+        )
+
+        all_row_names = []
+        all_num_rows = sum([len(x) for x in all_objects])
+        all_data = OrderedDict()
+        for obj in all_objects:
+            for ocol in all_unique_columns:
+                if ocol not in all_data:
+                    all_data[ocol] = [None] * len(obj)
+
+                if ocol not in obj.column_names:
+                    all_data[ocol] = [None] * len(obj)
+                else:
+                    all_data[ocol] = combine(obj.column(ocol), all_data[ocol])
+
+                rnames = obj.row_names
+                if rnames is None:
+                    rnames = [None] * all_num_rows
+
+                all_row_names.extend(rnames)
+
+        if all(all_row_names) is False:
+            all_row_names = None
+
+        current_class_const = type(self)
+        return current_class_const(
+            all_data,
+            number_of_rows=all_num_rows,
+            row_names=all_row_names,
+            column_names=all_unique_columns,
+        )
