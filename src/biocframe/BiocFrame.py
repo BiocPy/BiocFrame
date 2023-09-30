@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from itertools import chain
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from biocgenerics import combine

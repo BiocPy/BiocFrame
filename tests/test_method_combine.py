@@ -37,10 +37,11 @@ def test_basic_combine_multiple():
     assert merged.shape[0] == 2 * obj1.shape[0] + obj2.shape[0]
     assert merged.shape[1] == 2
 
+
 def test_basic_combine_empty():
     o1 = BiocFrame(number_of_rows=10)
     o2 = BiocFrame(number_of_rows=5)
-    
+
     merged = o1.combine(o2)
 
     print(merged)
