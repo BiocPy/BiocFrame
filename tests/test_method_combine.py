@@ -47,5 +47,5 @@ def test_basic_combine_empty():
     print(merged)
 
     assert isinstance(merged, BiocFrame)
-    assert merged.shape[0] ==15
+    assert merged.shape[0] == 15
     assert merged.shape[1] == 0
