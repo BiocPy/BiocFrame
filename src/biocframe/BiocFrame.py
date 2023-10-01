@@ -139,6 +139,9 @@ class BiocFrame:
             ValueError: If row names are not unique.
         """
 
+        if not isinstance(self._data, dict):
+            raise TypeError("`data` must be a dictionary.")
+
         self._number_of_rows = validate_rows(
             self._data, self._number_of_rows, self._row_names
         )
@@ -768,7 +771,7 @@ class BiocFrame:
             set([item for sublist in all_columns for item in sublist])
         )
 
-        all_row_names = []
+        all_row_names = [None] * len(self) if self.row_names is None else self.row_names
         all_num_rows = sum([len(x) for x in all_objects])
         all_data = self.data.copy()
         for obj in other:
@@ -781,17 +784,14 @@ class BiocFrame:
                 else:
                     all_data[ocol] = combine(all_data[ocol], obj.column(ocol))
 
-                rnames = obj.row_names
-                if rnames is None:
-                    rnames = [None] * all_num_rows
+            rnames = obj.row_names
+            if rnames is None:
+                rnames = [None] * len(obj)
 
-                all_row_names.extend(rnames)
+            all_row_names.extend(rnames)
 
-        if all(all_row_names) is False or len(all_row_names) == 0:
+        if all([x is None for x in all_row_names]) or len(all_row_names) == 0:
             all_row_names = None
-
-        print("allrownames", all_row_names)
-        print(all_data)
 
         current_class_const = type(self)
         return current_class_const(

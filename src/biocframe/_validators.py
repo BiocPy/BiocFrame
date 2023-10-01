@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Tuple
+from warnings import warn
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -45,7 +46,7 @@ def validate_rows(
 
     if row_names is not None:
         if not validate_unique_list(row_names):
-            raise ValueError("`row_names` must be unique!")
+            warn("`row_names` must be unique!")
 
         if number_of_rows is None:
             number_of_rows = len(row_names)
