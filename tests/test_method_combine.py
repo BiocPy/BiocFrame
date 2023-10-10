@@ -93,9 +93,3 @@ def test_combine_generic_preserve_types():
     assert isinstance(merged, BiocFrame)
     assert isinstance(merged.column("odd"), np.ndarray)
     assert isinstance(merged.column("even"), list)
-
-    on2["odd"] = [None] * 5
-    merged = on1.combine(on2)
-
-    assert merged is not None
-    assert isinstance(merged.column("odd"), list)

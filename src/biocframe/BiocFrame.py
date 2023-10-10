@@ -811,8 +811,7 @@ class BiocFrame:
 def _combine_bframes(*x: BiocFrame):
     if not is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine` must be `BiocFrame` objects.")
-
-    return x[0].combine(x[1:])
+    return x[0].combine(*x[1:])
 
 
 @combine_rows.register(BiocFrame)
@@ -820,7 +819,7 @@ def _combine_rows_bframes(*x: BiocFrame):
     if not is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine_rows` must be `BiocFrame` objects.")
 
-    return x[0].combine(x[1:])
+    return x[0].combine(*x[1:])
 
 
 @combine_cols.register(BiocFrame)
