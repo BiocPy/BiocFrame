@@ -14,7 +14,7 @@ __license__ = "MIT"
 def _combine_bframes(*x: BiocFrame):
     if not is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine` must be `BiocFrame` objects.")
-    
+
     return x[0].combine(x[1:])
 
 
@@ -22,7 +22,7 @@ def _combine_bframes(*x: BiocFrame):
 def _combine_rows_bframes(*x: BiocFrame):
     if not is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine_rows` must be `BiocFrame` objects.")
-    
+
     return x[0].combine(x[1:])
 
 
@@ -30,5 +30,7 @@ def _combine_rows_bframes(*x: BiocFrame):
 def _combine_cols_bframes(*x: BiocFrame):
     if not is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine_cols` must be `BiocFrame` objects.")
-    
-    raise NotImplementedError("`combine_cols` is not implemented for `BiocFrame` objects.")
+
+    raise NotImplementedError(
+        "`combine_cols` is not implemented for `BiocFrame` objects."
+    )
