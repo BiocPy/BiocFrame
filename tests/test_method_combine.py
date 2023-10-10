@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from biocframe import BiocFrame
-from biocgenerics import combine
+from biocgenerics.combine import combine
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"

@@ -16,5 +16,5 @@ def is_list_of_type(x: Any, target_type: Callable) -> bool:
         bool: True if ``x`` is :py:class:`list` and all elements are of the same type.
     """
     return isinstance(x, (list, tuple)) and all(
-        [isinstance(item, target_type) for item in x]
+        isinstance(item, target_type) for item in x
     )
