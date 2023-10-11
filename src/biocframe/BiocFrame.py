@@ -77,10 +77,10 @@ class BiocFrame:
             "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
             "symbol": ["MAP1A", "BIN1", "ESR1"],
             "ranges": BiocFrame({
-                "chr": ["chr1", "chr2", "chr3"]
+                "chr": ["chr1", "chr2", "chr3"],
                 "start": [1000, 1100, 5000],
                 "end": [1100, 4000, 5500]
-            ),
+            }),
         }
         bframe = BiocFrame(obj)
 
