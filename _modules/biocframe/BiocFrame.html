@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>biocframe.BiocFrame - BiocFrame 0.3.11 documentation</title>
+        <title>biocframe.BiocFrame - BiocFrame 0.3.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">BiocFrame 0.3.11 documentation</div></a>
+      <a href="../../index.html"><div class="brand">BiocFrame 0.3.12 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.11 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.12 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -204,6 +204,9 @@
 <span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">from</span> <span class="nn">biocgenerics.combine</span> <span class="kn">import</span> <span class="n">combine</span>
+<span class="kn">from</span> <span class="nn">biocgenerics.combine_cols</span> <span class="kn">import</span> <span class="n">combine_cols</span>
+<span class="kn">from</span> <span class="nn">biocgenerics.combine_rows</span> <span class="kn">import</span> <span class="n">combine_rows</span>
 <span class="kn">from</span> <span class="nn">prettytable</span> <span class="kn">import</span> <span class="n">PrettyTable</span>
 
 <span class="kn">from</span> <span class="nn">._type_checks</span> <span class="kn">import</span> <span class="n">is_list_of_type</span>
@@ -291,10 +294,10 @@
 <span class="sd">            &quot;ensembl&quot;: [&quot;ENS00001&quot;, &quot;ENS00002&quot;, &quot;ENS00002&quot;],</span>
 <span class="sd">            &quot;symbol&quot;: [&quot;MAP1A&quot;, &quot;BIN1&quot;, &quot;ESR1&quot;],</span>
 <span class="sd">            &quot;ranges&quot;: BiocFrame({</span>
-<span class="sd">                &quot;chr&quot;: [&quot;chr1&quot;, &quot;chr2&quot;, &quot;chr3&quot;]</span>
+<span class="sd">                &quot;chr&quot;: [&quot;chr1&quot;, &quot;chr2&quot;, &quot;chr3&quot;],</span>
 <span class="sd">                &quot;start&quot;: [1000, 1100, 5000],</span>
 <span class="sd">                &quot;end&quot;: [1100, 4000, 5500]</span>
-<span class="sd">            ),</span>
+<span class="sd">            }),</span>
 <span class="sd">        }</span>
 <span class="sd">        bframe = BiocFrame(obj)</span>
 
@@ -351,6 +354,9 @@
 <span class="sd">            ValueError: If all columns do not contain the same number of rows.</span>
 <span class="sd">            ValueError: If row names are not unique.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`data` must be a dictionary.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_number_of_rows</span> <span class="o">=</span> <span class="n">validate_rows</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_number_of_rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span>
@@ -1000,8 +1006,84 @@
 <span class="sd">            Tuple[int, int]: A tuple  (m, n),</span>
 <span class="sd">            where `m` is the number of rows, and `n` is the number of columns.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
 
+<div class="viewcode-block" id="BiocFrame.combine">
+<a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.combine">[docs]</a>
+    <span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">:</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_list_of_type</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BiocFrame</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;All objects to combine must be BiocFrame objects.&quot;</span><span class="p">)</span>
+
+        <span class="n">all_objects</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+        <span class="n">all_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">column_names</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_objects</span><span class="p">]</span>
+        <span class="n">all_columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
+        <span class="n">all_unique_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+            <span class="nb">set</span><span class="p">([</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">all_columns</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">])</span>
+        <span class="p">)</span>
+
+        <span class="n">all_row_names</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_names</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_names</span>
+        <span class="n">all_num_rows</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_objects</span><span class="p">])</span>
+        <span class="n">all_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">other</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ocol</span> <span class="ow">in</span> <span class="n">all_unique_columns</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ocol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_data</span><span class="p">:</span>
+                    <span class="n">all_data</span><span class="p">[</span><span class="n">ocol</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">ocol</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">column_names</span><span class="p">:</span>
+                    <span class="n">all_data</span><span class="p">[</span><span class="n">ocol</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">all_data</span><span class="p">[</span><span class="n">ocol</span><span class="p">]</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">all_data</span><span class="p">[</span><span class="n">ocol</span><span class="p">],</span> <span class="n">obj</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">ocol</span><span class="p">))</span>
+
+            <span class="n">rnames</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">row_names</span>
+            <span class="k">if</span> <span class="n">rnames</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">rnames</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+            <span class="n">all_row_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">rnames</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_row_names</span><span class="p">])</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_row_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">all_row_names</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">current_class_const</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">current_class_const</span><span class="p">(</span>
+            <span class="n">all_data</span><span class="p">,</span>
+            <span class="n">number_of_rows</span><span class="o">=</span><span class="n">all_num_rows</span><span class="p">,</span>
+            <span class="n">row_names</span><span class="o">=</span><span class="n">all_row_names</span><span class="p">,</span>
+            <span class="n">column_names</span><span class="o">=</span><span class="n">all_unique_columns</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BiocFrame.combine_rows">
+<a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.combine_rows">[docs]</a>
+    <span class="k">def</span> <span class="nf">combine_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">:</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+</div>
+
+
+
+<span class="nd">@combine</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">BiocFrame</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_combine_bframes</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">:</span> <span class="n">BiocFrame</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_list_of_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">BiocFrame</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All elements to `combine` must be `BiocFrame` objects.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+
+<span class="nd">@combine_rows</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">BiocFrame</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_combine_rows_bframes</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">:</span> <span class="n">BiocFrame</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_list_of_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">BiocFrame</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All elements to `combine_rows` must be `BiocFrame` objects.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+
+<span class="nd">@combine_cols</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">BiocFrame</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">_combine_cols_bframes</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">:</span> <span class="n">BiocFrame</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_list_of_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">BiocFrame</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All elements to `combine_cols` must be `BiocFrame` objects.&quot;</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+        <span class="s2">&quot;`combine_cols` is not implemented for `BiocFrame` objects.&quot;</span>
+    <span class="p">)</span>
 </pre></div>
         </article>
       </div>
@@ -1034,7 +1116,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=3b0e221d"></script>
+</div><script src="../../_static/documentation_options.js?v=0cf6a877"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>

@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Tutorial" href="getting_started.html" /><link rel="prev" title="BiocFrame" href="index.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>BiocFrame - BiocFrame 0.3.11 documentation</title>
+        <title>BiocFrame - BiocFrame 0.3.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.3.11 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.3.12 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.11 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.12 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -218,15 +218,12 @@
 <img alt="Unit tests" src="https://github.com/BiocPy/BiocFrame/actions/workflows/pypi-test.yml/badge.svg" /></p>
 <section class="tex2jax_ignore mathjax_ignore" id="biocframe">
 <h1>BiocFrame<a class="headerlink" href="#biocframe" title="Link to this heading">#</a></h1>
-<p>This package provides a data frame representation similar to a pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>, with
-support for nested column types.</p>
-<section id="install">
-<h2>Install<a class="headerlink" href="#install" title="Link to this heading">#</a></h2>
-<p>Package is published to <a class="reference external" href="https://pypi.org/project/biocframe/">PyPI</a></p>
+<p>This package provides <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> class, a dataframe-like representation similar to a pandas, with support for flexible and nested objects.</p>
+<p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> makes no assumption on the types of the columns, the minimum requirement is each column implements length: <code class="docutils literal notranslate"><span class="pre">__len__</span></code> and slice: <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> operations.</p>
+<p>To get started, install the package from <a class="reference external" href="https://pypi.org/project/biocframe/">PyPI</a></p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>biocframe
 </pre></div>
 </div>
-</section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <p>Lets create a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> from a dictionary</p>
@@ -354,7 +351,6 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">BiocFrame</a><ul>
-<li><a class="reference internal" href="#install">Install</a></li>
 <li><a class="reference internal" href="#usage">Usage</a><ul>
 <li><a class="reference internal" href="#access-properties">Access Properties</a></li>
 <li><a class="reference internal" href="#setters">Setters</a></li>
@@ -373,7 +369,7 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=3b0e221d"></script>
+</div><script src="_static/documentation_options.js?v=0cf6a877"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>

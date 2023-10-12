@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="biocframe.io package" href="biocframe.io.html" /><link rel="prev" title="biocframe" href="modules.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>biocframe package - BiocFrame 0.3.11 documentation</title>
+        <title>biocframe package - BiocFrame 0.3.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">BiocFrame 0.3.11 documentation</div></a>
+      <a href="../index.html"><div class="brand">BiocFrame 0.3.12 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.11 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.12 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -250,10 +250,10 @@ as a column.</p>
     <span class="s2">&quot;ensembl&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ENS00001&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00002&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00002&quot;</span><span class="p">],</span>
     <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;MAP1A&quot;</span><span class="p">,</span> <span class="s2">&quot;BIN1&quot;</span><span class="p">,</span> <span class="s2">&quot;ESR1&quot;</span><span class="p">],</span>
     <span class="s2">&quot;ranges&quot;</span><span class="p">:</span> <span class="n">BiocFrame</span><span class="p">({</span>
-        <span class="s2">&quot;chr&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;chr1&quot;</span><span class="p">,</span> <span class="s2">&quot;chr2&quot;</span><span class="p">,</span> <span class="s2">&quot;chr3&quot;</span><span class="p">]</span>
+        <span class="s2">&quot;chr&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;chr1&quot;</span><span class="p">,</span> <span class="s2">&quot;chr2&quot;</span><span class="p">,</span> <span class="s2">&quot;chr3&quot;</span><span class="p">],</span>
         <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1100</span><span class="p">,</span> <span class="mi">5000</span><span class="p">],</span>
         <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">5500</span><span class="p">]</span>
-    <span class="p">),</span>
+    <span class="p">}),</span>
 <span class="p">}</span>
 <span class="n">bframe</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 </pre></div>
@@ -586,6 +586,16 @@ contain unique <a class="reference internal" href="#id0" title="biocframe.BiocFr
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.combine">
+<span class="sig-name descname"><span class="pre">combine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><span class="pre">BiocFrame</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><span class="pre">BiocFrame</span></a></span></span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.combine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.combine" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.combine_rows">
+<span class="sig-name descname"><span class="pre">combine_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><span class="pre">BiocFrame</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><span class="pre">BiocFrame</span></a></span></span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.combine_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.combine_rows" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="id1">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Dict" title="(in Python v3.9)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Any" title="(in Python v3.9)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id1" title="Link to this definition">#</a></dt>
@@ -856,6 +866,8 @@ where <cite>m</cite> is the number of rows, and <cite>n</cite> is the number of 
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column()</span></code></a></li>
 <li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column_names</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.columns</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.combine"><code class="docutils literal notranslate"><span class="pre">BiocFrame.combine()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.combine_rows"><code class="docutils literal notranslate"><span class="pre">BiocFrame.combine_rows()</span></code></a></li>
 <li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">BiocFrame.data</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.dims"><code class="docutils literal notranslate"><span class="pre">BiocFrame.dims</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.has_column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.has_column()</span></code></a></li>
@@ -889,7 +901,7 @@ where <cite>m</cite> is the number of rows, and <cite>n</cite> is the number of 
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=3b0e221d"></script>
+</div><script src="../_static/documentation_options.js?v=0cf6a877"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
