@@ -1,6 +1,9 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+from biocgenerics.combine import combine
+from biocgenerics.combine_cols import combine_cols
+from biocgenerics.combine_rows import combine_rows
 from prettytable import PrettyTable
 
 from ._type_checks import is_list_of_type
@@ -137,6 +140,9 @@ class BiocFrame:
             ValueError: If all columns do not contain the same number of rows.
             ValueError: If row names are not unique.
         """
+
+        if not isinstance(self._data, dict):
+            raise TypeError("`data` must be a dictionary.")
 
         self._number_of_rows = validate_rows(
             self._data, self._number_of_rows, self._row_names
@@ -754,3 +760,73 @@ class BiocFrame:
             where `m` is the number of rows, and `n` is the number of columns.
         """
         return self.shape
+
+    def combine(self, *other: "BiocFrame") -> "BiocFrame":
+        if not is_list_of_type(other, BiocFrame):
+            raise TypeError("All objects to combine must be BiocFrame objects.")
+
+        all_objects = [self] + list(other)
+
+        all_columns = [x.column_names for x in all_objects]
+        all_columns.append(self.column_names)
+        all_unique_columns = list(
+            set([item for sublist in all_columns for item in sublist])
+        )
+
+        all_row_names = [None] * len(self) if self.row_names is None else self.row_names
+        all_num_rows = sum([len(x) for x in all_objects])
+        all_data = self.data.copy()
+        for obj in other:
+            for ocol in all_unique_columns:
+                if ocol not in all_data:
+                    all_data[ocol] = [None] * len(obj)
+
+                if ocol not in obj.column_names:
+                    all_data[ocol] = [None] * len(obj)
+                else:
+                    all_data[ocol] = combine(all_data[ocol], obj.column(ocol))
+
+            rnames = obj.row_names
+            if rnames is None:
+                rnames = [None] * len(obj)
+
+            all_row_names.extend(rnames)
+
+        if all([x is None for x in all_row_names]) or len(all_row_names) == 0:
+            all_row_names = None
+
+        current_class_const = type(self)
+        return current_class_const(
+            all_data,
+            number_of_rows=all_num_rows,
+            row_names=all_row_names,
+            column_names=all_unique_columns,
+        )
+
+    def combine_rows(self, *other: "BiocFrame") -> "BiocFrame":
+        pass
+
+
+@combine.register(BiocFrame)
+def _combine_bframes(*x: BiocFrame):
+    if not is_list_of_type(x, BiocFrame):
+        raise ValueError("All elements to `combine` must be `BiocFrame` objects.")
+    return x[0].combine(*x[1:])
+
+
+@combine_rows.register(BiocFrame)
+def _combine_rows_bframes(*x: BiocFrame):
+    if not is_list_of_type(x, BiocFrame):
+        raise ValueError("All elements to `combine_rows` must be `BiocFrame` objects.")
+
+    return x[0].combine(*x[1:])
+
+
+@combine_cols.register(BiocFrame)
+def _combine_cols_bframes(*x: BiocFrame):
+    if not is_list_of_type(x, BiocFrame):
+        raise ValueError("All elements to `combine_cols` must be `BiocFrame` objects.")
+
+    raise NotImplementedError(
+        "`combine_cols` is not implemented for `BiocFrame` objects."
+    )

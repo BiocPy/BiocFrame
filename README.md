@@ -16,13 +16,12 @@
 
 # BiocFrame
 
-This package provides a data frame representation similar to a pandas `DataFrame`, with
-support for nested column types.
+This package provides `BiocFrame` class, a dataframe-like representation similar to a pandas, with support for flexible and nested objects.
+
+`BiocFrame` makes no assumption on the types of the columns, the minimum requirement is each column implements length: `__len__` and slice: `__getitem__` operations.
 
 
-## Install
-
-Package is published to [PyPI](https://pypi.org/project/biocframe/)
+To get started, install the package from [PyPI](https://pypi.org/project/biocframe/)
 
 ```shell
 pip install biocframe
