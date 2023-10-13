@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from biocgenerics.combine import combine
 from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
-from prettytable import PrettyTable
+from rich.table import Table
 
 from ._type_checks import is_list_of_type
 from ._validators import validate_cols, validate_rows, validate_unique_list
@@ -155,8 +155,20 @@ class BiocFrame:
             self._number_of_rows = 0
 
     def __repr__(self) -> str:
-        table = PrettyTable(padding_width=1)
-        table.field_names = [str(col) for col in self.column_names]
+        from io import StringIO
+
+        from rich.console import Console
+
+        console = Console(file=StringIO())
+
+        table = Table(
+            title=f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns"
+        )
+        if self.row_names is not None:
+            table.add_column("row_names")
+
+        for col in self.column_names:
+            table.add_column(str(col))
 
         _rows = []
         rows_to_show = 2
@@ -169,6 +181,8 @@ class BiocFrame:
             _row = self.row(r)
             vals = list(_row.values())
             res = [str(v) for v in vals]
+            if self.row_names:
+                res = [str(self.row_names[r])] + res
             _rows.append(res)
 
         if self.shape[0] > 2 * rows_to_show:
@@ -184,17 +198,17 @@ class BiocFrame:
             _row = self.row(r)
             vals = list(_row.values())
             res = [str(v) for v in vals]
+            if self.row_names:
+                res = [str(self.row_names[r])] + res
             _rows.append(res)
 
-        table.add_rows(_rows)
+        for _row in _rows:
+            table.add_row(*_row)
 
-        pattern = (
-            f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns \n"
-            f"contains row names?: {self.row_names is not None} \n"
-            f"{table.get_string()}"
-        )
+        with console.capture() as capture:
+            console.print(table)
 
-        return pattern
+        return capture.get()
 
     @property
     def shape(self) -> Tuple[int, int]:
