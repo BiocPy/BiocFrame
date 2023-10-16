@@ -159,16 +159,15 @@ class BiocFrame:
 
         from rich.console import Console
 
-        console = Console(file=StringIO())
-
         table = Table(
-            title=f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns"
+            title=f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns",
+            show_header=True,
         )
         if self.row_names is not None:
             table.add_column("row_names")
 
         for col in self.column_names:
-            table.add_column(str(col))
+            table.add_column(f"{str(col)} [italic]<{type(self.column(col)).__name__}>")
 
         _rows = []
         rows_to_show = 2
@@ -176,7 +175,7 @@ class BiocFrame:
         if _top > rows_to_show:
             _top = rows_to_show
 
-        # top three rows
+        # top two rows
         for r in range(_top):
             _row = self.row(r)
             vals = list(_row.values())
@@ -187,14 +186,19 @@ class BiocFrame:
 
         if self.shape[0] > 2 * rows_to_show:
             # add ...
-            _rows.append(["..." for _ in range(len(self.column_names))])
+            _dots = []
+            if self.row_names:
+                _dots = ["..."]
+
+            _dots.extend(["..." for _ in range(len(self.column_names))])
+            _rows.append(_dots)
 
         _last = self.shape[0] - _top
         if _last <= rows_to_show:
             _last = self.shape[0] - _top
 
-        # last three rows
-        for r in range(_last + 1, len(self)):
+        # last set of rows
+        for r in range(_last, len(self)):
             _row = self.row(r)
             vals = list(_row.values())
             res = [str(v) for v in vals]
@@ -205,6 +209,7 @@ class BiocFrame:
         for _row in _rows:
             table.add_row(*_row)
 
+        console = Console(file=StringIO())
         with console.capture() as capture:
             console.print(table)
 
