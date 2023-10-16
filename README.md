@@ -29,7 +29,7 @@ pip install biocframe
 
 ## Usage
 
-To construct a `BiocFrame` object, simply provide the data as a dictionary. 
+To construct a `BiocFrame` object, simply provide the data as a dictionary.
 
 ```python
 from random import random
@@ -194,7 +194,7 @@ combined = bframe.combine(bframe2)
     │ 99         │ 88          │
     └────────────┴─────────────┘
 
-For more details, check out the module reference [documentation](https://biocpy.github.io/BiocFrame/api/biocframe.html#biocframe.BiocFrame.BiocFrame).
+For more details, check out the BiocFrame class [reference](https://biocpy.github.io/BiocFrame/api/biocframe.html#biocframe.BiocFrame.BiocFrame).
 
 
 <!-- pyscaffold-notes -->
