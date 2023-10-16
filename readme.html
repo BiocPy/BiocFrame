@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Tutorial" href="getting_started.html" /><link rel="prev" title="BiocFrame" href="index.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="biocframe" href="api/modules.html" /><link rel="prev" title="BiocFrame" href="index.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>BiocFrame - BiocFrame 0.3.12 documentation</title>
+        <title>BiocFrame - BiocFrame 0.3.13 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.3.12 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.3.13 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.12 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.13 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -156,7 +156,6 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/modules.html">Module Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="api/biocframe.html">biocframe package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of biocframe package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/biocframe.io.html">biocframe.io package</a></li>
@@ -218,73 +217,173 @@
 <img alt="Unit tests" src="https://github.com/BiocPy/BiocFrame/actions/workflows/pypi-test.yml/badge.svg" /></p>
 <section class="tex2jax_ignore mathjax_ignore" id="biocframe">
 <h1>BiocFrame<a class="headerlink" href="#biocframe" title="Link to this heading">#</a></h1>
-<p>This package provides <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> class, a dataframe-like representation similar to a pandas, with support for flexible and nested objects.</p>
-<p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> makes no assumption on the types of the columns, the minimum requirement is each column implements length: <code class="docutils literal notranslate"><span class="pre">__len__</span></code> and slice: <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> operations.</p>
+<p>This package provides <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> class, an alternative to Pandas DataFrame’s.</p>
+<p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> makes no assumption on the types of the columns, the minimum requirement is each column implements length: <code class="docutils literal notranslate"><span class="pre">__len__</span></code> and slice: <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> dunder methods. This allows <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> to accept nested representations or any supported class as columns.</p>
 <p>To get started, install the package from <a class="reference external" href="https://pypi.org/project/biocframe/">PyPI</a></p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>biocframe
 </pre></div>
 </div>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<p>Lets create a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> from a dictionary</p>
+<p>To construct a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> object, simply provide the data as a dictionary.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
 <span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
 
-<span class="n">bframe</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;seqnames&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="s2">&quot;chr1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;chr2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;chr2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;chr2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;chr1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;chr1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;chr3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;chr3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;chr3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;chr3&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
-        <span class="o">*</span> <span class="mi">20</span><span class="p">,</span>
-        <span class="s2">&quot;starts&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">),</span>
-        <span class="s2">&quot;ends&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">310</span><span class="p">),</span>
-        <span class="s2">&quot;strand&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">20</span><span class="p">,</span>
-        <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
-        <span class="s2">&quot;GC&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">random</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">)</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ensembl&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ENS00001&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00002&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00003&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;MAP1A&quot;</span><span class="p">,</span> <span class="s2">&quot;BIN1&quot;</span><span class="p">,</span> <span class="s2">&quot;ESR1&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+<span class="n">bframe</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="p">)</span>
 </pre></div>
 </div>
-<section id="access-properties">
-<h3>Access Properties<a class="headerlink" href="#access-properties" title="Link to this heading">#</a></h3>
-<p>Accessor methods/properties are available to access column names, row names and dims.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># find the dimensions</span>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
+BiocFrame with 3 rows &amp; 2 columns
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ ensembl &lt;list&gt; ┃ symbol &lt;list&gt; ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ ENS00001       │ MAP1A         │
+│ ENS00002       │ BIN1          │
+│ ENS00003       │ ESR1          │
+└────────────────┴───────────────┘
+</pre></div>
+</div>
+<p>You can specify complex representations as columns, for example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">obj</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;ensembl&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ENS00001&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00002&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00002&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;symbol&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;MAP1A&quot;</span><span class="p">,</span> <span class="s2">&quot;BIN1&quot;</span><span class="p">,</span> <span class="s2">&quot;ESR1&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;ranges&quot;</span><span class="p">:</span> <span class="n">BiocFrame</span><span class="p">({</span>
+        <span class="s2">&quot;chr&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;chr1&quot;</span><span class="p">,</span> <span class="s2">&quot;chr2&quot;</span><span class="p">,</span> <span class="s2">&quot;chr3&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1100</span><span class="p">,</span> <span class="mi">5000</span><span class="p">],</span>
+        <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">5500</span><span class="p">]</span>
+    <span class="p">}),</span>
+<span class="p">}</span>
+
+<span class="n">bframe2</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">row_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;row1&quot;</span><span class="p">,</span> <span class="s2">&quot;row2&quot;</span><span class="p">,</span> <span class="s2">&quot;row3&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
+BiocFrame with 3 rows &amp; 3 columns
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ row_names ┃ ensembl &lt;list&gt; ┃ symbol &lt;list&gt; ┃ ranges &lt;BiocFrame&gt;                          ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ row1      │ ENS00001       │ MAP1A         │ {&#39;chr&#39;: &#39;chr1&#39;, &#39;start&#39;: 1000, &#39;end&#39;: 1100} │
+│ row2      │ ENS00002       │ BIN1          │ {&#39;chr&#39;: &#39;chr2&#39;, &#39;start&#39;: 1100, &#39;end&#39;: 4000} │
+│ row3      │ ENS00002       │ ESR1          │ {&#39;chr&#39;: &#39;chr3&#39;, &#39;start&#39;: 5000, &#39;end&#39;: 5500} │
+└───────────┴────────────────┴───────────────┴─────────────────────────────────────────────┘
+</pre></div>
+</div>
+<section id="properties">
+<h3>Properties<a class="headerlink" href="#properties" title="Link to this heading">#</a></h3>
+<p>Properties can be accessed directly from the object, for e.g. column names, row names and/or dimensions of the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dimensionality or shape</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+
+<span class="c1">## output</span>
+<span class="c1">## (3, 2)</span>
 
 <span class="c1"># get the column names</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
+
+<span class="c1">## output</span>
+<span class="c1">## [&#39;ensembl&#39;, &#39;symbol&#39;]</span>
 </pre></div>
 </div>
-</section>
 <section id="setters">
-<h3>Setters<a class="headerlink" href="#setters" title="Link to this heading">#</a></h3>
-<p>Using the Pythonic way to set properties</p>
+<h4>Setters<a class="headerlink" href="#setters" title="Link to this heading">#</a></h4>
+<p>To set various properties</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set new column names</span>
-<span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">new_column_names</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
-
-<span class="c1"># add or reassign columns</span>
-
-<span class="n">bframe</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+<span class="n">bframe</span><span class="o">.</span><span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;column1&quot;</span><span class="p">,</span> <span class="s2">&quot;column2&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
+BiocFrame with 3 rows &amp; 2 columns
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃ column1 &lt;list&gt; ┃ column2 &lt;list&gt; ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ ENS00001       │ MAP1A          │
+│ ENS00002       │ BIN1           │
+│ ENS00003       │ ESR1           │
+└────────────────┴────────────────┘
+</pre></div>
+</div>
+<p>To add new columns,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bframe</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
+BiocFrame with 3 rows &amp; 3 columns
+┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ column1 &lt;list&gt; ┃ column2 &lt;list&gt; ┃ score &lt;range&gt; ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ ENS00001       │ MAP1A          │ 2             │
+│ ENS00002       │ BIN1           │ 3             │
+│ ENS00003       │ ESR1           │ 4             │
+└────────────────┴────────────────┴───────────────┘
 </pre></div>
 </div>
 </section>
-<section id="slice-the-biocframe">
-<h3>Slice the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code><a class="headerlink" href="#slice-the-biocframe" title="Link to this heading">#</a></h3>
-<p>Currently slicing is only supported by indices or names (column names or row names). A future version may implement pandas query-like operations.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sliced_bframe</span> <span class="o">=</span> <span class="n">bframe</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+</section>
+<section id="subset-biocframe">
+<h3>Subset <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code><a class="headerlink" href="#subset-biocframe" title="Link to this heading">#</a></h3>
+<p>Use the subset (<code class="docutils literal notranslate"><span class="pre">[]</span></code>) operator to <strong>slice</strong> the object,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sliced</span> <span class="o">=</span> <span class="n">bframe</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sliced</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For more use cases including subset, checkout the <a class="reference external" href="https://biocpy.github.io/BiocFrame/">documentation</a></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
+BiocFrame with 1 row &amp; 1 column
+┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+┃ row_names ┃ column1 &lt;list&gt; ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+│ 1         │ ENS00002       │
+└───────────┴────────────────┘
+</pre></div>
+</div>
+<p>This operation accepts different slice input types, you can either specify a boolean vector, a <code class="docutils literal notranslate"><span class="pre">slice</span></code> object, a list of indices, or row/column names to subset.</p>
+</section>
+<section id="combine">
+<h3>Combine<a class="headerlink" href="#combine" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> implements the combine generic from <a class="reference external" href="https://github.com/BiocPy/generics">biocgenerics</a>. To combine multiple objects,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bframe1</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;odd&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+        <span class="s2">&quot;even&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">bframe2</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;odd&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">99</span><span class="p">],</span>
+        <span class="s2">&quot;even&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">44</span><span class="p">,</span> <span class="mi">66</span><span class="p">,</span> <span class="mi">88</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">biocgenerics.combine</span> <span class="kn">import</span> <span class="n">combine</span>
+<span class="n">combined</span> <span class="o">=</span> <span class="n">combine</span><span class="p">(</span><span class="n">bframe1</span><span class="p">,</span> <span class="n">bframe2</span><span class="p">)</span>
+
+<span class="c1"># OR an object oriented approach</span>
+
+<span class="n">combined</span> <span class="o">=</span> <span class="n">bframe</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">bframe2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
+BiocFrame with 10 rows &amp; 2
+        columns
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+┃ odd &lt;list&gt; ┃ even &lt;list&gt; ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+│ 1          │ 0           │
+│ 3          │ 2           │
+│ ...        │ ...         │
+│ 99         │ 88          │
+└────────────┴─────────────┘
+</pre></div>
+</div>
+<p>For more details, check out the BiocFrame class <a class="reference external" href="https://biocpy.github.io/BiocFrame/api/biocframe.html#biocframe.BiocFrame.BiocFrame">reference</a>.</p>
 <!-- pyscaffold-notes -->
 </section>
 </section>
@@ -300,12 +399,12 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="getting_started.html">
+          <a class="next-page" href="api/modules.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Tutorial</div>
+                <div class="title">biocframe</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -352,9 +451,12 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
             <ul>
 <li><a class="reference internal" href="#">BiocFrame</a><ul>
 <li><a class="reference internal" href="#usage">Usage</a><ul>
-<li><a class="reference internal" href="#access-properties">Access Properties</a></li>
+<li><a class="reference internal" href="#properties">Properties</a><ul>
 <li><a class="reference internal" href="#setters">Setters</a></li>
-<li><a class="reference internal" href="#slice-the-biocframe">Slice the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#subset-biocframe">Subset <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code></a></li>
+<li><a class="reference internal" href="#combine">Combine</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#note">Note</a></li>
@@ -369,7 +471,7 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=0cf6a877"></script>
+</div><script src="_static/documentation_options.js?v=a88e2c6e"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
