@@ -17,7 +17,6 @@ pip install biocframe
 :maxdepth: 2
 
 Overview <readme>
-Getting Started <getting_started>
 Module Reference <api/modules>
 Contributions & Help <contributing>
 License <license>
