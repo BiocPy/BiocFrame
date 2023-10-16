@@ -235,7 +235,7 @@ class BiocFrame:
             _last = self.shape[0] - _top
 
         # last set of rows
-        for r in range(_last+1, len(self)):
+        for r in range(_last + 1, len(self)):
             _row = self.row(r)
             vals = list(_row.values())
             res = [str(v) for v in vals]

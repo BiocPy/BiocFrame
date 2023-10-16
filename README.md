@@ -29,7 +29,7 @@ pip install biocframe
 
 ## Usage
 
-To construct a `BiocFrame` object, simply provide the data as a dictionary. 
+To construct a `BiocFrame` object, simply provide the data as a dictionary.
 
 ```python
 from random import random
@@ -44,7 +44,7 @@ print(bframe)
 
 ## output
 
-BiocFrame with 3 rows & 2 columns 
+BiocFrame with 3 rows & 2 columns
 ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
 ┃ ensembl <list> ┃ symbol <list> ┃
 ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
@@ -72,7 +72,7 @@ print(bframe2)
 
 ## output
 
-   BiocFrame with 3 rows & 3 columns                              
+   BiocFrame with 3 rows & 3 columns
 ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ row_names ┃ ensembl <list> ┃ symbol <list> ┃ ranges <BiocFrame>                          ┃
 ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
@@ -110,7 +110,7 @@ bframe.column_names = ["column1", "column2"]
 print(bframe)
 
 ## output
-BiocFrame with 3 rows & 2 columns 
+BiocFrame with 3 rows & 2 columns
 ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
 ┃ column1 <list> ┃ column2 <list> ┃
 ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
@@ -127,7 +127,7 @@ bframe["score"] = range(2, 5)
 bframe
 
 ## output
- BiocFrame with 3 rows & 3 columns         
+ BiocFrame with 3 rows & 3 columns
 ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
 ┃ column1 <list> ┃ column2 <list> ┃ score <range> ┃
 ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
@@ -146,7 +146,7 @@ sliced = bframe[1:2, [True, False, False]]
 print(sliced)
 
 ## output
-BiocFrame with 1 row & 1 column            
+BiocFrame with 1 row & 1 column
 ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
 ┃ row_names ┃ column1 <list> ┃
 ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
