@@ -24,16 +24,16 @@ def _match_to_indices(
     """
 
     resolved_indices = None
-    is_unary = False
+    is_scalar = False
 
     if isinstance(query, str):
         resolved_indices = [data.index(query)]
-        is_unary = True
+        is_scalar = True
     elif isinstance(query, int):
         if abs(query) > len(data):
             raise ValueError("Integer index is greater than the shape.")
         resolved_indices = [query]
-        is_unary = True
+        is_scalar = True
     elif isinstance(query, slice):
         # resolved_indices = list(range(len(data))[query])
         resolved_indices = query
@@ -60,7 +60,7 @@ def _match_to_indices(
     else:
         raise TypeError("`indices` is unsupported!")
 
-    return resolved_indices, is_unary
+    return resolved_indices, is_scalar
 
 
 def _slice_or_index(data: Any, query: Union[slice, List[int]]):

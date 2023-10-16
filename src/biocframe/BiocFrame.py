@@ -415,12 +415,12 @@ class BiocFrame:
         new_data = OrderedDict()
         new_row_names = self.row_names
         new_column_names = self.column_names
-        is_row_unary = False
-        is_col_unary = False
+        is_row_scalar = False
+        is_col_scalar = False
 
         # slice the columns and data
         if column_indices_or_names is not None:
-            new_column_indices, is_col_unary = _match_to_indices(
+            new_column_indices, is_col_scalar = _match_to_indices(
                 self.column_names, column_indices_or_names
             )
 
@@ -436,7 +436,7 @@ class BiocFrame:
             if temp_row_names is None:
                 temp_row_names = list(range(self.shape[0]))
 
-            new_row_indices, is_row_unary = _match_to_indices(
+            new_row_indices, is_row_scalar = _match_to_indices(
                 temp_row_names, row_indices_or_names
             )
 
@@ -453,12 +453,12 @@ class BiocFrame:
         else:
             new_number_of_rows = self.shape[0]
 
-        if is_row_unary is True:
+        if is_row_scalar is True:
             rdata = {}
             for col in new_column_names:
                 rdata[col] = new_data[col][0]
             return rdata
-        elif is_col_unary is True:
+        elif is_col_scalar is True:
             return new_data[new_column_names[0]]
 
         current_class_const = type(self)
