@@ -125,7 +125,7 @@ def validate_cols(
 
 
 def validate_unique_list(values: List) -> bool:
-    """Validate if ``values`` contains unique values.
+    """Check if ``values`` contains unique values.
 
     Args:
         values (List): List to check.

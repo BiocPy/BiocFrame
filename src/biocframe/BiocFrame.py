@@ -4,9 +4,8 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from biocgenerics.combine import combine
 from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
-from rich.table import Table
+from biocutils import is_list_of_type
 
-from ._type_checks import is_list_of_type
 from ._validators import validate_cols, validate_rows, validate_unique_list
 from .types import SlicerArgTypes, SlicerTypes
 from .utils import _match_to_indices, _slice_or_index
@@ -55,7 +54,7 @@ class BiocFrame:
 
     Columns are required to implement the length (``__len__``) and slice (``__getitem__``) dunder
     methods. This allows :py:class:`~biocframe.BiocFrame.BiocFrame` to accept nested
-    `BiocFrame` objects as columns.
+    `BiocFrame` or any supported class as columns.
 
     Typical usage example:
 
@@ -65,7 +64,7 @@ class BiocFrame:
 
         # made up ensembl ids.
         obj = {
-            "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
+            "ensembl": ["ENS00001", "ENS00002", "ENS00003"],
             "symbol": ["MAP1A", "BIN1", "ESR1"],
         }
         bframe = BiocFrame(obj)
@@ -87,19 +86,56 @@ class BiocFrame:
         }
         bframe = BiocFrame(obj)
 
-    Methods are also available to slice the object
+    Methods are available to **slice** (:py:meth:`~biocframe.BiocFrame.BiocFrame.__getitem__`) the object,
 
     .. code-block:: python
 
-        sliced_bframe = bframe[1:2, [True, False, False]]
+        sliced = bframe[1:2, [True, False, False]]
+
+    Additionally, the ``slice`` operation accepts different inputs, you can either
+    specify a boolean vector, a :py:class:`~slice` object, or a list of indices or row names to subset.
+
+    To access a particular **row or column** of the dataframe,
+
+    .. code-block:: python
+
+        row2 = bframe.row(2)
+        ensembl_col = bframe.column("ensembl")
+
+    Use the :py:func:`~biocgenerics.combine.combine` generic to concatenate multiple biocframe objects,
+
+    .. code-block:: python
+
+        bframe1 = BiocFrame(
+            {
+                "odd": [1, 3, 5, 7, 9],
+                "even": [0, 2, 4, 6, 8],
+            }
+        )
+
+        bframe2 = BiocFrame(
+            {
+                "odd": [11, 33, 55, 77, 99],
+                "even": [0, 22, 44, 66, 88],
+            }
+        )
+
+        from biocgenerics.combine import combine
+        combined = combine(bframe1, bframe2)
+
+    or the combine function
+
+    .. code-block:: python
+
+        combined = bframe1.combine(bframe2)
 
     Attributes:
         data (Dict[str, Any], optional): Dictionary of column names as `keys` and
             their values. All columns must have the same length. Defaults to {}.
-        number_of_rows (int, optional): Number of rows.
-        row_names (List, optional): Row index names.
-        column_names (List[str], optional): Column names, if not provided,
-            they are automatically inferred from the data.
+        number_of_rows (int, optional): Number of rows. If not specified, inferred from ``data``.
+        row_names (list, optional): Row names.
+        column_names (list, optional): Column names. If not provided,
+            inferred from the ``data``.
         metadata (dict): Additional metadata. Defaults to {}.
 
     Raises:
@@ -118,12 +154,12 @@ class BiocFrame:
 
         Args:
             data (Dict[str, Any], optional): Dictionary of column names as `keys` and
-            their values. All columns must have the same length. Defaults to None.
-            number_of_rows (int, optional): Number of rows. Defaults to None.
-            row_names (List, optional): Row index names. Defaults to None.
-            column_names (List[str], optional): Column names, if not provided,
-                they are automatically inferred from the data. Defaults to None.
-            metadata (dict, optional): Additional metadata. Defaults to None.
+                their values. All columns must have the same length. Defaults to {}.
+            number_of_rows (int, optional): Number of rows. If not specified, inferred from ``data``.
+            row_names (list, optional): Row names.
+            column_names (list, optional): Column names. If not provided,
+                inferred from the ``data``.
+            metadata (dict): Additional metadata. Defaults to {}.
         """
         self._number_of_rows = number_of_rows
         self._row_names = row_names
@@ -134,7 +170,7 @@ class BiocFrame:
         self._validate()
 
     def _validate(self):
-        """Internal method used to validate the object.
+        """Internal method to validate the object.
 
         Raises:
             ValueError: If all columns do not contain the same number of rows.
@@ -158,6 +194,7 @@ class BiocFrame:
         from io import StringIO
 
         from rich.console import Console
+        from rich.table import Table
 
         table = Table(
             title=f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns",
@@ -217,17 +254,17 @@ class BiocFrame:
 
     @property
     def shape(self) -> Tuple[int, int]:
-        """Get shape of the data frame.
+        """Dimensionality of the BiocFrame.
 
         Returns:
-            Tuple[int, int]: A tuple  (m, n),
+            Tuple[int, int]: A tuple (m, n),
             where `m` is the number of rows, and `n` is the number of columns.
         """
         return (self._number_of_rows, self._number_of_columns)
 
     @property
     def row_names(self) -> Optional[List]:
-        """Access row names.
+        """Row names of the BiocFrame.
 
         Returns:
             (List, optional): Row names if available, otherwise None.
@@ -236,7 +273,7 @@ class BiocFrame:
 
     @row_names.setter
     def row_names(self, names: Optional[List]):
-        """Set a new row index. All values in ``names`` must be unique.
+        """Set new row names. All values in ``names`` must be unique.
 
         Args:
             names (List[str], optional): A list of unique values.
@@ -260,7 +297,7 @@ class BiocFrame:
 
     @property
     def data(self) -> Dict[str, Any]:
-        """Access data as :py:class:`dict`.
+        """Access columns as :py:class:`dict`.
 
         Returns:
             Dict[str, Any]: Dictionary of columns and their values.
@@ -269,7 +306,7 @@ class BiocFrame:
 
     @property
     def column_names(self) -> List[str]:
-        """Access column names.
+        """Column names of the BiocFrame.
 
         Returns:
             List[str]: A list of column names.
@@ -332,7 +369,7 @@ class BiocFrame:
         self._metadata = metadata
 
     def has_column(self, name: str) -> bool:
-        """Checks whether the column exists.
+        """Check whether the column exists in the BiocFrame.
 
         Args:
             name (str): Name to check.
@@ -343,7 +380,7 @@ class BiocFrame:
         return name in self.column_names
 
     def column(self, index_or_name: Union[str, int]) -> Any:
-        """Access a column by integer position or column label.
+        """Access a column by index or column label.
 
         Args:
             index_or_name (Union[str, int]): Name of the column, which must a valid name in
@@ -370,7 +407,7 @@ class BiocFrame:
         return self[None, index_or_name]
 
     def row(self, index_or_name: Union[str, int]) -> dict:
-        """Access a row by integer position or row name.
+        """Access a row by index or row name.
 
         Args:
             index_or_name (Union[str, int]): Integer index of the row to access.
@@ -404,16 +441,16 @@ class BiocFrame:
         """Internal method to slice by index or values.
 
         Args:
-            row_indices_or_names (SlicerTypes, optional): Row indices (integer positions)
+            row_indices_or_names (SlicerTypes, optional): Row indices (index positions)
                 or row names (string) to slice. Defaults to None.
 
-            column_indices_or_names (SlicerTypes, optional): Column indices (integer positions)
+            column_indices_or_names (SlicerTypes, optional): Column indices (index positions)
                 or column names (string) to slice. Defaults to None.
 
         Returns:
             Union["BiocFrame", dict, list]:
                 - If a single row is sliced, returns a :py:class:`dict`.
-                - If a single column is sliced, returns a :py:class:`list`.
+                - If a single column is sliced, returns the same type of the column.
                 - For all other scenarios, returns the same type as the caller with the subsetted rows and columns.
         """
 
@@ -541,7 +578,7 @@ class BiocFrame:
         Returns:
             Union["BiocFrame", dict, list]:
             - If a single row is sliced, returns a :py:class:`dict`.
-            - If a single column is sliced, returns a :py:class:`list`.
+            - If a single column is sliced, returns returns the same type of the column.
             - For all other scenarios, returns the same type as the caller with the subsetted rows and columns.
         """
 
@@ -563,12 +600,14 @@ class BiocFrame:
             elif is_list_of_type(args, int):
                 return self._slice(args, None)
             else:
-                raise ValueError("`args` is not supported.")
+                raise TypeError(
+                    "Arguments not supported! Since slice is a list, must contain either list of column names or indices."
+                )
 
         # tuple
         if isinstance(args, tuple):
             if len(args) == 0:
-                raise ValueError("`args` must contain at least one slice.")
+                raise ValueError("Arguments must specify atleast a single slice!")
 
             if len(args) == 1:
                 return self._slice(args[0], None)
@@ -578,9 +617,11 @@ class BiocFrame:
                     args[1],
                 )
             else:
-                raise ValueError("Length of `args` is more than 2.")
+                raise ValueError(
+                    "Number of slices more than 2. `BiocFrame` only supports 2-dimensional slicing."
+                )
 
-        raise TypeError("`args` is not supported.")
+        raise TypeError("Provided slice arguments are not supported!")
 
     # TODO: implement in-place or views
     def __setitem__(self, name: str, value: List):
@@ -686,6 +727,8 @@ class BiocFrame:
     def __array_ufunc__(self, func, method, *inputs, **kwargs) -> "BiocFrame":
         """Interface with NumPy array methods.
 
+        Note: This is a very primitive implementation and needs tests to support different types.
+
         Usage:
 
         .. code-block:: python
@@ -781,6 +824,19 @@ class BiocFrame:
         return self.shape
 
     def combine(self, *other: "BiocFrame") -> "BiocFrame":
+        """Combine multiple BiocFrame objects by row.
+
+        Note: Fills missing columns with an array of `None`s.
+
+        Args:
+            *other (BiocFrame): BiocFrame objects.
+
+        Raises:
+            TypeError: If all objects are not of type BiocFrame.
+
+        Returns:
+            BiocFrame: A combined BiocFrame.
+        """
         if not is_list_of_type(other, BiocFrame):
             raise TypeError("All objects to combine must be BiocFrame objects.")
 
@@ -821,9 +877,6 @@ class BiocFrame:
             row_names=all_row_names,
             column_names=all_unique_columns,
         )
-
-    def combine_rows(self, *other: "BiocFrame") -> "BiocFrame":
-        pass
 
 
 @combine.register(BiocFrame)

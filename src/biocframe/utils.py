@@ -1,7 +1,7 @@
 from typing import Any, List, Tuple, Union
 from warnings import warn
 
-from ._type_checks import is_list_of_type
+from biocutils import is_list_of_type
 from .types import SlicerTypes
 
 __author__ = "jkanche"
@@ -12,7 +12,7 @@ __license__ = "MIT"
 def _match_to_indices(
     data: List, query: SlicerTypes
 ) -> Tuple[Union[slice, List[int]], bool]:
-    """Utility function to make slicer arguments more palatable.
+    """Utility function to ingest slicer arguments.
 
     Args:
         data (List): Input data array to slice.
