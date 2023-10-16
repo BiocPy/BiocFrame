@@ -601,7 +601,8 @@ class BiocFrame:
                 return self._slice(args, None)
             else:
                 raise TypeError(
-                    "Arguments not supported! Since slice is a list, must contain either list of column names or indices."
+                    "Arguments not supported! Since slice is a list, must contain either list of column "
+                    "names or indices."
                 )
 
         # tuple
