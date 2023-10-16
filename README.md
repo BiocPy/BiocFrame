@@ -41,18 +41,17 @@ obj = {
 }
 bframe = BiocFrame(obj)
 print(bframe)
-
-## output
-
-BiocFrame with 3 rows & 2 columns 
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
-┃ ensembl <list> ┃ symbol <list> ┃
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-│ ENS00001       │ MAP1A         │
-│ ENS00002       │ BIN1          │
-│ ENS00003       │ ESR1          │
-└────────────────┴───────────────┘
 ```
+
+    ## output
+    BiocFrame with 3 rows & 2 columns 
+    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+    ┃ ensembl <list> ┃ symbol <list> ┃
+    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+    │ ENS00001       │ MAP1A         │
+    │ ENS00002       │ BIN1          │
+    │ ENS00003       │ ESR1          │
+    └────────────────┴───────────────┘
 
 You can specify complex representations as columns, for example
 
@@ -69,18 +68,17 @@ obj = {
 
 bframe2 = BiocFrame(obj, row_names=["row1", "row2", "row3"])
 print(bframe2)
-
-## output
-
-   BiocFrame with 3 rows & 3 columns                              
-┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ row_names ┃ ensembl <list> ┃ symbol <list> ┃ ranges <BiocFrame>                          ┃
-┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ row1      │ ENS00001       │ MAP1A         │ {'chr': 'chr1', 'start': 1000, 'end': 1100} │
-│ row2      │ ENS00002       │ BIN1          │ {'chr': 'chr2', 'start': 1100, 'end': 4000} │
-│ row3      │ ENS00002       │ ESR1          │ {'chr': 'chr3', 'start': 5000, 'end': 5500} │
-└───────────┴────────────────┴───────────────┴─────────────────────────────────────────────┘
 ```
+
+    ## output
+    BiocFrame with 3 rows & 3 columns                              
+    ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+    ┃ row_names ┃ ensembl <list> ┃ symbol <list> ┃ ranges <BiocFrame>                          ┃
+    ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+    │ row1      │ ENS00001       │ MAP1A         │ {'chr': 'chr1', 'start': 1000, 'end': 1100} │
+    │ row2      │ ENS00002       │ BIN1          │ {'chr': 'chr2', 'start': 1100, 'end': 4000} │
+    │ row3      │ ENS00002       │ ESR1          │ {'chr': 'chr3', 'start': 5000, 'end': 5500} │
+    └───────────┴────────────────┴───────────────┴─────────────────────────────────────────────┘
 
 ### Properties
 
@@ -91,13 +89,13 @@ Properties can be accessed directly from the object, for e.g. column names, row 
 print(bframe.dims)
 
 ## output
-(3, 2)
+## (3, 2)
 
 # get the column names
 print(bframe.column_names)
 
 ## output
-['ensembl', 'symbol']
+## ['ensembl', 'symbol']
 ```
 
 #### Setters
@@ -108,34 +106,34 @@ To set various properties
 # set new column names
 bframe.column_names = ["column1", "column2"]
 print(bframe)
-
-## output
-BiocFrame with 3 rows & 2 columns 
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
-┃ column1 <list> ┃ column2 <list> ┃
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
-│ ENS00001       │ MAP1A          │
-│ ENS00002       │ BIN1           │
-│ ENS00003       │ ESR1           │
-└────────────────┴────────────────┘
 ```
+
+    ## output
+    BiocFrame with 3 rows & 2 columns 
+    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+    ┃ column1 <list> ┃ column2 <list> ┃
+    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+    │ ENS00001       │ MAP1A          │
+    │ ENS00002       │ BIN1           │
+    │ ENS00003       │ ESR1           │
+    └────────────────┴────────────────┘
 
 To add new columns,
 
 ```python
 bframe["score"] = range(2, 5)
-bframe
-
-## output
- BiocFrame with 3 rows & 3 columns         
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
-┃ column1 <list> ┃ column2 <list> ┃ score <range> ┃
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-│ ENS00001       │ MAP1A          │ 2             │
-│ ENS00002       │ BIN1           │ 3             │
-│ ENS00003       │ ESR1           │ 4             │
-└────────────────┴────────────────┴───────────────┘
+print(bframe)
 ```
+
+    ## output
+    BiocFrame with 3 rows & 3 columns         
+    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+    ┃ column1 <list> ┃ column2 <list> ┃ score <range> ┃
+    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+    │ ENS00001       │ MAP1A          │ 2             │
+    │ ENS00002       │ BIN1           │ 3             │
+    │ ENS00003       │ ESR1           │ 4             │
+    └────────────────┴────────────────┴───────────────┘
 
 ### Subset `BiocFrame`
 
@@ -144,16 +142,15 @@ Use the subset (`[]`) operator to **slice** the object,
 ```python
 sliced = bframe[1:2, [True, False, False]]
 print(sliced)
-
-## output
-BiocFrame with 1 row & 1 column            
-┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
-┃ row_names ┃ column1 <list> ┃
-┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
-│ 1         │ ENS00002       │
-└───────────┴────────────────┘
-
 ```
+
+    ## output
+    BiocFrame with 1 row & 1 column            
+    ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+    ┃ row_names ┃ column1 <list> ┃
+    ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+    │ 1         │ ENS00002       │
+    └───────────┴────────────────┘
 
 This operation accepts different slice input types, you can either specify a boolean vector, a `slice` object, a list of indices, or row/column names to subset.
 
@@ -184,6 +181,18 @@ combined = combine(bframe1, bframe2)
 
 combined = bframe.combine(bframe2)
 ```
+
+    ## output
+    BiocFrame with 10 rows & 2 
+            columns           
+    ┏━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+    ┃ odd <list> ┃ even <list> ┃
+    ┡━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+    │ 1          │ 0           │
+    │ 3          │ 2           │
+    │ ...        │ ...         │
+    │ 99         │ 88          │
+    └────────────┴─────────────┘
 
 For more details, check out the module reference [documentation](https://biocpy.github.io/BiocFrame/api/biocframe.html#biocframe.BiocFrame.BiocFrame).
 
