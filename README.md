@@ -44,7 +44,7 @@ print(bframe)
 ```
 
     ## output
-    BiocFrame with 3 rows & 2 columns 
+    BiocFrame with 3 rows & 2 columns
     ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
     ┃ ensembl <list> ┃ symbol <list> ┃
     ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
@@ -71,7 +71,7 @@ print(bframe2)
 ```
 
     ## output
-    BiocFrame with 3 rows & 3 columns                              
+    BiocFrame with 3 rows & 3 columns
     ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
     ┃ row_names ┃ ensembl <list> ┃ symbol <list> ┃ ranges <BiocFrame>                          ┃
     ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
@@ -109,7 +109,7 @@ print(bframe)
 ```
 
     ## output
-    BiocFrame with 3 rows & 2 columns 
+    BiocFrame with 3 rows & 2 columns
     ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
     ┃ column1 <list> ┃ column2 <list> ┃
     ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
@@ -126,7 +126,7 @@ print(bframe)
 ```
 
     ## output
-    BiocFrame with 3 rows & 3 columns         
+    BiocFrame with 3 rows & 3 columns
     ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
     ┃ column1 <list> ┃ column2 <list> ┃ score <range> ┃
     ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
@@ -145,7 +145,7 @@ print(sliced)
 ```
 
     ## output
-    BiocFrame with 1 row & 1 column            
+    BiocFrame with 1 row & 1 column
     ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
     ┃ row_names ┃ column1 <list> ┃
     ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
@@ -183,8 +183,8 @@ combined = bframe.combine(bframe2)
 ```
 
     ## output
-    BiocFrame with 10 rows & 2 
-            columns           
+    BiocFrame with 10 rows & 2
+            columns
     ┏━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
     ┃ odd <list> ┃ even <list> ┃
     ┡━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
