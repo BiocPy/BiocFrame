@@ -1,7 +1,8 @@
 from typing import Any, List, Tuple, Union
 from warnings import warn
 
-from ._type_checks import is_list_of_type
+from biocutils import is_list_of_type
+
 from .types import SlicerTypes
 
 __author__ = "jkanche"
@@ -10,9 +11,9 @@ __license__ = "MIT"
 
 
 def _match_to_indices(
-    data: List, query: SlicerTypes
+    data: Any, query: SlicerTypes
 ) -> Tuple[Union[slice, List[int]], bool]:
-    """Utility function to make slicer arguments more palatable.
+    """Utility function to ingest slicer arguments .
 
     Args:
         data (List): Input data array to slice.
@@ -24,16 +25,16 @@ def _match_to_indices(
     """
 
     resolved_indices = None
-    is_unary = False
+    is_scalar = False
 
     if isinstance(query, str):
         resolved_indices = [data.index(query)]
-        is_unary = True
+        is_scalar = True
     elif isinstance(query, int):
         if abs(query) > len(data):
             raise ValueError("Integer index is greater than the shape.")
         resolved_indices = [query]
-        is_unary = True
+        is_scalar = True
     elif isinstance(query, slice):
         # resolved_indices = list(range(len(data))[query])
         resolved_indices = query
@@ -60,7 +61,7 @@ def _match_to_indices(
     else:
         raise TypeError("`indices` is unsupported!")
 
-    return resolved_indices, is_unary
+    return resolved_indices, is_scalar
 
 
 def _slice_or_index(data: Any, query: Union[slice, List[int]]):

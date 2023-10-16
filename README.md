@@ -16,9 +16,9 @@
 
 # BiocFrame
 
-This package provides `BiocFrame` class, a dataframe-like representation similar to a pandas, with support for flexible and nested objects.
+This package provides `BiocFrame` class, an alternative to Pandas DataFrame's.
 
-`BiocFrame` makes no assumption on the types of the columns, the minimum requirement is each column implements length: `__len__` and slice: `__getitem__` operations.
+`BiocFrame` makes no assumption on the types of the columns, the minimum requirement is each column implements length: `__len__` and slice: `__getitem__` dunder methods. This allows `BiocFrame` to accept nested representations or any supported class as columns.
 
 
 To get started, install the package from [PyPI](https://pypi.org/project/biocframe/)
@@ -29,71 +29,172 @@ pip install biocframe
 
 ## Usage
 
-Lets create a `BiocFrame` from a dictionary
+To construct a `BiocFrame` object, simply provide the data as a dictionary.
 
 ```python
 from random import random
 from biocframe import BiocFrame
 
-bframe = BiocFrame(
-    data = {
-        "seqnames": [
-            "chr1",
-            "chr2",
-            "chr2",
-            "chr2",
-            "chr1",
-            "chr1",
-            "chr3",
-            "chr3",
-            "chr3",
-            "chr3",
-        ]
-        * 20,
-        "starts": range(100, 300),
-        "ends": range(110, 310),
-        "strand": ["-", "+", "+", "*", "*", "+", "+", "+", "-", "-"] * 20,
-        "score": range(0, 200),
-        "GC": [random() for _ in range(10)] * 20,
-    }
-)
+obj = {
+    "ensembl": ["ENS00001", "ENS00002", "ENS00003"],
+    "symbol": ["MAP1A", "BIN1", "ESR1"],
+}
+bframe = BiocFrame(obj)
+print(bframe)
 ```
 
-### Access Properties
+    ## output
+    BiocFrame with 3 rows & 2 columns
+    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+    ┃ ensembl <list> ┃ symbol <list> ┃
+    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+    │ ENS00001       │ MAP1A         │
+    │ ENS00002       │ BIN1          │
+    │ ENS00003       │ ESR1          │
+    └────────────────┴───────────────┘
 
-Accessor methods/properties are available to access column names, row names and dims.
+You can specify complex representations as columns, for example
 
 ```python
-# find the dimensions
+obj = {
+    "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
+    "symbol": ["MAP1A", "BIN1", "ESR1"],
+    "ranges": BiocFrame({
+        "chr": ["chr1", "chr2", "chr3"],
+        "start": [1000, 1100, 5000],
+        "end": [1100, 4000, 5500]
+    }),
+}
+
+bframe2 = BiocFrame(obj, row_names=["row1", "row2", "row3"])
+print(bframe2)
+```
+
+    ## output
+    BiocFrame with 3 rows & 3 columns
+    ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+    ┃ row_names ┃ ensembl <list> ┃ symbol <list> ┃ ranges <BiocFrame>                          ┃
+    ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+    │ row1      │ ENS00001       │ MAP1A         │ {'chr': 'chr1', 'start': 1000, 'end': 1100} │
+    │ row2      │ ENS00002       │ BIN1          │ {'chr': 'chr2', 'start': 1100, 'end': 4000} │
+    │ row3      │ ENS00002       │ ESR1          │ {'chr': 'chr3', 'start': 5000, 'end': 5500} │
+    └───────────┴────────────────┴───────────────┴─────────────────────────────────────────────┘
+
+### Properties
+
+Properties can be accessed directly from the object, for e.g. column names, row names and/or dimensions of the `BiocFrame`.
+
+```python
+# Dimensionality or shape
 print(bframe.dims)
+
+## output
+## (3, 2)
 
 # get the column names
 print(bframe.column_names)
+
+## output
+## ['ensembl', 'symbol']
 ```
 
-### Setters
+#### Setters
 
-Using the Pythonic way to set properties
+To set various properties
 
 ```python
 # set new column names
-bframe.column_names = [..., new_column_names, ...]
-print(bframe.column_names)
-
-# add or reassign columns
-
-bframe["score"] = range(200, 400)
+bframe.column_names = ["column1", "column2"]
+print(bframe)
 ```
 
-### Slice the `BiocFrame`
+    ## output
+    BiocFrame with 3 rows & 2 columns
+    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+    ┃ column1 <list> ┃ column2 <list> ┃
+    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+    │ ENS00001       │ MAP1A          │
+    │ ENS00002       │ BIN1           │
+    │ ENS00003       │ ESR1           │
+    └────────────────┴────────────────┘
 
-Currently slicing is only supported by indices or names (column names or row names). A future version may implement pandas query-like operations.
+To add new columns,
 
 ```python
-sliced_bframe = bframe[3:7, 2:5]
+bframe["score"] = range(2, 5)
+print(bframe)
 ```
 
-For more use cases including subset, checkout the [documentation](https://biocpy.github.io/BiocFrame/)
+    ## output
+    BiocFrame with 3 rows & 3 columns
+    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+    ┃ column1 <list> ┃ column2 <list> ┃ score <range> ┃
+    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+    │ ENS00001       │ MAP1A          │ 2             │
+    │ ENS00002       │ BIN1           │ 3             │
+    │ ENS00003       │ ESR1           │ 4             │
+    └────────────────┴────────────────┴───────────────┘
+
+### Subset `BiocFrame`
+
+Use the subset (`[]`) operator to **slice** the object,
+
+```python
+sliced = bframe[1:2, [True, False, False]]
+print(sliced)
+```
+
+    ## output
+    BiocFrame with 1 row & 1 column
+    ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
+    ┃ row_names ┃ column1 <list> ┃
+    ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
+    │ 1         │ ENS00002       │
+    └───────────┴────────────────┘
+
+This operation accepts different slice input types, you can either specify a boolean vector, a `slice` object, a list of indices, or row/column names to subset.
+
+
+### Combine
+
+`BiocFrame` implements the combine generic from [biocgenerics](https://github.com/BiocPy/generics). To combine multiple objects,
+
+```python
+bframe1 = BiocFrame(
+    {
+        "odd": [1, 3, 5, 7, 9],
+        "even": [0, 2, 4, 6, 8],
+    }
+)
+
+bframe2 = BiocFrame(
+    {
+        "odd": [11, 33, 55, 77, 99],
+        "even": [0, 22, 44, 66, 88],
+    }
+)
+
+from biocgenerics.combine import combine
+combined = combine(bframe1, bframe2)
+
+# OR an object oriented approach
+
+combined = bframe.combine(bframe2)
+```
+
+    ## output
+    BiocFrame with 10 rows & 2
+            columns
+    ┏━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
+    ┃ odd <list> ┃ even <list> ┃
+    ┡━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
+    │ 1          │ 0           │
+    │ 3          │ 2           │
+    │ ...        │ ...         │
+    │ 99         │ 88          │
+    └────────────┴─────────────┘
+
+For more details, check out the BiocFrame class [reference](https://biocpy.github.io/BiocFrame/api/biocframe.html#biocframe.BiocFrame.BiocFrame).
 
 
 <!-- pyscaffold-notes -->

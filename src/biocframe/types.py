@@ -1,4 +1,4 @@
-from typing import Optional, List, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
