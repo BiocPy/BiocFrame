@@ -844,7 +844,6 @@ class BiocFrame:
         all_objects = [self] + list(other)
 
         all_columns = [x.column_names for x in all_objects]
-        all_columns.append(self.column_names)
         all_unique_columns = list(
             set([item for sublist in all_columns for item in sublist])
         )
@@ -852,15 +851,20 @@ class BiocFrame:
         all_row_names = [None] * len(self) if self.row_names is None else self.row_names
         all_num_rows = sum([len(x) for x in all_objects])
         all_data = self.data.copy()
+
+        for ocol in all_unique_columns:
+            if ocol not in all_data:
+                all_data[ocol] = [None] * len(self)
+
         for obj in other:
             for ocol in all_unique_columns:
-                if ocol not in all_data:
-                    all_data[ocol] = [None] * len(obj)
-
+                _tcol = None
                 if ocol not in obj.column_names:
-                    all_data[ocol] = [None] * len(obj)
+                    _tcol = [None] * len(obj)
                 else:
-                    all_data[ocol] = combine(all_data[ocol], obj.column(ocol))
+                    _tcol = obj.column(ocol)
+
+                all_data[ocol] = combine(all_data[ocol], _tcol)
 
             rnames = obj.row_names
             if rnames is None:

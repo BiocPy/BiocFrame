@@ -40,7 +40,7 @@ def validate_rows(
 
     if len(incorrect_len_keys) > 0:
         raise ValueError(
-            "`BiocFrame` expects all columns in ``data`` to be of equal"
+            "All columns in ``data`` must be the same "
             f"length, these columns do not: {', '.join(incorrect_len_keys)}."
         )
 
