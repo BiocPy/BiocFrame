@@ -32,6 +32,7 @@ def test_names():
     assert rownames(obj) == None
     assert colnames(obj) == ["column1", "nested", "column2"]
 
+
 def test_set_names():
     obj = BiocFrame(
         {
