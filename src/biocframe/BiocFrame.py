@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Tuple, Union
+from warnings import warn
 
 from biocgenerics.combine import combine
 from biocgenerics.combine_cols import combine_cols
@@ -291,7 +292,7 @@ class BiocFrame:
                 )
 
             if not validate_unique_list(names):
-                raise ValueError("row index must be unique!")
+                warn("row names are not unique!")
 
         self._row_names = names
 
