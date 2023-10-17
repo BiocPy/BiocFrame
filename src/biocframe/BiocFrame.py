@@ -2,9 +2,13 @@ from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Tuple, Union
 from warnings import warn
 
+from biocgenerics.colnames import colnames as colnames_generic
+from biocgenerics.colnames import set_colnames
 from biocgenerics.combine import combine
 from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
+from biocgenerics.rownames import rownames as rownames_generic
+from biocgenerics.rownames import set_rownames
 from biocutils import is_list_of_type
 
 from ._validators import validate_cols, validate_rows, validate_unique_list
@@ -908,3 +912,23 @@ def _combine_cols_bframes(*x: BiocFrame):
     raise NotImplementedError(
         "`combine_cols` is not implemented for `BiocFrame` objects."
     )
+
+
+@rownames_generic.register(BiocFrame)
+def _rownames_bframe(x: BiocFrame):
+    return x.row_names
+
+
+@set_rownames.register(BiocFrame)
+def _set_rownames_bframe(x: BiocFrame, names: List[str]):
+    x.row_names = names
+
+
+@colnames_generic.register(BiocFrame)
+def _colnames_bframe(x: BiocFrame):
+    return x.column_names
+
+
+@set_colnames.register(BiocFrame)
+def _set_colnames_bframe(x: BiocFrame, names: List[str]):
+    x.column_names = names
