@@ -196,13 +196,20 @@ class BiocFrame:
             self._number_of_rows = 0
 
     def __repr__(self) -> str:
+        if self.row_names is None:
+            if self.dims[0] == 0:
+                return f"Empty BiocFrame with no rows & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}."
+
+            if self.dims[1] == 0:
+                return f"Empty BiocFrame with {self.dims[0]} row{'s' if self.dims[0] != 1 else ''} & no columns."
+
         from io import StringIO
 
         from rich.console import Console
         from rich.table import Table
 
         table = Table(
-            title=f"BiocFrame with {self.dims[0]} rows & {self.dims[1]} columns",
+            title=f"BiocFrame with {self.dims[0]} row{'s' if self.dims[0] != 1 else ''} & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}",
             show_header=True,
         )
         if self.row_names is not None:
