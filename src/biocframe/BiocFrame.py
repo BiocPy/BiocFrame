@@ -190,8 +190,6 @@ class BiocFrame:
         )
         self._column_names, self._data = validate_cols(self._column_names, self._data)
 
-        self._number_of_columns = len(self._column_names)
-
         if self._number_of_rows is None:
             self._number_of_rows = 0
 
@@ -272,7 +270,7 @@ class BiocFrame:
             Tuple[int, int]: A tuple (m, n),
             where `m` is the number of rows, and `n` is the number of columns.
         """
-        return (self._number_of_rows, self._number_of_columns)
+        return (self._number_of_rows, len(self._column_names))
 
     @property
     def row_names(self) -> Optional[List]:
@@ -341,10 +339,10 @@ class BiocFrame:
         if names is None:
             raise ValueError("`names` cannot be `None`!")
 
-        if len(names) != self._number_of_columns:
+        if len(names) != len(self._column_names):
             raise ValueError(
                 "Length of `names` does not match number of columns, need to be "
-                f"{self._number_of_columns} but provided {len(names)}."
+                f"{len(self._column_names)} but provided {len(names)}."
             )
 
         if not (validate_unique_list(names)):
@@ -673,7 +671,6 @@ class BiocFrame:
 
         if name not in self.column_names:
             self._column_names.append(name)
-            self._number_of_columns += 1
 
         self._data[name] = value
 
@@ -709,7 +706,6 @@ class BiocFrame:
 
         del self._data[name]
         self._column_names.remove(name)
-        self._number_of_columns -= 1
 
     def __len__(self) -> int:
         """Number of rows.
@@ -836,7 +832,7 @@ class BiocFrame:
         """
         return self.shape
 
-    def combine(self, *other: "BiocFrame") -> "BiocFrame":
+    def combine(self, *other):
         """Combine multiple BiocFrame objects by row.
 
         Note: Fills missing columns with an array of `None`s.
@@ -848,7 +844,7 @@ class BiocFrame:
             TypeError: If all objects are not of type BiocFrame.
 
         Returns:
-            BiocFrame: A combined BiocFrame.
+            The same type as caller with the combined data.
         """
         if not is_list_of_type(other, BiocFrame):
             raise TypeError("All objects to combine must be BiocFrame objects.")
@@ -860,7 +856,9 @@ class BiocFrame:
             set([item for sublist in all_columns for item in sublist])
         )
 
-        all_row_names = [None] * len(self) if self.row_names is None else self.row_names
+        all_row_names = (
+            [None] * len(self) if self.row_names is None else self.row_names.copy()
+        )
         all_num_rows = sum([len(x) for x in all_objects])
         all_data = self.data.copy()
 
@@ -894,6 +892,68 @@ class BiocFrame:
             row_names=all_row_names,
             column_names=all_unique_columns,
         )
+
+    def __deepcopy__(self, memo=None, _nil=[]):
+        """Make a deep copy of the object.
+
+        Raises:
+            Exception: If a column cannot be copied.
+
+        Returns:
+            The same type as caller.
+        """
+        from copy import deepcopy
+
+        _colnames_copy = deepcopy(self.column_names)
+        _num_rows_copy = deepcopy(self._number_of_rows)
+        _rownames_copy = deepcopy(self.row_names)
+        _metadata_copy = deepcopy(self.metadata)
+
+        # copy dictionary first
+        _data_copy = OrderedDict()
+        for col in _colnames_copy:
+            try:
+                _data_copy[col] = deepcopy(self.column(col))
+            except Exception as e:
+                raise Exception(
+                    f"Cannot `deepcopy` column '{col}', full error: {str(e)}"
+                ) from e
+
+        current_class_const = type(self)
+        return current_class_const(
+            _data_copy,
+            number_of_rows=_num_rows_copy,
+            row_names=_rownames_copy,
+            column_names=_colnames_copy,
+            metadata=_metadata_copy,
+        )
+
+    def __copy__(self):
+        """Make a shallow copy of the object.
+
+        Any modifications to the copied object may also affect the original.
+
+        Returns:
+            The same type as caller.
+        """
+        current_class_const = type(self)
+        new_instance = current_class_const(
+            self._data,
+            number_of_rows=self._number_of_rows,
+            row_names=self._row_names,
+            column_names=self._column_names,
+            metadata=self._metadata,
+        )
+
+        return new_instance
+
+    def copy(self):
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.__copy__`.
+
+        Returns:
+            The same type as caller.
+        """
+        return self.__copy__()
 
 
 @combine.register(BiocFrame)

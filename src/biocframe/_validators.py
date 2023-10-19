@@ -46,7 +46,7 @@ def validate_rows(
 
     if row_names is not None:
         if not validate_unique_list(row_names):
-            warn("`row_names` are not be unique!")
+            warn("`row_names` are not unique!")
 
         if number_of_rows is None:
             number_of_rows = len(row_names)
@@ -54,7 +54,7 @@ def validate_rows(
             if len(row_names) != number_of_rows:
                 raise ValueError(
                     "Length of `row_names` and `number_of_rows` do not match, "
-                    f"l{len(row_names)} != {number_of_rows}"
+                    f"{len(row_names)} != {number_of_rows}"
                 )
 
     return number_of_rows
@@ -102,7 +102,6 @@ def validate_cols(
     # lets just fix it
     # column names and dict order should be the same
     incorrect_types = []
-    new_odata = OrderedDict()
     for k in column_names:
         # check for types
         col_value = data[k]
@@ -110,16 +109,12 @@ def validate_cols(
         if not (hasattr(col_value, "__len__") and hasattr(col_value, "__getitem__")):
             incorrect_types.append(k)
 
-        new_odata[k] = data[k]
-
     if len(incorrect_types) > 0:
         raise TypeError(
             "`data` only accepts columns that supports `len` and "
             "`slice` operations. these columns do not support these methods: "
             f"{', '.join(incorrect_types)}."
         )
-
-    data = new_odata
 
     return column_names, data
 

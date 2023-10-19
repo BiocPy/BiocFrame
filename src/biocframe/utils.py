@@ -21,7 +21,7 @@ def _match_to_indices(
             a list of indices to keep.
 
     Returns:
-        Tuple[Union[slice, List[int]], bool]: Resolved list of indices and if its a unary slice.
+        Tuple[Union[slice, List[int]], bool]: Resolved list of indices and if its a scalar slice.
     """
 
     resolved_indices = None
