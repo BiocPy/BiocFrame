@@ -207,7 +207,10 @@ class BiocFrame:
         from rich.table import Table
 
         table = Table(
-            title=f"BiocFrame with {self.dims[0]} row{'s' if self.dims[0] != 1 else ''} & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}",
+            title=(
+                f"BiocFrame with {self.dims[0]} row{'s' if self.dims[0] != 1 else ''}"
+                " & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
+            ),
             show_header=True,
         )
         if self.row_names is not None:
