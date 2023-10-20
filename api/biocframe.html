@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="biocframe.io package" href="biocframe.io.html" /><link rel="prev" title="biocframe" href="modules.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>biocframe package - BiocFrame 0.3.16 documentation</title>
+        <title>biocframe package - BiocFrame 0.3.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">BiocFrame 0.3.16 documentation</div></a>
+      <a href="../index.html"><div class="brand">BiocFrame 0.3.17 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.16 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.17 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -374,6 +374,32 @@ inferred from the <code class="docutils literal notranslate"><span class="pre">d
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>An object with the same type as the caller.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__copy__">
+<span class="sig-name descname"><span class="pre">__copy__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__copy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__copy__" title="Link to this definition">#</a></dt>
+<dd><p>Make a shallow copy of the object.</p>
+<p>Any modifications to the copied object may also affect the original.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The same type as caller.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__deepcopy__">
+<span class="sig-name descname"><span class="pre">__deepcopy__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_nil</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__deepcopy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__deepcopy__" title="Link to this definition">#</a></dt>
+<dd><p>Make a deep copy of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#Exception" title="(in Python v3.9)"><strong>Exception</strong></a> – If a column cannot be copied.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The same type as caller.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -642,10 +668,18 @@ contain unique <a class="reference internal" href="#id0" title="biocframe.BiocFr
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#TypeError" title="(in Python v3.9)"><strong>TypeError</strong></a> – If all objects are not of type BiocFrame.</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A combined BiocFrame.</p>
+<dd class="field-odd"><p>The same type as caller with the combined data.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame">BiocFrame</a></p>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.copy" title="Link to this definition">#</a></dt>
+<dd><p>Alias to <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.__copy__" title="biocframe.BiocFrame.BiocFrame.__copy__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__copy__()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The same type as caller.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -910,6 +944,8 @@ where <cite>m</cite> is the number of rows, and <cite>n</cite> is the number of 
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.column_names"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column_names</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.metadata"><code class="docutils literal notranslate"><span class="pre">BiocFrame.metadata</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.__array_ufunc__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__array_ufunc__()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.__copy__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__copy__()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__deepcopy__()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.__delitem__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__delitem__()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.__getitem__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__getitem__()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.__iter__"><code class="docutils literal notranslate"><span class="pre">BiocFrame.__iter__()</span></code></a></li>
@@ -921,6 +957,7 @@ where <cite>m</cite> is the number of rows, and <cite>n</cite> is the number of 
 <li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column_names</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.columns</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.combine"><code class="docutils literal notranslate"><span class="pre">BiocFrame.combine()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.copy"><code class="docutils literal notranslate"><span class="pre">BiocFrame.copy()</span></code></a></li>
 <li><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">BiocFrame.data</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.dims"><code class="docutils literal notranslate"><span class="pre">BiocFrame.dims</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.has_column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.has_column()</span></code></a></li>
@@ -954,7 +991,7 @@ where <cite>m</cite> is the number of rows, and <cite>n</cite> is the number of 
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=f087b2d0"></script>
+</div><script src="../_static/documentation_options.js?v=54ff36c9"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
