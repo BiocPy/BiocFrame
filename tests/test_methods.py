@@ -223,20 +223,15 @@ def test_bframe_slice_with_extras():
             "column1": [1, 2, 3],
             "column2": [4, 5, 6],
         },
-        mcols = BiocFrame(
-            { 
-                "foo": [ -1, -2 ], 
-                "bar": [ "A", "B" ]
-            }
-        ),
-        metadata = { "YAY": 2 }
+        mcols=BiocFrame({"foo": [-1, -2], "bar": ["A", "B"]}),
+        metadata={"YAY": 2},
     )
 
-    subframe = bframe[0:2,:]
+    subframe = bframe[0:2, :]
     assert subframe.mcols.shape[0] == bframe.mcols.shape[1]
     assert subframe.metadata == bframe.metadata
 
-    subframe = bframe[:,[1]]
+    subframe = bframe[:, [1]]
     assert subframe.mcols.shape[0] == 1
     assert subframe.mcols.column("foo") == [-2]
     assert subframe.metadata == bframe.metadata

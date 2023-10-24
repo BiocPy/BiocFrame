@@ -122,21 +122,16 @@ def test_extra_bits():
         {
             "column1": [1, 2, 3],
         },
-        mcols = BiocFrame(
-            { 
-                "foo": [ 1 ], 
-                "bar": [ "A" ]
-            }
-        ),
-        metadata = { "YAY": 2 }
+        mcols=BiocFrame({"foo": [1], "bar": ["A"]}),
+        metadata={"YAY": 2},
     )
 
     assert isinstance(bframe.mcols, BiocFrame)
     assert bframe.metadata["YAY"] == 2
 
     # Setters work correctly.
-    bframe.mcols = BiocFrame({ "STUFF": [ 2.5 ] })
+    bframe.mcols = BiocFrame({"STUFF": [2.5]})
     assert bframe.mcols.column_names == ["STUFF"]
 
-    bframe.metadata = { "FOO": "A" }
+    bframe.metadata = {"FOO": "A"}
     assert bframe.metadata["FOO"] == "A"

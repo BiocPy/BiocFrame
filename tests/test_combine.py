@@ -101,13 +101,8 @@ def test_combine_with_extras():
             "column1": [1, 2, 3],
             "column2": [4, 5, 6],
         },
-        mcols = BiocFrame(
-            { 
-                "foo": [ -1, -2 ], 
-                "bar": [ "A", "B" ]
-            }
-        ),
-        metadata = { "YAY": 2 }
+        mcols=BiocFrame({"foo": [-1, -2], "bar": ["A", "B"]}),
+        metadata={"YAY": 2},
     )
 
     obj2 = BiocFrame(
