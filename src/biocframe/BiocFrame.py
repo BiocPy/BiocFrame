@@ -535,12 +535,19 @@ class BiocFrame:
         elif is_col_scalar is True:
             return new_data[new_column_names[0]]
 
+        mcols = self._mcols
+        if mcols is not None:
+            if column_indices_or_names is not None:
+                mcols = mcols._slice(new_column_indices)
+
         current_class_const = type(self)
         return current_class_const(
             data=new_data,
             number_of_rows=new_number_of_rows,
             row_names=new_row_names,
             column_names=new_column_names,
+            metadata=self._metadata,
+            mcols=mcols,
         )
 
     # TODO: implement in-place or views
@@ -913,6 +920,8 @@ class BiocFrame:
             number_of_rows=all_num_rows,
             row_names=all_row_names,
             column_names=all_unique_columns,
+            metadata=self._metadata,
+            mcols=self._mcols,
         )
 
     def __deepcopy__(self, memo=None, _nil=[]):
