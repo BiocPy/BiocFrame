@@ -153,6 +153,7 @@ class BiocFrame:
         number_of_rows: Optional[int] = None,
         row_names: Optional[List] = None,
         column_names: Optional[List[str]] = None,
+        mcols: Optional["BiocFrame"] = None,
         metadata: Optional[dict] = None,
     ) -> None:
         """Initialize a `BiocFrame` object.
@@ -171,6 +172,7 @@ class BiocFrame:
         self._data = {} if data is None else data
         self._column_names = column_names
         self._metadata = {} if metadata is None else metadata
+        self._mcols = mcols
 
         self._validate()
 
@@ -188,7 +190,7 @@ class BiocFrame:
         self._number_of_rows = validate_rows(
             self._data, self._number_of_rows, self._row_names
         )
-        self._column_names, self._data = validate_cols(self._column_names, self._data)
+        self._column_names, self._data, self._mcols = validate_cols(self._column_names, self._data)
 
         if self._number_of_rows is None:
             self._number_of_rows = 0
@@ -357,6 +359,23 @@ class BiocFrame:
 
         self._column_names = names
         self._data = new_data
+
+    @property
+    def mcols(self) -> Union[None, "BiocFrame"]:
+        """
+        Returns: The ``mcols``, containing annotation on the columns.
+        """
+        # TODO: need to attach row names.
+        return self._mcols
+
+    def mcols(self, mcols: Union[None, "BiocFrame"]):
+        if mcols is not None:
+            if mcols.shape[0] != self.shape[1]:
+                raise ValueError("Number of rows in `mcols` should be equal to the number of columns.")
+            if mcols.row_names is not None:
+                if mcols.row_names != column_names:
+                    raise ValueError("Row names of `mcols` should be equal to the column names.")
+        self._mcols = mcols
 
     @property
     def metadata(self) -> dict:
