@@ -121,11 +121,6 @@ def validate_cols(
             raise ValueError(
                 "Number of rows in `mcols` should be equal to the number of columns."
             )
-        if mcols.row_names is not None:
-            if mcols.row_names != column_names:
-                raise ValueError(
-                    "Row names of `mcols` should be equal to the column names."
-                )
 
     return column_names, data, mcols
 

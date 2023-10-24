@@ -115,3 +115,28 @@ def test_nested_biocFrame():
     assert isinstance(nested_col, BiocFrame)
     assert nested_col.row_names is None
     assert len(nested_col.column_names) == 3
+
+
+def test_extra_bits():
+    bframe = BiocFrame(
+        {
+            "column1": [1, 2, 3],
+        },
+        mcols = BiocFrame(
+            { 
+                "foo": [ 1 ], 
+                "bar": [ "A" ]
+            }
+        ),
+        metadata = { "YAY": 2 }
+    )
+
+    assert isinstance(bframe.mcols, BiocFrame)
+    assert bframe.metadata["YAY"] == 2
+
+    # Setters work correctly.
+    bframe.mcols = BiocFrame({ "STUFF": [ 2.5 ] })
+    assert bframe.mcols.column_names == ["STUFF"]
+
+    bframe.metadata = { "FOO": "A" }
+    assert bframe.metadata["FOO"] == "A"

@@ -93,3 +93,30 @@ def test_combine_generic_preserve_types():
     assert isinstance(merged, BiocFrame)
     assert isinstance(merged.column("odd"), np.ndarray)
     assert isinstance(merged.column("even"), list)
+
+
+def test_combine_with_extras():
+    obj1 = BiocFrame(
+        {
+            "column1": [1, 2, 3],
+            "column2": [4, 5, 6],
+        },
+        mcols = BiocFrame(
+            { 
+                "foo": [ -1, -2 ], 
+                "bar": [ "A", "B" ]
+            }
+        ),
+        metadata = { "YAY": 2 }
+    )
+
+    obj2 = BiocFrame(
+        {
+            "column1": [1, 2, 3],
+            "column2": [4, 5, 6],
+        },
+    )
+
+    merged = combine(obj1, obj2)
+    assert merged.metadata == obj1.metadata
+    assert merged.mcols.shape == obj1.mcols.shape

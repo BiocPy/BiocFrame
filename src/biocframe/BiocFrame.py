@@ -191,7 +191,7 @@ class BiocFrame:
             self._data, self._number_of_rows, self._row_names
         )
         self._column_names, self._data, self._mcols = validate_cols(
-            self._column_names, self._data
+            self._column_names, self._data, self._mcols
         )
 
         if self._number_of_rows is None:
@@ -370,17 +370,13 @@ class BiocFrame:
         # TODO: need to attach row names.
         return self._mcols
 
+    @mcols.setter
     def mcols(self, mcols: Union[None, "BiocFrame"]):
         if mcols is not None:
             if mcols.shape[0] != self.shape[1]:
                 raise ValueError(
                     "Number of rows in `mcols` should be equal to the number of columns."
                 )
-            if mcols.row_names is not None:
-                if mcols.row_names != column_names:
-                    raise ValueError(
-                        "Row names of `mcols` should be equal to the column names."
-                    )
         self._mcols = mcols
 
     @property
@@ -544,7 +540,7 @@ class BiocFrame:
         mcols = self._mcols
         if mcols is not None:
             if column_indices_or_names is not None:
-                mcols = mcols._slice(new_column_indices)
+                mcols = mcols._slice(new_column_indices, None)
 
         current_class_const = type(self)
         return current_class_const(
