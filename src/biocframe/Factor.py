@@ -1,4 +1,5 @@
 from typing import List, Sequence, Union
+from copy import deepcopy
 from biocgenerics.combine import combine
 from biocutils import is_list_of_type
 
@@ -26,8 +27,14 @@ class Factor:
             validate:
                 Whether to validate the arguments. Internal use only.
         """
-        self._codes = list(codes) # could be more efficient with NumPy... but who cares.
-        self._levels = list(levels)
+        if not isinstance(codes, list):
+            codes = list(codes)
+        self._codes = codes # could be more efficient with NumPy... but who cares.
+
+        if not isinstance(levels, list):
+            levels= list(levels)
+        self._levels = levels
+
         self._ordered = ordered
 
         if validate:
@@ -77,25 +84,30 @@ class Factor:
         """
         return len(self._codes)
 
-    def __list__(self) -> List[str]:
-        """
-        Returns:
-            List of strings containing the level corresponding to each entry of :py:attr:`~codes`.
-        """
-        output = [None] * len(self._codes)
-        for i, x in enumerate(self._codes):
-            if x is not None:
-                output[i] = self._levels[x]
-        return output 
-
-    def __getitem__(self, args: Sequence[int]) -> "Factor":
+    def __getitem__(self, args: Union[int, Sequence[int]]) -> Union[str, "Factor"]:
         """
         Args:
-            args: Sequence of integers specifying the elements of interest.
+            args: 
+                Sequence of integers specifying the elements of interest.
+                Alternatively an integer specifying a single element.
 
         Returns:
-            A new ``Factor`` containing only the elements of interest from ``args``.
+            If ``args`` is a sequence, a new ``Factor`` is returned containing
+            only the elements of interest from ``args``.
+
+            If ``args`` is an integer, a string is returned containing the
+            level corresponding to the code at position ``args``.
         """
+        if isinstance(args, int):
+            x = self._codes[args]
+            if x is not None:
+                return self._levels[x]
+            else:
+                return x
+
+        if isinstance(args, slice):
+            args = range(*args.indices(len(self._codes)))
+
         new_codes = []
         for i in args:
             new_codes.append(self._codes[i])
@@ -116,6 +128,9 @@ class Factor:
             with the code of the matched level. If there is no matching level,
             None is inserted instead.
         """
+        if isinstance(args, slice):
+            args = range(*args.indices(len(self._codes)))
+
         if self._levels == value._levels:
             for i, x in enumerate(args):
                 self._codes[x] = value._codes[i]
@@ -130,9 +145,9 @@ class Factor:
                 else:
                     mapping.append(None)
             for i, x in enumerate(args):
-                self._codes[i] = mapping[x]
+                self._codes[x] = mapping[value._codes[i]]
 
-    def drop_unused_levels(self, in_place: bool = False):
+    def drop_unused_levels(self, in_place: bool = False) -> "Factor":
         """
         Args:
             in_place: Whether to perform this modification in-place.
@@ -149,13 +164,22 @@ class Factor:
         else:
             new_codes = [None] * len(self._codes)
 
+        in_use = [False] * len(self._levels)
+        for x in self._codes:
+            if x is not None:
+                in_use[x] = True
+
         new_levels = []
-        level_map = {}
+        reindex = []
+        for i, x in enumerate(in_use):
+            if x:
+                reindex.append(len(new_levels))
+                new_levels.append(self._levels[i])
+            else:
+                reindex.append(None)
+
         for i, x in enumerate(self._codes):
-            if x not in level_map:
-                level_map[x] = len(new_levels)
-                new_levels.append(x)
-            new_codes[i] = level_map[x]
+            new_codes[i] = reindex[x] 
 
         if in_place:
             self._levels = new_levels
@@ -163,12 +187,17 @@ class Factor:
         else:
             return Factor(new_codes, new_levels, self._ordered, validate=False)
 
-    def set_levels(self, levels: List[str], in_place: bool = False):
+    def set_levels(self, levels: Union[str, List[str]], in_place: bool = False) -> "Factor":
         """
         Args:
             levels: 
                 A list of replacement levels. These should be unique strings
-                with no missing values.
+                with no missing values. 
+
+                Alternatively a single string containing an existing level in
+                this object. The new levels are defined as a permutation of the
+                existing levels where the provided string is now the first
+                level. The order of all other levels is preserved.
 
             in_place: 
                 Whether to perform this modification in-place.
@@ -205,9 +234,10 @@ class Factor:
 
         mapping = [None] * len(self._levels)
         for i, x in enumerate(self._levels):
-            mapping[i] = lmapping[x]
+            if x in lmapping:
+                mapping[i] = lmapping[x]
 
-        new_codes = [None] * self._codes
+        new_codes = [None] * len(self._codes)
         for i, x in enumerate(self._codes):
             new_codes[i] = mapping[x]
 
@@ -217,6 +247,21 @@ class Factor:
             return self
         else:
             return Factor(new_codes, new_levels, self._ordered, validate=False)
+
+    def __copy__(self) -> "Factor":
+        """
+        Returns:
+            A shallow copy of the ``Factor`` object.
+        """
+        return Factor(self._codes, self._levels, self._ordered, validate=False)
+
+    def __deepcopy__(self, memo) -> "Factor":
+        """
+        Returns: 
+            A deep copy of the ``Factor`` object.
+        """
+        return Factor(deepcopy(self._codes, memo), deepcopy(self._levels, memo), self._ordered, validate=False)
+
 
 @combine.register(Factor)
 def _combine_factors(*x: Factor):
@@ -245,11 +290,14 @@ def _combine_factors(*x: Factor):
             mapping = []
             for i, y in enumerate(f._levels):
                 if y not in all_levels_map:
-                    all_levels_map[y] = len(all_levels_seq)
+                    all_levels_map[y] = len(new_levels)
                     new_levels.append(y)
                 mapping.append(all_levels_map[y])
             for j in f._codes:
-                new_codes.append(mapping[j])
+                if j is None:
+                    new_codes.append(None)
+                else:
+                    new_codes.append(mapping[j])
         new_ordered = False
 
     return Factor(new_codes, new_levels, new_ordered, validate=False)
