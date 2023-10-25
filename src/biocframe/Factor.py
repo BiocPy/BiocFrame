@@ -3,6 +3,7 @@ from copy import deepcopy
 from biocgenerics.combine import combine
 from biocutils import is_list_of_type
 
+
 def _pretty_ellipsis(x: Sequence, transformer) -> str:
     collected = []
 
@@ -33,15 +34,22 @@ def _pretty_ellipsis(x: Sequence, transformer) -> str:
 
 
 class Factor:
+    """Factor class, equivalent to R's ``factor``.
+
+    This is a vector of integer codes, each of which is an index into a list of unique strings. The aim is to encode a
+    list of strings as integers for easier numerical analysis.
     """
-    Factor class, equivalent to R's ``factor``. This is a vector of integer
-    codes, each of which is an index into a list of unique strings. The aim is
-    to encode a list of strings as integers for easier numerical analysis.
-    """
-    def __init__(self, codes: Sequence[int], levels: Sequence[str], ordered: bool = False, validate: bool = True):
+
+    def __init__(
+        self,
+        codes: Sequence[int],
+        levels: Sequence[str],
+        ordered: bool = False,
+        validate: bool = True,
+    ):
         """
         Args:
-            codes: 
+            codes:
                 List of codes. Each value should be a non-negative
                 integer that is less than the length of ``levels``.
                 Entries may also be None.
@@ -51,22 +59,22 @@ class Factor:
 
             ordered:
                 Whether the levels are ordered.
-                
+
             validate:
                 Whether to validate the arguments. Internal use only.
         """
         if not isinstance(codes, list):
             codes = list(codes)
-        self._codes = codes # could be more efficient with NumPy... but who cares.
+        self._codes = codes  # could be more efficient with NumPy... but who cares.
 
         if not isinstance(levels, list):
-            levels= list(levels)
+            levels = list(levels)
         self._levels = levels
 
         self._ordered = ordered
 
         if validate:
-            if not is_list_of_type(self._codes, int, ignore_none = True):
+            if not is_list_of_type(self._codes, int, ignore_none=True):
                 raise TypeError("all entries of 'codes' should be integers or None")
             if not is_list_of_type(self._levels, str):
                 raise TypeError("all entries of 'levels' should be non-missing strings")
@@ -75,7 +83,9 @@ class Factor:
                 if x is None:
                     continue
                 if x < 0 or x >= len(self._levels):
-                    raise ValueError("all entries of 'codes' should refer to an entry of 'levels'")
+                    raise ValueError(
+                        "all entries of 'codes' should refer to an entry of 'levels'"
+                    )
 
             if len(set(self._levels)) < len(self._levels):
                 raise ValueError("all entries of 'levels' should be unique")
@@ -84,7 +94,7 @@ class Factor:
     def codes(self) -> List[int]:
         """
         Returns:
-            List of codes, to be used to index into the :py:attr:`~levels`. 
+            List of codes, to be used to index into the :py:attr:`~levels`.
             Values may also be None.
         """
         return self._codes
@@ -120,20 +130,28 @@ class Factor:
         return tmp
 
     def __str__(self) -> str:
-        message = "Factor of length " + str(len(self._codes)) + " with " + str(len(self._levels)) + " level"
+        message = (
+            "Factor of length "
+            + str(len(self._codes))
+            + " with "
+            + str(len(self._levels))
+            + " level"
+        )
         if len(self._levels) != 0:
             message += "s"
-        message += '\n'
+        message += "\n"
 
-        message += "values: " + _pretty_ellipsis(self._codes, lambda i : self._levels[i]) + "\n"
-        message += "levels: " + _pretty_ellipsis(self._levels, lambda x : x) + "\n"
+        message += (
+            "values: " + _pretty_ellipsis(self._codes, lambda i: self._levels[i]) + "\n"
+        )
+        message += "levels: " + _pretty_ellipsis(self._levels, lambda x: x) + "\n"
         message += "ordered: " + str(self._ordered)
         return message
 
     def __getitem__(self, args: Union[int, Sequence[int]]) -> Union[str, "Factor"]:
         """
         Args:
-            args: 
+            args:
                 Sequence of integers specifying the elements of interest.
                 Alternatively an integer specifying a single element.
 
@@ -201,8 +219,8 @@ class Factor:
         Returns:
             If ``in_place = False``, a new ``Factor`` object is returned
             where all unused levels have been removed.
-            
-            If ``in_place = True``, unused levels are removed from the 
+
+            If ``in_place = True``, unused levels are removed from the
             current object; a reference to the current object is returned.
         """
         if in_place:
@@ -225,7 +243,7 @@ class Factor:
                 reindex.append(None)
 
         for i, x in enumerate(self._codes):
-            new_codes[i] = reindex[x] 
+            new_codes[i] = reindex[x]
 
         if in_place:
             self._levels = new_levels
@@ -233,19 +251,21 @@ class Factor:
         else:
             return Factor(new_codes, new_levels, self._ordered, validate=False)
 
-    def set_levels(self, levels: Union[str, List[str]], in_place: bool = False) -> "Factor":
+    def set_levels(
+        self, levels: Union[str, List[str]], in_place: bool = False
+    ) -> "Factor":
         """
         Args:
-            levels: 
+            levels:
                 A list of replacement levels. These should be unique strings
-                with no missing values. 
+                with no missing values.
 
                 Alternatively a single string containing an existing level in
                 this object. The new levels are defined as a permutation of the
                 existing levels where the provided string is now the first
                 level. The order of all other levels is preserved.
 
-            in_place: 
+            in_place:
                 Whether to perform this modification in-place.
 
         Returns:
@@ -254,13 +274,13 @@ class Factor:
             codes so that they still refer to the same level in the new
             ``levels``. If a code refers to a level that is not present in the
             new ``levels``, it is replaced with None.
-            
+
             If ``in_place = True``, the levels are replaced in the current
             object, and a reference to the current object is returned.
         """
         lmapping = {}
         if isinstance(levels, str):
-            new_levels = [levels] 
+            new_levels = [levels]
             for x in self._levels:
                 if x == levels:
                     lmapping[x] = 0
@@ -268,7 +288,9 @@ class Factor:
                     lmapping[x] = len(new_levels)
                     new_levels.append(x)
             if levels not in lmapping:
-                raise ValueError("string 'levels' should already be present among object levels")
+                raise ValueError(
+                    "string 'levels' should already be present among object levels"
+                )
         else:
             if not is_list_of_type(levels, str):
                 raise TypeError("all entries of 'levels' should be non-missing strings")
@@ -303,10 +325,15 @@ class Factor:
 
     def __deepcopy__(self, memo) -> "Factor":
         """
-        Returns: 
+        Returns:
             A deep copy of the ``Factor`` object.
         """
-        return Factor(deepcopy(self._codes, memo), deepcopy(self._levels, memo), self._ordered, validate=False)
+        return Factor(
+            deepcopy(self._codes, memo),
+            deepcopy(self._levels, memo),
+            self._ordered,
+            validate=False,
+        )
 
 
 @combine.register(Factor)
