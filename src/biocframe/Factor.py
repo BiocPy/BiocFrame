@@ -3,6 +3,34 @@ from copy import deepcopy
 from biocgenerics.combine import combine
 from biocutils import is_list_of_type
 
+def _pretty_ellipsis(x: Sequence, transformer) -> str:
+    collected = []
+
+    if len(x) > 10:
+        for i in range(3):
+            c = x[i]
+            if c is None:
+                collected.append("None")
+            else:
+                collected.append(repr(transformer(c)))
+
+        collected.append("...")
+        for i in range(3):
+            c = x[len(x) - i - 1]
+            if c is None:
+                collected.append("None")
+            else:
+                collected.append(repr(transformer(c)))
+
+    else:
+        for c in x:
+            if c is None:
+                collected.append("None")
+            else:
+                collected.append(repr(transformer(c)))
+
+    return "[" + ", ".join(collected) + "]"
+
 
 class Factor:
     """
@@ -83,6 +111,24 @@ class Factor:
             Length of the factor in terms of the number of codes.
         """
         return len(self._codes)
+
+    def __repr__(self) -> str:
+        tmp = "Factor(codes=" + repr(self._codes) + ", levels=" + repr(self._levels)
+        if self._ordered:
+            tmp += ", ordered=True"
+        tmp += ")"
+        return tmp
+
+    def __str__(self) -> str:
+        message = "Factor of length " + str(len(self._codes)) + " with " + str(len(self._levels)) + " level"
+        if len(self._levels) != 0:
+            message += "s"
+        message += '\n'
+
+        message += "values: " + _pretty_ellipsis(self._codes, lambda i : self._levels[i]) + "\n"
+        message += "levels: " + _pretty_ellipsis(self._levels, lambda x : x) + "\n"
+        message += "ordered: " + str(self._ordered)
+        return message
 
     def __getitem__(self, args: Union[int, Sequence[int]]) -> Union[str, "Factor"]:
         """

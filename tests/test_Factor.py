@@ -32,6 +32,28 @@ def test_Factor_basics():
     assert list(f) == [ None ] * 10
 
 
+def test_Factor_basics():
+    f = Factor([0,1,2,0,2,4], levels=["A", "B", "C", "D", "E"])
+    assert repr(f).startswith("Factor(")
+    assert str(f).startswith("Factor of length")
+
+    f = Factor([0,1,4,2,0,3,1,3,2,4], levels=["A", "B", "C", "D", "E"])
+    assert repr(f).startswith("Factor(")
+    assert str(f).startswith("Factor of length")
+
+    f = Factor([], levels=["A", "B", "C", "D", "E"])
+    assert repr(f).startswith("Factor(")
+    assert str(f).startswith("Factor of length")
+
+    f = Factor([1], levels=["A", "B", "C", "D", "E"])
+    assert repr(f).startswith("Factor(")
+    assert str(f).startswith("Factor of length")
+
+    f = Factor([i % 5 for i in range(100)], levels=["A", "B", "C", "D", "E"])
+    assert repr(f).startswith("Factor(")
+    assert str(f).startswith("Factor of length")
+
+
 def test_Factor_getitem():
     f = Factor([0,1,2,0,2,4], levels=["A", "B", "C", "D", "E"])
     assert f[0] == "A"
