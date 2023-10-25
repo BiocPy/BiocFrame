@@ -136,12 +136,12 @@ class BiocFrame:
 
     Attributes:
         data (Dict[str, Any], optional): Dictionary of column names as `keys` and
-            their values. All columns must have the same length. Defaults to {}.
-        number_of_rows (int, optional): Number of rows. If not specified, inferred from ``data``.
+            their values.
+        number_of_rows (int, optional): Number of rows.
         row_names (list, optional): Row names.
-        column_names (list, optional): Column names. If not provided,
-            inferred from the ``data``.
-        metadata (dict): Additional metadata. Defaults to {}.
+        column_names (list, optional): Column names.
+        mcols (BiocFrame, optional): Metadata about columns.
+        metadata (dict): Additional metadata.
 
     Raises:
         ValueError: If there is a mismatch in the number of rows or columns in the data.
@@ -165,6 +165,8 @@ class BiocFrame:
             row_names (list, optional): Row names.
             column_names (list, optional): Column names. If not provided,
                 inferred from the ``data``.
+            mcols (BiocFrame, optional): Metadata about columns. Must have the same length as the number
+                of columns. Defaults to None.
             metadata (dict): Additional metadata. Defaults to {}.
         """
         self._number_of_rows = number_of_rows
@@ -941,6 +943,7 @@ class BiocFrame:
         _num_rows_copy = deepcopy(self._number_of_rows)
         _rownames_copy = deepcopy(self.row_names)
         _metadata_copy = deepcopy(self.metadata)
+        _mcols_copy = deepcopy(self._mcols) if self._mcols is not None else None
 
         # copy dictionary first
         _data_copy = OrderedDict()
@@ -959,6 +962,7 @@ class BiocFrame:
             row_names=_rownames_copy,
             column_names=_colnames_copy,
             metadata=_metadata_copy,
+            mcols = _mcols_copy
         )
 
     def __copy__(self):
@@ -976,6 +980,7 @@ class BiocFrame:
             row_names=self._row_names,
             column_names=self._column_names,
             metadata=self._metadata,
+            mcols = self._mcols
         )
 
         return new_instance
