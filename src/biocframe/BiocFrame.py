@@ -962,7 +962,7 @@ class BiocFrame:
             row_names=_rownames_copy,
             column_names=_colnames_copy,
             metadata=_metadata_copy,
-            mcols = _mcols_copy
+            mcols=_mcols_copy,
         )
 
     def __copy__(self):
@@ -980,7 +980,7 @@ class BiocFrame:
             row_names=self._row_names,
             column_names=self._column_names,
             metadata=self._metadata,
-            mcols = self._mcols
+            mcols=self._mcols,
         )
 
         return new_instance
