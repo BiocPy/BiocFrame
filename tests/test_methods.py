@@ -217,6 +217,26 @@ def test_bframe_slice():
     assert sliced_list.dims == (2, 2)
 
 
+def test_bframe_slice_with_extras():
+    bframe = BiocFrame(
+        {
+            "column1": [1, 2, 3],
+            "column2": [4, 5, 6],
+        },
+        mcols=BiocFrame({"foo": [-1, -2], "bar": ["A", "B"]}),
+        metadata={"YAY": 2},
+    )
+
+    subframe = bframe[0:2, :]
+    assert subframe.mcols.shape[0] == bframe.mcols.shape[1]
+    assert subframe.metadata == bframe.metadata
+
+    subframe = bframe[:, [1]]
+    assert subframe.mcols.shape[0] == 1
+    assert subframe.mcols.column("foo") == [-2]
+    assert subframe.metadata == bframe.metadata
+
+
 def test_bframe_unary_slice():
     obj = {
         "column1": [1, 2, 3],

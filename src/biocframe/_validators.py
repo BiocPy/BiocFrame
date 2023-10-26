@@ -62,6 +62,7 @@ def validate_rows(
 def validate_cols(
     column_names: List[str],
     data: Dict[str, Any],
+    mcols: Optional["BiocFrame"],
 ) -> Tuple[List[str], Dict[str, Any]]:
     """Validate columns of a :py:class:`biocframe.BiocFrame` object.
 
@@ -115,7 +116,13 @@ def validate_cols(
             f"{', '.join(incorrect_types)}."
         )
 
-    return column_names, data
+    if mcols is not None:
+        if mcols.shape[0] != len(column_names):
+            raise ValueError(
+                "Number of rows in `mcols` should be equal to the number of columns."
+            )
+
+    return column_names, data, mcols
 
 
 def validate_unique_list(values: List) -> bool:

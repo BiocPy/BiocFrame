@@ -136,12 +136,12 @@ class BiocFrame:
 
     Attributes:
         data (Dict[str, Any], optional): Dictionary of column names as `keys` and
-            their values. All columns must have the same length. Defaults to {}.
-        number_of_rows (int, optional): Number of rows. If not specified, inferred from ``data``.
+            their values.
+        number_of_rows (int, optional): Number of rows.
         row_names (list, optional): Row names.
-        column_names (list, optional): Column names. If not provided,
-            inferred from the ``data``.
-        metadata (dict): Additional metadata. Defaults to {}.
+        column_names (list, optional): Column names.
+        mcols (BiocFrame, optional): Metadata about columns.
+        metadata (dict): Additional metadata.
 
     Raises:
         ValueError: If there is a mismatch in the number of rows or columns in the data.
@@ -153,6 +153,7 @@ class BiocFrame:
         number_of_rows: Optional[int] = None,
         row_names: Optional[List] = None,
         column_names: Optional[List[str]] = None,
+        mcols: Optional["BiocFrame"] = None,
         metadata: Optional[dict] = None,
     ) -> None:
         """Initialize a `BiocFrame` object.
@@ -164,6 +165,8 @@ class BiocFrame:
             row_names (list, optional): Row names.
             column_names (list, optional): Column names. If not provided,
                 inferred from the ``data``.
+            mcols (BiocFrame, optional): Metadata about columns. Must have the same length as the number
+                of columns. Defaults to None.
             metadata (dict): Additional metadata. Defaults to {}.
         """
         self._number_of_rows = number_of_rows
@@ -171,6 +174,7 @@ class BiocFrame:
         self._data = {} if data is None else data
         self._column_names = column_names
         self._metadata = {} if metadata is None else metadata
+        self._mcols = mcols
 
         self._validate()
 
@@ -188,18 +192,20 @@ class BiocFrame:
         self._number_of_rows = validate_rows(
             self._data, self._number_of_rows, self._row_names
         )
-        self._column_names, self._data = validate_cols(self._column_names, self._data)
+        self._column_names, self._data, self._mcols = validate_cols(
+            self._column_names, self._data, self._mcols
+        )
 
         if self._number_of_rows is None:
             self._number_of_rows = 0
 
     def __repr__(self) -> str:
         if self.row_names is None:
-            if self.dims[0] == 0:
-                return f"Empty BiocFrame with no rows & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}."
+            if self.shape[0] == 0:
+                return f"Empty BiocFrame with no rows & {self.shape[1]} column{'s' if self.shape[1] != 1 else ''}."
 
-            if self.dims[1] == 0:
-                return f"Empty BiocFrame with {self.dims[0]} row{'s' if self.dims[0] != 1 else ''} & no columns."
+            if self.shape[1] == 0:
+                return f"Empty BiocFrame with {self.shape[0]} row{'s' if self.shape[0] != 1 else ''} & no columns."
 
         from io import StringIO
 
@@ -208,8 +214,8 @@ class BiocFrame:
 
         table = Table(
             title=(
-                f"BiocFrame with {self.dims[0]} row{'s' if self.dims[0] != 1 else ''}"
-                " & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
+                f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
+                f" & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
             ),
             show_header=True,
         )
@@ -244,11 +250,11 @@ class BiocFrame:
             _rows.append(_dots)
 
         _last = self.shape[0] - _top
-        if _last <= rows_to_show:
-            _last = self.shape[0] - _top
+        if _last < rows_to_show:
+            _last += 1
 
         # last set of rows
-        for r in range(_last + 1, len(self)):
+        for r in range(_last, len(self)):
             _row = self.row(r)
             vals = list(_row.values())
             res = [str(v) for v in vals]
@@ -357,6 +363,23 @@ class BiocFrame:
 
         self._column_names = names
         self._data = new_data
+
+    @property
+    def mcols(self) -> Union[None, "BiocFrame"]:
+        """
+        Returns: The ``mcols``, containing annotation on the columns.
+        """
+        # TODO: need to attach row names.
+        return self._mcols
+
+    @mcols.setter
+    def mcols(self, mcols: Union[None, "BiocFrame"]):
+        if mcols is not None:
+            if mcols.shape[0] != self.shape[1]:
+                raise ValueError(
+                    "Number of rows in `mcols` should be equal to the number of columns."
+                )
+        self._mcols = mcols
 
     @property
     def metadata(self) -> dict:
@@ -516,12 +539,19 @@ class BiocFrame:
         elif is_col_scalar is True:
             return new_data[new_column_names[0]]
 
+        mcols = self._mcols
+        if mcols is not None:
+            if column_indices_or_names is not None:
+                mcols = mcols._slice(new_column_indices, None)
+
         current_class_const = type(self)
         return current_class_const(
             data=new_data,
             number_of_rows=new_number_of_rows,
             row_names=new_row_names,
             column_names=new_column_names,
+            metadata=self._metadata,
+            mcols=mcols,
         )
 
     # TODO: implement in-place or views
@@ -675,9 +705,11 @@ class BiocFrame:
         if name not in self.column_names:
             self._column_names.append(name)
 
+            if self._mcols is not None:
+                self._mcols = self._mcols.combine(BiocFrame({}, number_of_rows=1))
+
         self._data[name] = value
 
-    # TODO: implement in-place or view
     def __delitem__(self, name: str):
         """Remove a column.
 
@@ -708,7 +740,14 @@ class BiocFrame:
             raise ValueError(f"Column: '{name}' does not exist.")
 
         del self._data[name]
+        _col_idx = self._column_names.index(name)
+
+        # TODO: do something better later!
+        _indices = [i for i in range(len(self._column_names)) if i != _col_idx]
+
         self._column_names.remove(name)
+        if self._mcols is not None:
+            self._mcols = self._mcols[_indices, :]
 
     def __len__(self) -> int:
         """Number of rows.
@@ -888,12 +927,24 @@ class BiocFrame:
         if all([x is None for x in all_row_names]) or len(all_row_names) == 0:
             all_row_names = None
 
+        combined_mcols = None
+        if self.mcols is not None:
+            combined_mcols = self.mcols
+            if len(all_unique_columns) > len(self.mcols):
+                combined_mcols = self.mcols.combine(
+                    BiocFrame(
+                        {}, number_of_rows=len(all_unique_columns) - len(self.mcols)
+                    )
+                )
+
         current_class_const = type(self)
         return current_class_const(
             all_data,
             number_of_rows=all_num_rows,
             row_names=all_row_names,
             column_names=all_unique_columns,
+            metadata=self._metadata,
+            mcols=combined_mcols,
         )
 
     def __deepcopy__(self, memo=None, _nil=[]):
@@ -911,6 +962,7 @@ class BiocFrame:
         _num_rows_copy = deepcopy(self._number_of_rows)
         _rownames_copy = deepcopy(self.row_names)
         _metadata_copy = deepcopy(self.metadata)
+        _mcols_copy = deepcopy(self._mcols) if self._mcols is not None else None
 
         # copy dictionary first
         _data_copy = OrderedDict()
@@ -929,6 +981,7 @@ class BiocFrame:
             row_names=_rownames_copy,
             column_names=_colnames_copy,
             metadata=_metadata_copy,
+            mcols=_mcols_copy,
         )
 
     def __copy__(self):
@@ -946,6 +999,7 @@ class BiocFrame:
             row_names=self._row_names,
             column_names=self._column_names,
             metadata=self._metadata,
+            mcols=self._mcols,
         )
 
         return new_instance
