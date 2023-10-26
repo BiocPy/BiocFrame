@@ -201,11 +201,11 @@ class BiocFrame:
 
     def __repr__(self) -> str:
         if self.row_names is None:
-            if self.dims[0] == 0:
-                return f"Empty BiocFrame with no rows & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}."
+            if self.shape[0] == 0:
+                return f"Empty BiocFrame with no rows & {self.shape[1]} column{'s' if self.shape[1] != 1 else ''}."
 
-            if self.dims[1] == 0:
-                return f"Empty BiocFrame with {self.dims[0]} row{'s' if self.dims[0] != 1 else ''} & no columns."
+            if self.shape[1] == 0:
+                return f"Empty BiocFrame with {self.shape[0]} row{'s' if self.shape[0] != 1 else ''} & no columns."
 
         from io import StringIO
 
@@ -214,8 +214,8 @@ class BiocFrame:
 
         table = Table(
             title=(
-                f"BiocFrame with {self.dims[0]} row{'s' if self.dims[0] != 1 else ''}"
-                " & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
+                f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
+                f" & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
             ),
             show_header=True,
         )
@@ -250,11 +250,11 @@ class BiocFrame:
             _rows.append(_dots)
 
         _last = self.shape[0] - _top
-        if _last <= rows_to_show:
-            _last = self.shape[0] - _top
+        if _last < rows_to_show:
+            _last += 1
 
         # last set of rows
-        for r in range(_last + 1, len(self)):
+        for r in range(_last, len(self)):
             _row = self.row(r)
             vals = list(_row.values())
             res = [str(v) for v in vals]
@@ -705,9 +705,11 @@ class BiocFrame:
         if name not in self.column_names:
             self._column_names.append(name)
 
+            if self._mcols is not None:
+                self._mcols = self._mcols.combine(BiocFrame({}, number_of_rows=1))
+
         self._data[name] = value
 
-    # TODO: implement in-place or view
     def __delitem__(self, name: str):
         """Remove a column.
 
@@ -738,7 +740,14 @@ class BiocFrame:
             raise ValueError(f"Column: '{name}' does not exist.")
 
         del self._data[name]
+        _col_idx = self._column_names.index(name)
+
+        # TODO: do something better later!
+        _indices = [i for i in range(len(self._column_names)) if i != _col_idx]
+
         self._column_names.remove(name)
+        if self._mcols is not None:
+            self._mcols = self._mcols[_indices, :]
 
     def __len__(self) -> int:
         """Number of rows.
@@ -918,6 +927,16 @@ class BiocFrame:
         if all([x is None for x in all_row_names]) or len(all_row_names) == 0:
             all_row_names = None
 
+        combined_mcols = None
+        if self.mcols is not None:
+            combined_mcols = self.mcols
+            if len(all_unique_columns) > len(self.mcols):
+                combined_mcols = self.mcols.combine(
+                    BiocFrame(
+                        {}, number_of_rows=len(all_unique_columns) - len(self.mcols)
+                    )
+                )
+
         current_class_const = type(self)
         return current_class_const(
             all_data,
@@ -925,7 +944,7 @@ class BiocFrame:
             row_names=all_row_names,
             column_names=all_unique_columns,
             metadata=self._metadata,
-            mcols=self._mcols,
+            mcols=combined_mcols,
         )
 
     def __deepcopy__(self, memo=None, _nil=[]):
