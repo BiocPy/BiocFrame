@@ -705,10 +705,10 @@ class BiocFrame:
         if name not in self.column_names:
             self._column_names.append(name)
 
-        self._data[name] = value
+            if self._mcols is not None:
+                self._mcols = self._mcols.combine(BiocFrame({}, number_of_rows=1))
 
-        if self._mcols is not None:
-            self._mcols = self._mcols.combine(BiocFrame({}, number_of_rows=1))
+        self._data[name] = value
 
     def __delitem__(self, name: str):
         """Remove a column.
