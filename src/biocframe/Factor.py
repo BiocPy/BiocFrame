@@ -90,25 +90,22 @@ class Factor:
             if len(set(self._levels)) < len(self._levels):
                 raise ValueError("all entries of 'levels' should be unique")
 
-    @property
-    def codes(self) -> List[int]:
+    def get_codes(self) -> List[int]:
         """
         Returns:
-            List of codes, to be used to index into the :py:attr:`~levels`.
-            Values may also be None.
+            List of codes, used as indices into the levels from
+            :py:attr:`~get_levels`. Values may also be None.
         """
         return self._codes
 
-    @property
-    def levels(self) -> List[str]:
+    def get_levels(self) -> List[str]:
         """
         Returns:
             List of unique factor levels.
         """
         return self._levels
 
-    @property
-    def ordered(self) -> bool:
+    def get_ordered(self) -> bool:
         """
         Returns:
             Whether the levels are ordered.
