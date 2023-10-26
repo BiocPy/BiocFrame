@@ -747,7 +747,7 @@ class BiocFrame:
 
         self._column_names.remove(name)
         if self._mcols is not None:
-            self._mcols = self._mcols[:, _indices]
+            self._mcols = self._mcols[_indices, :]
 
     def __len__(self) -> int:
         """Number of rows.
