@@ -1,36 +1,7 @@
 from typing import List, Sequence, Union
 from copy import deepcopy
 from biocgenerics.combine import combine
-from biocutils import is_list_of_type
-
-
-def _pretty_ellipsis(x: Sequence, transformer) -> str:
-    collected = []
-
-    if len(x) > 10:
-        for i in range(3):
-            c = x[i]
-            if c is None:
-                collected.append("None")
-            else:
-                collected.append(repr(transformer(c)))
-
-        collected.append("...")
-        for i in range(3):
-            c = x[len(x) - i - 1]
-            if c is None:
-                collected.append("None")
-            else:
-                collected.append(repr(transformer(c)))
-
-    else:
-        for c in x:
-            if c is None:
-                collected.append("None")
-            else:
-                collected.append(repr(transformer(c)))
-
-    return "[" + ", ".join(collected) + "]"
+import biocutils as ut
 
 
 class Factor:
@@ -74,9 +45,9 @@ class Factor:
         self._ordered = ordered
 
         if validate:
-            if not is_list_of_type(self._codes, int, ignore_none=True):
+            if not ut.is_list_of_type(self._codes, int, ignore_none=True):
                 raise TypeError("all entries of 'codes' should be integers or None")
-            if not is_list_of_type(self._levels, str):
+            if not ut.is_list_of_type(self._levels, str):
                 raise TypeError("all entries of 'levels' should be non-missing strings")
 
             for x in codes:
@@ -120,7 +91,7 @@ class Factor:
         return len(self._codes)
 
     def __repr__(self) -> str:
-        tmp = "Factor(codes=" + repr(self._codes) + ", levels=" + repr(self._levels)
+        tmp = "Factor(codes=" + ut.print_truncated_list(self._codes) + ", levels=" + ut.print_truncated_list(self._levels)
         if self._ordered:
             tmp += ", ordered=True"
         tmp += ")"
@@ -139,9 +110,9 @@ class Factor:
         message += "\n"
 
         message += (
-            "values: " + _pretty_ellipsis(self._codes, lambda i: self._levels[i]) + "\n"
+            "values: " + ut.print_truncated_list(self._codes, transform=lambda i: self._levels[i]) + "\n"
         )
-        message += "levels: " + _pretty_ellipsis(self._levels, lambda x: x) + "\n"
+        message += "levels: " + ut.print_truncated_list(self._levels, transform=lambda x: x) + "\n"
         message += "ordered: " + str(self._ordered)
         return message
 
@@ -159,15 +130,13 @@ class Factor:
             If ``args`` is an integer, a string is returned containing the
             level corresponding to the code at position ``args``.
         """
-        if isinstance(args, int):
-            x = self._codes[args]
+        args, scalar = ut.normalize_subscript(args, len(self), None)
+        if scalar:
+            x = self._codes[args[0]]
             if x is not None:
                 return self._levels[x]
             else:
                 return x
-
-        if isinstance(args, slice):
-            args = range(*args.indices(len(self._codes)))
 
         new_codes = []
         for i in args:
@@ -289,7 +258,7 @@ class Factor:
                     "string 'levels' should already be present among object levels"
                 )
         else:
-            if not is_list_of_type(levels, str):
+            if not ut.is_list_of_type(levels, str):
                 raise TypeError("all entries of 'levels' should be non-missing strings")
             new_levels = levels
             for i, x in enumerate(levels):
@@ -335,7 +304,7 @@ class Factor:
 
 @combine.register(Factor)
 def _combine_factors(*x: Factor):
-    if not is_list_of_type(x, Factor):
+    if not ut.is_list_of_type(x, Factor):
         raise ValueError("all elements to `combine` must be `Factor` objects")
 
     first = x[0]
