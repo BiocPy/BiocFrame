@@ -91,7 +91,12 @@ class Factor:
         return len(self._codes)
 
     def __repr__(self) -> str:
-        tmp = "Factor(codes=" + ut.print_truncated_list(self._codes) + ", levels=" + ut.print_truncated_list(self._levels)
+        tmp = (
+            "Factor(codes="
+            + ut.print_truncated_list(self._codes)
+            + ", levels="
+            + ut.print_truncated_list(self._levels)
+        )
         if self._ordered:
             tmp += ", ordered=True"
         tmp += ")"
@@ -110,9 +115,15 @@ class Factor:
         message += "\n"
 
         message += (
-            "values: " + ut.print_truncated_list(self._codes, transform=lambda i: self._levels[i]) + "\n"
+            "values: "
+            + ut.print_truncated_list(self._codes, transform=lambda i: self._levels[i])
+            + "\n"
         )
-        message += "levels: " + ut.print_truncated_list(self._levels, transform=lambda x: x) + "\n"
+        message += (
+            "levels: "
+            + ut.print_truncated_list(self._levels, transform=lambda x: x)
+            + "\n"
+        )
         message += "ordered: " + str(self._ordered)
         return message
 
