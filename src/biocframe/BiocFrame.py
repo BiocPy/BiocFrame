@@ -285,6 +285,19 @@ class BiocFrame:
 
         return capture.get()
 
+    def _setter_copy(self, in_place: bool = False) -> "BiocFrame":
+        if in_place:
+            return self
+        else:
+            return type(self)(
+                self._data,
+                self._number_of_rows,
+                self._row_names,
+                self._column_names,
+                self._mcols,
+                self._metadata,
+            )
+
     @property
     def shape(self) -> Tuple[int, int]:
         """Dimensionality of the BiocFrame.
@@ -295,6 +308,45 @@ class BiocFrame:
         """
         return (self._number_of_rows, len(self._column_names))
 
+    def get_row_names(self) -> Optional[List]:
+        """Row names of the BiocFrame.
+
+        Returns:
+            (List, optional): Row names if available, otherwise None.
+        """
+        return self._row_names
+
+    def set_row_names(
+        self, names: Optional[list], in_place: bool = False
+    ) -> "BiocFrame":
+        """Set new row names. All values in ``names`` must be unique.
+
+        Args:
+            names (List[str], optional): A list of unique values.
+            in_place (bool): Whether to modify the ``BiocFrame`` object in place.
+
+        Raises:
+            ValueError: If the length of ``names`` does not match the number of rows.
+            ValueError: If ``names`` is not unique.
+
+        Returns:
+            A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
+        if names is not None:
+            if len(names) != self.shape[0]:
+                raise ValueError(
+                    "Length of `names` does not match the number of rows, need to be "
+                    f"{self.shape[0]} but provided {len(names)}."
+                )
+
+            if not validate_unique_list(names):
+                warn("row names are not unique!")
+
+        output = self._setter_copy(in_place)
+        output._row_names = names
+        return output
+
     @property
     def row_names(self) -> Optional[List]:
         """Row names of the BiocFrame.
@@ -302,6 +354,10 @@ class BiocFrame:
         Returns:
             (List, optional): Row names if available, otherwise None.
         """
+        warn(
+            "'row_names' is deprecated, use 'get_row_names' instead",
+            DeprecationWarning,
+        )
         return self._row_names
 
     @row_names.setter
@@ -315,6 +371,11 @@ class BiocFrame:
             ValueError: If the length of ``names`` does not match the number of rows.
             ValueError: If ``names`` is not unique.
         """
+
+        warn(
+            "Setting property 'row_names' is deprecated, use 'set_row_names' instead",
+            DeprecationWarning,
+        )
 
         if names is not None:
             if len(names) != self.shape[0]:
@@ -330,12 +391,55 @@ class BiocFrame:
 
     @property
     def data(self) -> Dict[str, Any]:
-        """Access columns as :py:class:`dict`.
+        """Access columns as :py:class:`dict` Read-only property.
 
         Returns:
             Dict[str, Any]: Dictionary of columns and their values.
         """
         return self._data
+
+    def get_column_names(self) -> List[str]:
+        """Column names of the BiocFrame.
+
+        Returns:
+            List[str]: A list of column names.
+        """
+        return self._column_names
+
+    def set_column_names(self, names: List[str], in_place: bool = False) -> "BiocFrame":
+        """Set new column names. New names must be unique.
+
+        Args:
+            names (List[str]): A list of unique values.
+            in_place (bool): Whether to modify the ``BiocFrame`` object in place.
+
+        Raises:
+            ValueError:
+                If the length of ``names`` does not match the number of columns.
+                If ``names`` is not unique.
+
+        Returns:
+            A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
+
+        if names is None:
+            raise ValueError("column names cannot be None!")
+
+        if len(names) != len(self._column_names):
+            raise ValueError("Provided `names` does not match number of columns.")
+
+        if not (validate_unique_list(names)):
+            raise ValueError("Column names must be unique!")
+
+        new_data = OrderedDict()
+        for idx in range(len(names)):
+            new_data[names[idx]] = self._data[self.column_names[idx]]
+
+        output = self._setter_copy(in_place)
+        output._column_names = names
+        output._data = new_data
+        return output
 
     @property
     def column_names(self) -> List[str]:
@@ -344,6 +448,10 @@ class BiocFrame:
         Returns:
             List[str]: A list of column names.
         """
+        warn(
+            "'column_names' is deprecated, use 'get_column_names' instead",
+            DeprecationWarning,
+        )
         return self._column_names
 
     @column_names.setter
@@ -358,6 +466,11 @@ class BiocFrame:
                 If the length of ``names`` does not match the number of columns.
                 If ``names`` is not unique.
         """
+
+        warn(
+            "Setting property 'column_names' is deprecated, use 'set_column_names' instead",
+            DeprecationWarning,
+        )
 
         if names is None:
             raise ValueError("`names` cannot be `None`!")
@@ -378,22 +491,82 @@ class BiocFrame:
         self._column_names = names
         self._data = new_data
 
+    def get_mcols(self) -> Union[None, "BiocFrame"]:
+        """The ``mcols``, containing annotation on the columns."""
+        return self._mcols
+
+    def set_mcols(
+        self, mcols: Union[None, "BiocFrame"], in_place: bool = False
+    ) -> "BiocFrame":
+        """Set new `mcols`, containing annotations on the columns.
+
+        Args:
+            mcols (Biocframe, optional): New mcols. Can be `None` to remove this information.
+            in_place (bool): Whether to modify the ``BiocFrame`` object in place.
+
+        Returns:
+            A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
+        if mcols is not None:
+            if mcols.shape[0] != self.shape[1]:
+                raise ValueError(
+                    "Number of rows in `mcols` should be equal to the number of columns."
+                )
+
+        output = self._setter_copy(in_place)
+        output._mcols = mcols
+        return output
+
     @property
     def mcols(self) -> Union[None, "BiocFrame"]:
-        """
-        Returns: The ``mcols``, containing annotation on the columns.
-        """
-        # TODO: need to attach row names.
+        """The ``mcols``, containing annotation on the columns."""
+        warn(
+            "'mcols' is deprecated, use 'get_mcols' instead",
+            DeprecationWarning,
+        )
         return self._mcols
 
     @mcols.setter
     def mcols(self, mcols: Union[None, "BiocFrame"]):
+        warn(
+            "Setting property 'mcols' is deprecated, use 'set_mcols' instead",
+            DeprecationWarning,
+        )
         if mcols is not None:
             if mcols.shape[0] != self.shape[1]:
                 raise ValueError(
                     "Number of rows in `mcols` should be equal to the number of columns."
                 )
         self._mcols = mcols
+
+    def get_metadata(self) -> dict:
+        """Access metadata.
+
+        Returns:
+            dict: Metadata object.
+        """
+        return self._metadata
+
+    def set_metadata(self, metadata: dict, in_place: bool = False) -> "BiocFrame":
+        """Set new metadata.
+
+        Args:
+            metadata (dict): New metadata object.
+            in_place (bool): Whether to modify the ``BiocFrame`` object in place.
+
+        Returns:
+            A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
+        if not isinstance(metadata, dict):
+            raise TypeError(
+                f"`metadata` must be a dictionary, provided {type(metadata)}."
+            )
+
+        output = self._setter_copy(in_place)
+        output._metadata = metadata
+        return output
 
     @property
     def metadata(self) -> dict:
@@ -402,6 +575,10 @@ class BiocFrame:
         Returns:
             dict: Metadata object.
         """
+        warn(
+            "'metadata' is deprecated, use 'get_metadata' instead",
+            DeprecationWarning,
+        )
         return self._metadata
 
     @metadata.setter
@@ -411,6 +588,10 @@ class BiocFrame:
         Args:
             metadata (dict): New metadata object.
         """
+        warn(
+            "Setting property 'metadata' is deprecated, use 'set_metadata' instead",
+            DeprecationWarning,
+        )
         if not isinstance(metadata, dict):
             raise TypeError(
                 f"`metadata` must be a dictionary, provided {type(metadata)}."
@@ -570,7 +751,6 @@ class BiocFrame:
             mcols=mcols,
         )
 
-    # TODO: implement in-place or views
     def __getitem__(
         self,
         args: SlicerArgTypes,
@@ -683,7 +863,6 @@ class BiocFrame:
 
         raise TypeError("Provided slice arguments are not supported!")
 
-    # TODO: implement in-place or views
     def __setitem__(self, name: str, value: List):
         """Add or re-assign a value to a column.
 
@@ -859,15 +1038,6 @@ class BiocFrame:
         """
         return self.row_names
 
-    @rownames.setter
-    def rownames(self, names: list):
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
-
-        Args:
-            names (list): New row names.
-        """
-        self.row_names = names
-
     @property
     def colnames(self) -> list:
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
@@ -876,15 +1046,6 @@ class BiocFrame:
             list: list of column names.
         """
         return self.column_names
-
-    @colnames.setter
-    def colnames(self, names: list):
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
-
-        Args:
-            names (list): New column names.
-        """
-        self.column_names = names
 
     @property
     def dims(self) -> Tuple[int, int]:
