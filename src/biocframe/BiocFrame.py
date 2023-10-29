@@ -9,11 +9,12 @@ from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
 from biocgenerics.rownames import rownames as rownames_generic
 from biocgenerics.rownames import set_rownames
-from biocutils import is_list_of_type
+from biocutils import is_list_of_type, normalize_subscript
 
 from ._validators import validate_cols, validate_rows, validate_unique_list
+from .Factor import Factor
 from .types import SlicerArgTypes, SlicerTypes
-from .utils import _match_to_indices, _slice_or_index
+from .utils import _slice_or_index
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -200,6 +201,19 @@ class BiocFrame:
             self._number_of_rows = 0
 
     def __repr__(self) -> str:
+        if self.row_names is None:
+            if self.shape[0] == 0:
+                return f"Empty BiocFrame with no rows & {self.shape[1]} column{'s' if self.shape[1] != 1 else ''}."
+
+            if self.shape[1] == 0:
+                return f"Empty BiocFrame with {self.shape[0]} row{'s' if self.shape[0] != 1 else ''} & no columns."
+
+        return (
+            f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
+            f" & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
+        )
+
+    def __str__(self) -> str:
         if self.row_names is None:
             if self.shape[0] == 0:
                 return f"Empty BiocFrame with no rows & {self.shape[1]} column{'s' if self.shape[1] != 1 else ''}."
@@ -498,8 +512,8 @@ class BiocFrame:
 
         # slice the columns and data
         if column_indices_or_names is not None:
-            new_column_indices, is_col_scalar = _match_to_indices(
-                self.column_names, column_indices_or_names
+            new_column_indices, is_col_scalar = normalize_subscript(
+                column_indices_or_names, len(new_column_names), new_column_names
             )
 
             new_column_names = _slice_or_index(new_column_names, new_column_indices)
@@ -510,16 +524,18 @@ class BiocFrame:
         # slice the rows of the data
         new_number_of_rows = None
         if row_indices_or_names is not None:
-            temp_row_names = self.row_names
-            if temp_row_names is None:
-                temp_row_names = list(range(self.shape[0]))
-
-            new_row_indices, is_row_scalar = _match_to_indices(
-                temp_row_names, row_indices_or_names
+            new_row_names = self.row_names
+            new_row_indices, is_row_scalar = normalize_subscript(
+                row_indices_or_names, self.shape[0], new_row_names
             )
 
-            new_row_names = _slice_or_index(temp_row_names, new_row_indices)
-            new_number_of_rows = len(new_row_names)
+            if new_row_names is not None:
+                new_row_names = _slice_or_index(new_row_names, new_row_indices)
+                new_number_of_rows = len(new_row_names)
+            else:
+                new_number_of_rows = len(
+                    _slice_or_index(list(range(self.shape[0])), new_row_indices)
+                )
 
             for k, v in new_data.items():
                 if hasattr(v, "shape"):
@@ -769,8 +785,14 @@ class BiocFrame:
         """
         from pandas import DataFrame
 
+        _data_copy = OrderedDict()
+        for col in self.column_names:
+            _data_copy[col] = self.column(col)
+            if isinstance(self.column(col), Factor):
+                _data_copy[col] = _data_copy[col].to_pandas()
+
         return DataFrame(
-            data=self._data, index=self._row_names, columns=self._column_names
+            data=_data_copy, index=self._row_names, columns=self._column_names
         )
 
     # TODO: very primitive implementation, needs very robust testing
