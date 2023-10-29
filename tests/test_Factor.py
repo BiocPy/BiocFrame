@@ -2,6 +2,7 @@ from biocframe import Factor
 from biocgenerics.combine import combine
 import pytest
 import copy
+import pandas as pd
 
 
 def test_Factor_basics():
@@ -176,3 +177,24 @@ def test_Factor_combine():
     f2 = Factor([1, 3, 2], levels=["D", "E", "F", "G"], ordered=True)
     out = combine(f1, f2)
     assert not out.get_ordered()
+
+
+def test_Factor_pandas():
+    f1 = Factor([0, 2, 4, 2, 0], levels=["A", "B", "C", "D", "E"])
+    pcat = f1.to_pandas()
+    assert pcat is not None
+    assert len(pcat) == len(f1)
+
+    f2 = Factor([1, 3, 2], levels=["D", "E", "F", "G"], ordered=True)
+    pcat = f2.to_pandas()
+    assert pcat is not None
+    assert len(pcat) == len(f2)
+    assert pcat.ordered == f2.get_ordered()
+
+
+def test_Factor_init_from_list():
+    f1 = Factor.from_list(["A", "B", "A", "B", "E"])
+
+    assert isinstance(f1, Factor)
+    assert len(f1) == 5
+    assert len(f1.get_levels()) == 3

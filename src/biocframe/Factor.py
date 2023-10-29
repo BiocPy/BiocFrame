@@ -1,7 +1,8 @@
-from typing import List, Sequence, Union
 from copy import deepcopy
-from biocgenerics.combine import combine
+from typing import List, Sequence, Union
+
 import biocutils as ut
+from biocgenerics.combine import combine
 
 
 class Factor:
@@ -311,6 +312,36 @@ class Factor:
             self._ordered,
             validate=False,
         )
+
+    def to_pandas(self):
+        """Coerce to :py:class:`~pandas.Categorical` object.
+
+        Returns:
+            Categorical: A :py:class:`~pandas.Categorical` object.
+        """
+        from pandas import Categorical
+
+        return Categorical(
+            values=[self._levels[c] for c in self._codes],
+            ordered=self._ordered,
+        )
+
+    @staticmethod
+    def from_list(values: Sequence[str]) -> "Factor":
+        """Represent a categorical vector as a Factor.
+
+        Args:
+            values (Sequence[str]): List of strings
+
+        Raises:
+            ValueError: If values is not a list.
+
+        Returns:
+            Factor: A Factor object.
+        """
+        levels, indices = ut.factor(values)
+
+        return Factor(indices, levels=levels)
 
 
 @combine.register(Factor)

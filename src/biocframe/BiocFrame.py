@@ -12,6 +12,7 @@ from biocgenerics.rownames import set_rownames
 from biocutils import is_list_of_type, normalize_subscript
 
 from ._validators import validate_cols, validate_rows, validate_unique_list
+from .Factor import Factor
 from .types import SlicerArgTypes, SlicerTypes
 from .utils import _slice_or_index
 
@@ -784,8 +785,14 @@ class BiocFrame:
         """
         from pandas import DataFrame
 
+        _data_copy = OrderedDict()
+        for col in self.column_names:
+            _data_copy[col] = self.column(col)
+            if isinstance(self.column(col), Factor):
+                _data_copy[col] = _data_copy[col].to_pandas()
+
         return DataFrame(
-            data=self._data, index=self._row_names, columns=self._column_names
+            data=_data_copy, index=self._row_names, columns=self._column_names
         )
 
     # TODO: very primitive implementation, needs very robust testing
