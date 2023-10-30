@@ -209,7 +209,7 @@ class BiocFrame:
                 data_blobs.append(repr(k) + ": " + print_truncated_list(v))
             else:
                 data_blobs.append(repr(k) + ": " + repr(v))
-        output += ', '.join(data_blobs)
+        output += ", ".join(data_blobs)
         output += "}"
 
         output += ", number_of_rows=" + str(self.shape[0])
@@ -229,7 +229,7 @@ class BiocFrame:
                     meta_blobs.append(repr(k) + ": " + print_truncated_list(v))
                 else:
                     meta_blobs.append(repr(k) + ": " + repr(v))
-            output += "{" + ', '.join(data_blobs) + "}"
+            output += "{" + ", ".join(data_blobs) + "}"
 
         output += ")"
         return output
@@ -264,14 +264,28 @@ class BiocFrame:
                     showed = showed[:3] + ["..."] + showed[3:]
                 columns.append([col, "<" + type(data).__name__ + ">"] + showed)
 
-            output += format_table(columns, floating_names = floating)
+            output += format_table(columns, floating_names=floating)
             added_table = True
 
         footer = []
         if self.mcols is not None and self.mcols.shape[1]:
-            footer.append("mcols (" + str(len(self.mcols.shape[1])) + "): " + print_truncated_list(self.mcols.column_names, sep=" ", include_brackets=False))
+            footer.append(
+                "mcols ("
+                + str(len(self.mcols.shape[1]))
+                + "): "
+                + print_truncated_list(
+                    self.mcols.column_names, sep=" ", include_brackets=False
+                )
+            )
         if len(self.metadata):
-            footer.append("metadata (" + str(len(self.metadata)) + "): " + print_truncated_list(list(self.metadata.keys()), sep=" ", include_brackets=False))
+            footer.append(
+                "metadata ("
+                + str(len(self.metadata))
+                + "): "
+                + print_truncated_list(
+                    list(self.metadata.keys()), sep=" ", include_brackets=False
+                )
+            )
         if len(footer):
             if added_table:
                 output += "\n------\n"
