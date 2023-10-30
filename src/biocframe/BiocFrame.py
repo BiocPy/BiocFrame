@@ -9,7 +9,8 @@ from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
 from biocgenerics.rownames import rownames as rownames_generic
 from biocgenerics.rownames import set_rownames
-from biocutils import is_list_of_type, normalize_subscript
+from biocgenerics import show_as_cell, format_table
+from biocutils import is_list_of_type, normalize_subscript, print_truncated_list
 
 from ._validators import validate_cols, validate_rows, validate_unique_list
 from .Factor import Factor
@@ -214,76 +215,49 @@ class BiocFrame:
         )
 
     def __str__(self) -> str:
-        if self.row_names is None:
-            if self.shape[0] == 0:
-                return f"Empty BiocFrame with no rows & {self.shape[1]} column{'s' if self.shape[1] != 1 else ''}."
+        output = f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
+        output += f" and {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}\n"
 
-            if self.shape[1] == 0:
-                return f"Empty BiocFrame with {self.shape[0]} row{'s' if self.shape[0] != 1 else ''} & no columns."
+        nr = self.shape[0]
+        added_table = False
+        if nr and self.shape[1]:
+            if nr <= 10:
+                indices = range(nr)
+                insert_ellipsis = False
+            else:
+                indices = [0, 1, 2, nr - 3, nr - 2, nr - 1]
+                insert_ellipsis = True
 
-        from io import StringIO
+            if self._row_names is not None:
+                raw_floating = _slice_or_index(self._row_names, indices)
+            else:
+                raw_floating = ["[" + str(i) + "]" for i in indices]
+            if insert_ellipsis:
+                raw_floating = raw_floating[:3] + [""] + raw_floating[3:]
+            floating = ["", ""] + raw_floating
 
-        from rich.console import Console
-        from rich.table import Table
+            columns = []
+            for col in self._column_names:
+                data = self._data[col]
+                showed = show_as_cell(data, indices)
+                if insert_ellipsis:
+                    showed = showed[:3] + ["..."] + showed[3:]
+                columns.append([col, "<" + type(data).__name__ + ">"] + showed)
 
-        table = Table(
-            title=(
-                f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
-                f" & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
-            ),
-            show_header=True,
-        )
-        if self.row_names is not None:
-            table.add_column("row_names")
+            output += format_table(columns, floating_names = floating)
+            added_table = True
 
-        for col in self.column_names:
-            table.add_column(f"{str(col)} [italic]<{type(self.column(col)).__name__}>")
+        footer = []
+        if self.mcols is not None and self.mcols.shape[1]:
+            footer.append("mcols (" + str(len(self.mcols.shape[1])) + "): " + print_truncated_list(self.mcols.column_names, sep=" ", include_brackets=False))
+        if len(self.metadata):
+            footer.append("metadata (" + str(len(self.metadata)) + "): " + print_truncated_list(list(self.metadata.keys()), sep=" ", include_brackets=False))
+        if len(footer):
+            if added_table:
+                output += "\n------\n"
+            output += "\n".join(footer)
 
-        _rows = []
-        rows_to_show = 2
-        _top = self.shape[0]
-        if _top > rows_to_show:
-            _top = rows_to_show
-
-        # top two rows
-        for r in range(_top):
-            _row = self.row(r)
-            vals = list(_row.values())
-            res = [str(v) for v in vals]
-            if self.row_names:
-                res = [str(self.row_names[r])] + res
-            _rows.append(res)
-
-        if self.shape[0] > 2 * rows_to_show:
-            # add ...
-            _dots = []
-            if self.row_names:
-                _dots = ["..."]
-
-            _dots.extend(["..." for _ in range(len(self.column_names))])
-            _rows.append(_dots)
-
-        _last = self.shape[0] - _top
-        if _last < rows_to_show:
-            _last += 1
-
-        # last set of rows
-        for r in range(_last, len(self)):
-            _row = self.row(r)
-            vals = list(_row.values())
-            res = [str(v) for v in vals]
-            if self.row_names:
-                res = [str(self.row_names[r])] + res
-            _rows.append(res)
-
-        for _row in _rows:
-            table.add_row(*_row)
-
-        console = Console(file=StringIO())
-        with console.capture() as capture:
-            console.print(table)
-
-        return capture.get()
+        return output
 
     @property
     def shape(self) -> Tuple[int, int]:
