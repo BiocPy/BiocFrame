@@ -129,19 +129,23 @@ def test_bframe_setters_with_rows():
     }
 
     bframe = BiocFrame(obj)
-    bframe[1:3,"column1"] = [20, 30]
-    assert bframe.column("column1") == [ 1, 20, 30, 4, 5 ]
+    bframe[1:3, "column1"] = [20, 30]
+    assert bframe.column("column1") == [1, 20, 30, 4, 5]
 
     bframe = BiocFrame(obj)
-    bframe[1:3,["column1", "column2"]] = BiocFrame({ "column1": [20, 30], "column2": [ "E", "F" ] })
-    assert bframe.column("column1") == [ 1, 20, 30, 4, 5 ]
-    assert bframe.column("column2") == [ "b", "E", "F", "a", "c" ]
+    bframe[1:3, ["column1", "column2"]] = BiocFrame(
+        {"column1": [20, 30], "column2": ["E", "F"]}
+    )
+    assert bframe.column("column1") == [1, 20, 30, 4, 5]
+    assert bframe.column("column2") == ["b", "E", "F", "a", "c"]
 
     # Works even when columns are out of order.
     bframe = BiocFrame(obj)
-    bframe[1:3,["column2", "column1"]] = BiocFrame({ "column1": [20, 30], "column2": [ "E", "F" ] })
-    assert bframe.column("column1") == [ 1, 20, 30, 4, 5 ]
-    assert bframe.column("column2") == [ "b", "E", "F", "a", "c" ]
+    bframe[1:3, ["column2", "column1"]] = BiocFrame(
+        {"column1": [20, 30], "column2": ["E", "F"]}
+    )
+    assert bframe.column("column1") == [1, 20, 30, 4, 5]
+    assert bframe.column("column2") == ["b", "E", "F", "a", "c"]
 
 
 def test_bframe_setters_should_fail():

@@ -715,11 +715,15 @@ class BiocFrame:
         if isinstance(args, tuple):
             rows, cols = args
 
-            row_idx, scalar = normalize_subscript(rows, self.shape[0], names=self._row_names)
+            row_idx, scalar = normalize_subscript(
+                rows, self.shape[0], names=self._row_names
+            )
             if scalar:
                 raise TypeError("row indices should be a sequence or slice")
 
-            col_idx, scalar = normalize_subscript(cols, self.shape[1], names=self._column_names)
+            col_idx, scalar = normalize_subscript(
+                cols, self.shape[1], names=self._column_names
+            )
             if scalar:
                 current = self._data[self._column_names[col_idx[0]]]
                 for j, k in enumerate(row_idx):
