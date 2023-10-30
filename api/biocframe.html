@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="biocframe.io package" href="biocframe.io.html" /><link rel="prev" title="biocframe" href="modules.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>biocframe package - BiocFrame 0.3.18 documentation</title>
+        <title>biocframe package - BiocFrame 0.3.19 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">BiocFrame 0.3.18 documentation</div></a>
+      <a href="../index.html"><div class="brand">BiocFrame 0.3.19 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.18 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.19 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -228,7 +228,7 @@
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">BiocFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mcols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p><cite>BiocFrame</cite> is an alternative to <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>.</p>
+<p><cite>BiocFrame</cite> is an alternative to <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>.</p>
 <p>Columns are required to implement the length (<code class="docutils literal notranslate"><span class="pre">__len__</span></code>) and slice (<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>) dunder
 methods. This allows <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiocFrame</span></code></a> to accept nested
 <cite>BiocFrame</cite> or any supported class as columns.</p>
@@ -565,7 +565,7 @@ contain unique <a class="reference internal" href="#id0" title="biocframe.BiocFr
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__setitem__">
-<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__setitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__setitem__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__setitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__setitem__" title="Link to this definition">#</a></dt>
 <dd><p>Add or re-assign a value to a column.</p>
 <p>Usage:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Made-up chromosome locations and ensembl ids.</span>
@@ -586,7 +586,7 @@ contain unique <a class="reference internal" href="#id0" title="biocframe.BiocFr
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the column.</p></li>
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – Name of the column.</p></li>
 <li><p><strong>value</strong> (<em>List</em>) – New value to set.</p></li>
 </ul>
 </dd>
@@ -852,10 +852,10 @@ where <cite>m</cite> is the number of rows, and <cite>n</cite> is the number of 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.to_pandas">
 <span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.to_pandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.to_pandas" title="Link to this definition">#</a></dt>
-<dd><p>Convert <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiocFrame</span></code></a> into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
+<dd><p>Convert <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiocFrame</span></code></a> into <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
+<dd class="field-odd"><p>A <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>DataFrame</p>
@@ -884,6 +884,236 @@ where <cite>m</cite> is the number of rows, and <cite>n</cite> is the number of 
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrameIter.__next__">
 <span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrameIter.__next__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrameIter.__next__" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-biocframe.Factor">
+<span id="biocframe-factor-module"></span><h2>biocframe.Factor module<a class="headerlink" href="#module-biocframe.Factor" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biocframe.Factor.</span></span><span class="sig-name descname"><span class="pre">Factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">codes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Factor class, equivalent to R’s <code class="docutils literal notranslate"><span class="pre">factor</span></code>.</p>
+<p>This is a vector of integer codes, each of which is an index into a list of unique strings. The aim is to encode a
+list of strings as integers for easier numerical analysis.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.__copy__">
+<span class="sig-name descname"><span class="pre">__copy__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.__copy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.__copy__" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#biocframe.Factor.Factor" title="biocframe.Factor.Factor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Factor</span></code></a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A shallow copy of the <code class="docutils literal notranslate"><span class="pre">Factor</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.__deepcopy__">
+<span class="sig-name descname"><span class="pre">__deepcopy__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memo</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.__deepcopy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.__deepcopy__" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#biocframe.Factor.Factor" title="biocframe.Factor.Factor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Factor</span></code></a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A deep copy of the <code class="docutils literal notranslate"><span class="pre">Factor</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.__getitem__" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Union" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]]) – Sequence of integers specifying the elements of interest.
+Alternatively an integer specifying a single element.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Union" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference internal" href="#biocframe.Factor.Factor" title="biocframe.Factor.Factor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Factor</span></code></a>]</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>If <code class="docutils literal notranslate"><span class="pre">args</span></code> is a sequence, a new <code class="docutils literal notranslate"><span class="pre">Factor</span></code> is returned containing
+only the elements of interest from <code class="docutils literal notranslate"><span class="pre">args</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">args</span></code> is an integer, a string is returned containing the
+level corresponding to the code at position <code class="docutils literal notranslate"><span class="pre">args</span></code>.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.__len__" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Length of the factor in terms of the number of codes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.__repr__" title="Link to this definition">#</a></dt>
+<dd><p>Return repr(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.__setitem__">
+<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.__setitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.__setitem__" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Sequence" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]) – Sequence of integers specifying the elements to be replaced.</p></li>
+<li><p><strong>value</strong> (<a class="reference internal" href="#biocframe.Factor.Factor" title="biocframe.Factor.Factor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Factor</span></code></a>) – A <code class="docutils literal notranslate"><span class="pre">Factor</span></code> containing the replacement values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The <code class="docutils literal notranslate"><span class="pre">args</span></code> elements in the current object are replaced with the
+corresponding values in <code class="docutils literal notranslate"><span class="pre">value</span></code>. This is performed by finding the
+level for each entry of the replacement <code class="docutils literal notranslate"><span class="pre">value</span></code>, matching it to a
+level in the current object, and replacing the entry of <code class="docutils literal notranslate"><span class="pre">codes</span></code>
+with the code of the matched level. If there is no matching level,
+None is inserted instead.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.drop_unused_levels">
+<span class="sig-name descname"><span class="pre">drop_unused_levels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.drop_unused_levels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.drop_unused_levels" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>in_place</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to perform this modification in-place.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#biocframe.Factor.Factor" title="biocframe.Factor.Factor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Factor</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>If <code class="docutils literal notranslate"><span class="pre">in_place</span> <span class="pre">=</span> <span class="pre">False</span></code>, a new <code class="docutils literal notranslate"><span class="pre">Factor</span></code> object is returned
+where all unused levels have been removed.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">in_place</span> <span class="pre">=</span> <span class="pre">True</span></code>, unused levels are removed from the
+current object; a reference to the current object is returned.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.from_list">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.from_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.from_list" title="Link to this definition">#</a></dt>
+<dd><p>Represent a categorical vector as a Factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em>]</em>) – List of strings</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.9/library/exceptions.html#ValueError" title="(in Python v3.9)"><strong>ValueError</strong></a> – If values is not a list.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A Factor object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#biocframe.Factor.Factor" title="biocframe.Factor.Factor">Factor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.get_codes">
+<span class="sig-name descname"><span class="pre">get_codes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.get_codes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.get_codes" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.List" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of codes, used as indices into the levels from
+<a class="reference internal" href="#biocframe.Factor.Factor.get_levels" title="biocframe.Factor.Factor.get_levels"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_levels</span></code></a>. Values may also be None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.get_levels">
+<span class="sig-name descname"><span class="pre">get_levels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.get_levels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.get_levels" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.List" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of unique factor levels.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.get_ordered">
+<span class="sig-name descname"><span class="pre">get_ordered</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.get_ordered"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.get_ordered" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether the levels are ordered.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.set_levels">
+<span class="sig-name descname"><span class="pre">set_levels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.set_levels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.set_levels" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>levels</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Union" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.List" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]) – <p>A list of replacement levels. These should be unique strings
+with no missing values.</p>
+<p>Alternatively a single string containing an existing level in
+this object. The new levels are defined as a permutation of the
+existing levels where the provided string is now the first
+level. The order of all other levels is preserved.</p>
+</p></li>
+<li><p><strong>in_place</strong> (<a class="reference external" href="https://docs.python.org/3.9/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Whether to perform this modification in-place.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#biocframe.Factor.Factor" title="biocframe.Factor.Factor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Factor</span></code></a></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>If <code class="docutils literal notranslate"><span class="pre">in_place</span> <span class="pre">=</span> <span class="pre">False</span></code>, a new <code class="docutils literal notranslate"><span class="pre">Factor</span></code> object is returned where
+the levels have been replaced. This will automatically adjust the
+codes so that they still refer to the same level in the new
+<code class="docutils literal notranslate"><span class="pre">levels</span></code>. If a code refers to a level that is not present in the
+new <code class="docutils literal notranslate"><span class="pre">levels</span></code>, it is replaced with None.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">in_place</span> <span class="pre">=</span> <span class="pre">True</span></code>, the levels are replaced in the current
+object, and a reference to the current object is returned.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.Factor.Factor.to_pandas">
+<span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/Factor.html#Factor.to_pandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.Factor.Factor.to_pandas" title="Link to this definition">#</a></dt>
+<dd><p>Coerce to <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Categorical.html#pandas.Categorical" title="(in pandas v2.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Categorical</span></code></a> object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Categorical.html#pandas.Categorical" title="(in pandas v2.1.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Categorical</span></code></a> object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Categorical</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -1000,6 +1230,25 @@ where <cite>m</cite> is the number of rows, and <cite>n</cite> is the number of 
 </li>
 </ul>
 </li>
+<li><a class="reference internal" href="#module-biocframe.Factor">biocframe.Factor module</a><ul>
+<li><a class="reference internal" href="#biocframe.Factor.Factor"><code class="docutils literal notranslate"><span class="pre">Factor</span></code></a><ul>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.__copy__"><code class="docutils literal notranslate"><span class="pre">Factor.__copy__()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.__deepcopy__"><code class="docutils literal notranslate"><span class="pre">Factor.__deepcopy__()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.__getitem__"><code class="docutils literal notranslate"><span class="pre">Factor.__getitem__()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.__len__"><code class="docutils literal notranslate"><span class="pre">Factor.__len__()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.__repr__"><code class="docutils literal notranslate"><span class="pre">Factor.__repr__()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.__setitem__"><code class="docutils literal notranslate"><span class="pre">Factor.__setitem__()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.drop_unused_levels"><code class="docutils literal notranslate"><span class="pre">Factor.drop_unused_levels()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.from_list"><code class="docutils literal notranslate"><span class="pre">Factor.from_list()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.get_codes"><code class="docutils literal notranslate"><span class="pre">Factor.get_codes()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.get_levels"><code class="docutils literal notranslate"><span class="pre">Factor.get_levels()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.get_ordered"><code class="docutils literal notranslate"><span class="pre">Factor.get_ordered()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.set_levels"><code class="docutils literal notranslate"><span class="pre">Factor.set_levels()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.Factor.Factor.to_pandas"><code class="docutils literal notranslate"><span class="pre">Factor.to_pandas()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-biocframe.types">biocframe.types module</a></li>
 <li><a class="reference internal" href="#module-biocframe.utils">biocframe.utils module</a></li>
 <li><a class="reference internal" href="#module-biocframe">Module contents</a></li>
@@ -1014,7 +1263,7 @@ where <cite>m</cite> is the number of rows, and <cite>n</cite> is the number of 
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=bce5950b"></script>
+</div><script src="../_static/documentation_options.js?v=189d1112"></script>
     <script src="../_static/doctools.js?v=888ff710"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=32e29ea5"></script>

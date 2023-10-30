@@ -20,6 +20,14 @@ biocframe.BiocFrame module
    :undoc-members:
    :show-inheritance:
 
+biocframe.Factor module
+-----------------------
+
+.. automodule:: biocframe.Factor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 biocframe.types module
 ----------------------
 

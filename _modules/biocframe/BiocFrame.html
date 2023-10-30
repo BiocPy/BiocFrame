@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>biocframe.BiocFrame - BiocFrame 0.3.18 documentation</title>
+        <title>biocframe.BiocFrame - BiocFrame 0.3.19 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">BiocFrame 0.3.18 documentation</div></a>
+      <a href="../../index.html"><div class="brand">BiocFrame 0.3.19 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.18 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.19 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -211,11 +211,12 @@
 <span class="kn">from</span> <span class="nn">biocgenerics.combine_rows</span> <span class="kn">import</span> <span class="n">combine_rows</span>
 <span class="kn">from</span> <span class="nn">biocgenerics.rownames</span> <span class="kn">import</span> <span class="n">rownames</span> <span class="k">as</span> <span class="n">rownames_generic</span>
 <span class="kn">from</span> <span class="nn">biocgenerics.rownames</span> <span class="kn">import</span> <span class="n">set_rownames</span>
-<span class="kn">from</span> <span class="nn">biocutils</span> <span class="kn">import</span> <span class="n">is_list_of_type</span>
+<span class="kn">from</span> <span class="nn">biocutils</span> <span class="kn">import</span> <span class="n">is_list_of_type</span><span class="p">,</span> <span class="n">normalize_subscript</span>
 
 <span class="kn">from</span> <span class="nn">._validators</span> <span class="kn">import</span> <span class="n">validate_cols</span><span class="p">,</span> <span class="n">validate_rows</span><span class="p">,</span> <span class="n">validate_unique_list</span>
+<span class="kn">from</span> <span class="nn">.Factor</span> <span class="kn">import</span> <span class="n">Factor</span>
 <span class="kn">from</span> <span class="nn">.types</span> <span class="kn">import</span> <span class="n">SlicerArgTypes</span><span class="p">,</span> <span class="n">SlicerTypes</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_match_to_indices</span><span class="p">,</span> <span class="n">_slice_or_index</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">_slice_or_index</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;jkanche&quot;</span>
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;jkanche&quot;</span>
@@ -422,6 +423,20 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Empty BiocFrame with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> row</span><span class="si">{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2"> &amp; no columns.&quot;</span>
 
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;BiocFrame with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> row</span><span class="si">{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; &amp; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> column</span><span class="si">{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Empty BiocFrame with no rows &amp; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> column</span><span class="si">{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">.&quot;</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Empty BiocFrame with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> row</span><span class="si">{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2"> &amp; no columns.&quot;</span>
+
         <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 
         <span class="kn">from</span> <span class="nn">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
@@ -484,8 +499,7 @@
         <span class="k">with</span> <span class="n">console</span><span class="o">.</span><span class="n">capture</span><span class="p">()</span> <span class="k">as</span> <span class="n">capture</span><span class="p">:</span>
             <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">capture</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
-
+        <span class="k">return</span> <span class="n">capture</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
@@ -723,8 +737,8 @@
 
         <span class="c1"># slice the columns and data</span>
         <span class="k">if</span> <span class="n">column_indices_or_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">new_column_indices</span><span class="p">,</span> <span class="n">is_col_scalar</span> <span class="o">=</span> <span class="n">_match_to_indices</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">,</span> <span class="n">column_indices_or_names</span>
+            <span class="n">new_column_indices</span><span class="p">,</span> <span class="n">is_col_scalar</span> <span class="o">=</span> <span class="n">normalize_subscript</span><span class="p">(</span>
+                <span class="n">column_indices_or_names</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_column_names</span><span class="p">),</span> <span class="n">new_column_names</span>
             <span class="p">)</span>
 
             <span class="n">new_column_names</span> <span class="o">=</span> <span class="n">_slice_or_index</span><span class="p">(</span><span class="n">new_column_names</span><span class="p">,</span> <span class="n">new_column_indices</span><span class="p">)</span>
@@ -735,16 +749,18 @@
         <span class="c1"># slice the rows of the data</span>
         <span class="n">new_number_of_rows</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">row_indices_or_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">temp_row_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_names</span>
-            <span class="k">if</span> <span class="n">temp_row_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">temp_row_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-
-            <span class="n">new_row_indices</span><span class="p">,</span> <span class="n">is_row_scalar</span> <span class="o">=</span> <span class="n">_match_to_indices</span><span class="p">(</span>
-                <span class="n">temp_row_names</span><span class="p">,</span> <span class="n">row_indices_or_names</span>
+            <span class="n">new_row_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_names</span>
+            <span class="n">new_row_indices</span><span class="p">,</span> <span class="n">is_row_scalar</span> <span class="o">=</span> <span class="n">normalize_subscript</span><span class="p">(</span>
+                <span class="n">row_indices_or_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_row_names</span>
             <span class="p">)</span>
 
-            <span class="n">new_row_names</span> <span class="o">=</span> <span class="n">_slice_or_index</span><span class="p">(</span><span class="n">temp_row_names</span><span class="p">,</span> <span class="n">new_row_indices</span><span class="p">)</span>
-            <span class="n">new_number_of_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_row_names</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">new_row_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">new_row_names</span> <span class="o">=</span> <span class="n">_slice_or_index</span><span class="p">(</span><span class="n">new_row_names</span><span class="p">,</span> <span class="n">new_row_indices</span><span class="p">)</span>
+                <span class="n">new_number_of_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_row_names</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">new_number_of_rows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                    <span class="n">_slice_or_index</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">new_row_indices</span><span class="p">)</span>
+                <span class="p">)</span>
 
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">new_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;shape&quot;</span><span class="p">):</span>
@@ -898,7 +914,7 @@
     <span class="c1"># TODO: implement in-place or views</span>
 <div class="viewcode-block" id="BiocFrame.__setitem__">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.__setitem__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add or re-assign a value to a column.</span>
 
 <span class="sd">        Usage:</span>
@@ -920,25 +936,49 @@
 <span class="sd">            bframe[&quot;symbol&quot;] = [&quot;gene_a&quot;, &quot;gene_b&quot;, &quot;gene_c&quot;]</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            name (str): Name of the column.</span>
+<span class="sd">            args (str): Name of the column.</span>
 <span class="sd">            value (List): New value to set.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: If the length of ``value`` does not match the number of rows.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Length of `value`, does not match the number of the rows,&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;need to be </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> but provided </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">args</span>
+
+            <span class="n">row_idx</span><span class="p">,</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">normalize_subscript</span><span class="p">(</span>
+                <span class="n">rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span>
             <span class="p">)</span>
+            <span class="k">if</span> <span class="n">scalar</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;row indices should be a sequence or slice&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">col_idx</span><span class="p">,</span> <span class="n">scalar</span> <span class="o">=</span> <span class="n">normalize_subscript</span><span class="p">(</span>
+                <span class="n">cols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">scalar</span><span class="p">:</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">[</span><span class="n">col_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]]</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row_idx</span><span class="p">):</span>
+                    <span class="n">current</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">col_idx</span><span class="p">:</span>
+                    <span class="n">nm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span>
+                    <span class="n">replacement</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row_idx</span><span class="p">):</span>
+                        <span class="n">current</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">replacement</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Length of `value`, does not match the number of the rows,&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;need to be </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> but provided </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mcols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_mcols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mcols</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">BiocFrame</span><span class="p">({},</span> <span class="n">number_of_rows</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">args</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mcols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_mcols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mcols</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">BiocFrame</span><span class="p">({},</span> <span class="n">number_of_rows</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">[</span><span class="n">args</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
 <div class="viewcode-block" id="BiocFrame.__delitem__">
@@ -1011,8 +1051,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 
+        <span class="n">_data_copy</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">:</span>
+            <span class="n">_data_copy</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="n">Factor</span><span class="p">):</span>
+                <span class="n">_data_copy</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">_data_copy</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+
         <span class="k">return</span> <span class="n">DataFrame</span><span class="p">(</span>
-            <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">_data_copy</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span>
         <span class="p">)</span></div>
 
 
@@ -1347,7 +1393,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=bce5950b"></script>
+</div><script src="../../_static/documentation_options.js?v=189d1112"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>
