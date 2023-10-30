@@ -863,7 +863,8 @@ class BiocFrame:
 
         raise TypeError("Provided slice arguments are not supported!")
 
-    def __setitem__(self, name: str, value: List):
+    # TODO: implement in-place or views
+    def __setitem__(self, args, value: Union[List, "BiocFrame"]):
         """Add or re-assign a value to a column.
 
         Usage:
@@ -885,25 +886,49 @@ class BiocFrame:
             bframe["symbol"] = ["gene_a", "gene_b", "gene_c"]
 
         Args:
-            name (str): Name of the column.
+            args (str): Name of the column.
             value (List): New value to set.
 
         Raises:
             ValueError: If the length of ``value`` does not match the number of rows.
         """
-        if len(value) != self.shape[0]:
-            raise ValueError(
-                "Length of `value`, does not match the number of the rows,"
-                f"need to be {self.shape[0]} but provided {len(value)}."
+        if isinstance(args, tuple):
+            rows, cols = args
+
+            row_idx, scalar = normalize_subscript(
+                rows, self.shape[0], names=self._row_names
             )
+            if scalar:
+                raise TypeError("row indices should be a sequence or slice")
 
-        if name not in self.column_names:
-            self._column_names.append(name)
+            col_idx, scalar = normalize_subscript(
+                cols, self.shape[1], names=self._column_names
+            )
+            if scalar:
+                current = self._data[self._column_names[col_idx[0]]]
+                for j, k in enumerate(row_idx):
+                    current[k] = value[j]
+            else:
+                for i in col_idx:
+                    nm = self._column_names[i]
+                    current = self._data[nm]
+                    replacement = value._data[nm]
+                    for j, k in enumerate(row_idx):
+                        current[k] = replacement[j]
+        else:
+            if len(value) != self.shape[0]:
+                raise ValueError(
+                    "Length of `value`, does not match the number of the rows,"
+                    f"need to be {self.shape[0]} but provided {len(value)}."
+                )
 
-            if self._mcols is not None:
-                self._mcols = self._mcols.combine(BiocFrame({}, number_of_rows=1))
+            if args not in self.column_names:
+                self._column_names.append(args)
 
-        self._data[name] = value
+                if self._mcols is not None:
+                    self._mcols = self._mcols.combine(BiocFrame({}, number_of_rows=1))
+
+            self._data[args] = value
 
     def __delitem__(self, name: str):
         """Remove a column.
