@@ -285,18 +285,11 @@ class BiocFrame:
 
         return capture.get()
 
-    def _setter_copy(self, in_place: bool = False) -> "BiocFrame":
-        if in_place:
+    def _define_output(self, in_place: bool = False) -> "BiocFrame":
+        if in_place is True:
             return self
         else:
-            return type(self)(
-                self._data,
-                self._number_of_rows,
-                self._row_names,
-                self._column_names,
-                self._mcols,
-                self._metadata,
-            )
+            return self.__copy__()
 
     @property
     def shape(self) -> Tuple[int, int]:
@@ -330,7 +323,7 @@ class BiocFrame:
             ValueError: If ``names`` is not unique.
 
         Returns:
-            A modified ``BiocFrame`` object, either as a copy of the original
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         if names is not None:
@@ -343,7 +336,7 @@ class BiocFrame:
             if not validate_unique_list(names):
                 warn("row names are not unique!")
 
-        output = self._setter_copy(in_place)
+        output = self._define_output(in_place)
         output._row_names = names
         return output
 
@@ -354,15 +347,11 @@ class BiocFrame:
         Returns:
             (List, optional): Row names if available, otherwise None.
         """
-        warn(
-            "'row_names' is deprecated, use 'get_row_names' instead",
-            DeprecationWarning,
-        )
-        return self._row_names
+        return self.get_row_names()
 
     @row_names.setter
     def row_names(self, names: Optional[List]):
-        """Set new row names. All values in ``names`` must be unique.
+        """Set new row names. All values in ``names`` must be unique. (in-place operation).
 
         Args:
             names (List[str], optional): A list of unique values.
@@ -373,21 +362,11 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'row_names' is deprecated, use 'set_row_names' instead",
-            DeprecationWarning,
+            "Setting property 'row_names'is an in-place operation, use 'set_row_names' instead",
+            UserWarning,
         )
 
-        if names is not None:
-            if len(names) != self.shape[0]:
-                raise ValueError(
-                    "Length of `names` does not match the number of rows, need to be "
-                    f"{self.shape[0]} but provided {len(names)}."
-                )
-
-            if not validate_unique_list(names):
-                warn("row names are not unique!")
-
-        self._row_names = names
+        self.set_row_names(names, in_place=True)
 
     @property
     def data(self) -> Dict[str, Any]:
@@ -419,7 +398,7 @@ class BiocFrame:
                 If ``names`` is not unique.
 
         Returns:
-            A modified ``BiocFrame`` object, either as a copy of the original
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
 
@@ -436,7 +415,7 @@ class BiocFrame:
         for idx in range(len(names)):
             new_data[names[idx]] = self._data[self.column_names[idx]]
 
-        output = self._setter_copy(in_place)
+        output = self._define_output(in_place)
         output._column_names = names
         output._data = new_data
         return output
@@ -448,15 +427,11 @@ class BiocFrame:
         Returns:
             List[str]: A list of column names.
         """
-        warn(
-            "'column_names' is deprecated, use 'get_column_names' instead",
-            DeprecationWarning,
-        )
-        return self._column_names
+        return self.get_column_names()
 
     @column_names.setter
     def column_names(self, names: List[str]):
-        """Set new column names. New names must be unique.
+        """Set new column names. New names must be unique (in-place operation).
 
         Args:
             names (List[str]): A list of unique values.
@@ -468,28 +443,11 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'column_names' is deprecated, use 'set_column_names' instead",
-            DeprecationWarning,
+            "Setting property 'column_names'is an in-place operation, use 'set_column_names' instead",
+            UserWarning,
         )
 
-        if names is None:
-            raise ValueError("`names` cannot be `None`!")
-
-        if len(names) != len(self._column_names):
-            raise ValueError(
-                "Length of `names` does not match number of columns, need to be "
-                f"{len(self._column_names)} but provided {len(names)}."
-            )
-
-        if not (validate_unique_list(names)):
-            raise ValueError("Column names must be unique!")
-
-        new_data = OrderedDict()
-        for idx in range(len(names)):
-            new_data[names[idx]] = self._data[self.column_names[idx]]
-
-        self._column_names = names
-        self._data = new_data
+        self.set_column_names(names, in_place=True)
 
     def get_mcols(self) -> Union[None, "BiocFrame"]:
         """The ``mcols``, containing annotation on the columns."""
@@ -505,7 +463,7 @@ class BiocFrame:
             in_place (bool): Whether to modify the ``BiocFrame`` object in place.
 
         Returns:
-            A modified ``BiocFrame`` object, either as a copy of the original
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         if mcols is not None:
@@ -514,31 +472,28 @@ class BiocFrame:
                     "Number of rows in `mcols` should be equal to the number of columns."
                 )
 
-        output = self._setter_copy(in_place)
+        output = self._define_output(in_place)
         output._mcols = mcols
         return output
 
     @property
     def mcols(self) -> Union[None, "BiocFrame"]:
         """The ``mcols``, containing annotation on the columns."""
-        warn(
-            "'mcols' is deprecated, use 'get_mcols' instead",
-            DeprecationWarning,
-        )
-        return self._mcols
+        return self.get_mcols()
 
     @mcols.setter
     def mcols(self, mcols: Union[None, "BiocFrame"]):
+        """Set new mcols (in-place operation).
+
+        Args:
+            mcols (Union[None, BiocFrame]): New metadata about column to set.
+        """
         warn(
-            "Setting property 'mcols' is deprecated, use 'set_mcols' instead",
-            DeprecationWarning,
+            "Setting property 'mcols'is an in-place operation, use 'set_mcols' instead",
+            UserWarning,
         )
-        if mcols is not None:
-            if mcols.shape[0] != self.shape[1]:
-                raise ValueError(
-                    "Number of rows in `mcols` should be equal to the number of columns."
-                )
-        self._mcols = mcols
+
+        self.set_mcols(mcols, in_place=True)
 
     def get_metadata(self) -> dict:
         """Access metadata.
@@ -556,7 +511,7 @@ class BiocFrame:
             in_place (bool): Whether to modify the ``BiocFrame`` object in place.
 
         Returns:
-            A modified ``BiocFrame`` object, either as a copy of the original
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         if not isinstance(metadata, dict):
@@ -564,7 +519,7 @@ class BiocFrame:
                 f"`metadata` must be a dictionary, provided {type(metadata)}."
             )
 
-        output = self._setter_copy(in_place)
+        output = self._define_output(in_place)
         output._metadata = metadata
         return output
 
@@ -575,29 +530,21 @@ class BiocFrame:
         Returns:
             dict: Metadata object.
         """
-        warn(
-            "'metadata' is deprecated, use 'get_metadata' instead",
-            DeprecationWarning,
-        )
-        return self._metadata
+        return self.get_metadata()
 
     @metadata.setter
     def metadata(self, metadata: dict):
-        """Set new metadata.
+        """Set new metadata (in-place operation).
 
         Args:
             metadata (dict): New metadata object.
         """
         warn(
-            "Setting property 'metadata' is deprecated, use 'set_metadata' instead",
-            DeprecationWarning,
+            "Setting property 'metadata'is an in-place operation, use 'set_metadata' instead",
+            UserWarning,
         )
-        if not isinstance(metadata, dict):
-            raise TypeError(
-                f"`metadata` must be a dictionary, provided {type(metadata)}."
-            )
 
-        self._metadata = metadata
+        self.set_metadata(metadata, in_place=True)
 
     def has_column(self, name: str) -> bool:
         """Check whether the column exists in the BiocFrame.
@@ -664,16 +611,19 @@ class BiocFrame:
 
         return self[index_or_name, None]
 
-    def _slice(
+    def slice(
         self,
         row_indices_or_names: Optional[SlicerTypes] = None,
         column_indices_or_names: Optional[SlicerTypes] = None,
     ) -> Union["BiocFrame", dict, list]:
-        """Internal method to slice by index or values.
+        """Slice ``BiocFrame`` by index or values.
 
         Args:
             row_indices_or_names (SlicerTypes, optional): Row indices (index positions)
-                or row names (string) to slice. Defaults to None.
+                or row names (string) to slice.
+
+                Object must contain :py:attr:`biocframe.BiocFrame.BiocFrame.row_names` to slice by names.
+                Defaults to None.
 
             column_indices_or_names (SlicerTypes, optional): Column indices (index positions)
                 or column names (string) to slice. Defaults to None.
@@ -739,7 +689,7 @@ class BiocFrame:
         mcols = self._mcols
         if mcols is not None:
             if column_indices_or_names is not None:
-                mcols = mcols._slice(new_column_indices, None)
+                mcols = mcols.slice(new_column_indices, None)
 
         current_class_const = type(self)
         return current_class_const(
@@ -823,21 +773,21 @@ class BiocFrame:
 
         # not an array, single str, slice by column
         if isinstance(args, str):
-            return self._slice(None, args)
+            return self.slice(None, args)
 
         if isinstance(args, int):
-            return self._slice(args, None)
+            return self.slice(args, None)
 
         # not an array, a slice
         if isinstance(args, slice):
-            return self._slice(args, None)
+            return self.slice(args, None)
 
         if isinstance(args, list):
             # column names if everything is a string
             if is_list_of_type(args, str):
-                return self._slice(None, args)
+                return self.slice(None, args)
             elif is_list_of_type(args, int):
-                return self._slice(args, None)
+                return self.slice(args, None)
             else:
                 raise TypeError(
                     "Arguments not supported! Since slice is a list, must contain either list of column "
@@ -850,9 +800,9 @@ class BiocFrame:
                 raise ValueError("Arguments must specify atleast a single slice!")
 
             if len(args) == 1:
-                return self._slice(args[0], None)
+                return self.slice(args[0], None)
             elif len(args) == 2:
-                return self._slice(
+                return self.slice(
                     args[0],
                     args[1],
                 )
@@ -863,9 +813,8 @@ class BiocFrame:
 
         raise TypeError("Provided slice arguments are not supported!")
 
-    # TODO: implement in-place or views
     def __setitem__(self, args, value: Union[List, "BiocFrame"]):
-        """Add or re-assign a value to a column.
+        """Add or re-assign a value to a column (in-place operation).
 
         Usage:
 
@@ -892,6 +841,11 @@ class BiocFrame:
         Raises:
             ValueError: If the length of ``value`` does not match the number of rows.
         """
+        warn(
+            "This method perform an in-place operation, use 'set_column' instead",
+            UserWarning,
+        )
+
         if isinstance(args, tuple):
             rows, cols = args
 
@@ -931,7 +885,7 @@ class BiocFrame:
             self._data[args] = value
 
     def __delitem__(self, name: str):
-        """Remove a column.
+        """Remove a column (in-place operation).
 
         Usage:
 
@@ -956,18 +910,106 @@ class BiocFrame:
         Raises:
             ValueError: If `name` is not a valid column.
         """
+        warn(
+            "This method perform an in-place operation, use 'remove_column' instead",
+            UserWarning,
+        )
+        self.remove_column(name, in_place=True)
+
+    def set_column(
+        self,
+        args: SlicerArgTypes,
+        value: Union[List, "BiocFrame"],
+        in_place: bool = False,
+    ) -> "BiocFrame":
+        """Set or Modify a column.
+
+        Args:
+            args (SlicerArgTypes): Name of the column.
+            value (Union[List, "BiocFrame"]): New value to set.
+            in_place (bool): Whether to modify the object in place. Defaults to False.
+
+        Raises:
+            TypeError: If row indices are not a sequence or slice.
+            ValueError: If length of `value` does not match the number of rows.
+
+        Returns:
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
+        output = self._define_output(in_place)
+        if isinstance(args, tuple):
+            rows, cols = args
+
+            row_idx, scalar = normalize_subscript(
+                rows, output.shape[0], names=output._row_names
+            )
+            if scalar:
+                raise TypeError("row indices should be a sequence or slice")
+
+            col_idx, scalar = normalize_subscript(
+                cols, output.shape[1], names=output._column_names
+            )
+            if scalar:
+                current = output._data[output._column_names[col_idx[0]]]
+                for j, k in enumerate(row_idx):
+                    current[k] = value[j]
+            else:
+                for i in col_idx:
+                    nm = output._column_names[i]
+                    current = output._data[nm]
+                    replacement = value._data[nm]
+                    for j, k in enumerate(row_idx):
+                        current[k] = replacement[j]
+        else:
+            if len(value) != output.shape[0]:
+                raise ValueError(
+                    "Length of `value`, does not match the number of the rows,"
+                    f"need to be {output.shape[0]} but provided {len(value)}."
+                )
+
+            if args not in output.column_names:
+                output._column_names.append(args)
+
+                if output._mcols is not None:
+                    output._mcols = output._mcols.combine(
+                        BiocFrame({}, number_of_rows=1)
+                    )
+
+            output._data[args] = value
+
+        return output
+
+    def remove_column(self, name: str, in_place: bool = False) -> "BiocFrame":
+        """Remove a column.
+
+        Args:
+            name (str): Name of the column to remove.
+            in_place (bool): Whether to modify the object in place. Defaults to False.
+
+        Raises:
+            ValueError: If column does not exist.
+
+        Returns:
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
         if name not in self.column_names:
             raise ValueError(f"Column: '{name}' does not exist.")
 
-        del self._data[name]
-        _col_idx = self._column_names.index(name)
+        output = self._define_output(in_place)
+
+        del output._data[name]
+        _col_idx = output._column_names.index(name)
 
         # TODO: do something better later!
-        _indices = [i for i in range(len(self._column_names)) if i != _col_idx]
+        _indices = [i for i in range(len(output._column_names)) if i != _col_idx]
 
-        self._column_names.remove(name)
-        if self._mcols is not None:
-            self._mcols = self._mcols[_indices, :]
+        output._column_names.remove(name)
+        if output._mcols is not None:
+            output._mcols = output._mcols[_indices, :]
+
+        return output
 
     def __len__(self) -> int:
         """Number of rows.
