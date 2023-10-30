@@ -202,17 +202,37 @@ class BiocFrame:
             self._number_of_rows = 0
 
     def __repr__(self) -> str:
-        if self.row_names is None:
-            if self.shape[0] == 0:
-                return f"Empty BiocFrame with no rows & {self.shape[1]} column{'s' if self.shape[1] != 1 else ''}."
+        output = "BiocFrame(data={"
+        data_blobs = []
+        for k, v in self._data.items():
+            if isinstance(v, list):
+                data_blobs.append(repr(k) + ": " + print_truncated_list(v))
+            else:
+                data_blobs.append(repr(k) + ": " + repr(v))
+        output += ', '.join(data_blobs)
+        output += "}"
 
-            if self.shape[1] == 0:
-                return f"Empty BiocFrame with {self.shape[0]} row{'s' if self.shape[0] != 1 else ''} & no columns."
+        output += ", number_of_rows=" + str(self.shape[0])
+        if self._row_names:
+            output += ", row_names=" + print_truncated_list(self._row_names)
 
-        return (
-            f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
-            f" & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
-        )
+        output += ", column_names=" + print_truncated_list(self._column_names)
+
+        if self._mcols is not None and self._mcols.shape[1] > 0:
+            # TODO: fix potential recursion here.
+            output += ", mcols=" + repr(self._mcols)
+
+        if len(self._metadata):
+            meta_blobs = []
+            for k, v in self._data.items():
+                if isinstance(v, list):
+                    meta_blobs.append(repr(k) + ": " + print_truncated_list(v))
+                else:
+                    meta_blobs.append(repr(k) + ": " + repr(v))
+            output += "{" + ', '.join(data_blobs) + "}"
+
+        output += ")"
+        return output
 
     def __str__(self) -> str:
         output = f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
