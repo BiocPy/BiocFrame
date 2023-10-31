@@ -626,8 +626,7 @@ class BiocFrame:
         return self.get_column(index_or_name)
 
     def get_row(self, index_or_name: Union[str, int]) -> dict:
-        """Access a row by index or row name.Alias to
-        :py:meth:`~biocframe.BiocFrame.BiocFrame.get_row`.
+        """Access a row by index or row name.Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_row`.
 
         Args:
             index_or_name (Union[str, int]): Integer index of the row to access.
