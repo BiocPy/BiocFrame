@@ -376,7 +376,7 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'row_names'is an in-place operation, use 'set_row_names' instead",
+            "Setting property 'row_names' is an in-place operation, use 'set_row_names' instead",
             UserWarning,
         )
 
@@ -457,7 +457,7 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'column_names'is an in-place operation, use 'set_column_names' instead",
+            "Setting property 'column_names' is an in-place operation, use 'set_column_names' instead",
             UserWarning,
         )
 
@@ -503,7 +503,7 @@ class BiocFrame:
             mcols (Union[None, BiocFrame]): New metadata about column to set.
         """
         warn(
-            "Setting property 'mcols'is an in-place operation, use 'set_mcols' instead",
+            "Setting property 'mcols' is an in-place operation, use 'set_mcols' instead",
             UserWarning,
         )
 
@@ -554,7 +554,7 @@ class BiocFrame:
             metadata (dict): New metadata object.
         """
         warn(
-            "Setting property 'metadata'is an in-place operation, use 'set_metadata' instead",
+            "Setting property 'metadata' is an in-place operation, use 'set_metadata' instead",
             UserWarning,
         )
 
@@ -571,7 +571,7 @@ class BiocFrame:
         """
         return name in self.column_names
 
-    def column(self, index_or_name: Union[str, int]) -> Any:
+    def get_column(self, index_or_name: Union[str, int]) -> Any:
         """Access a column by index or column label.
 
         Args:
@@ -597,6 +597,34 @@ class BiocFrame:
             )
 
         return self[None, index_or_name]
+
+    def column(self, index_or_name: Union[str, int]) -> Any:
+        """Access a column by index or column label. Alias to
+        :py:meth:`~biocframe.BiocFrame.BiocFrame.get_column`.
+
+        Args:
+            index_or_name (Union[str, int]): Name of the column, which must a valid name in
+                :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
+
+                Alternatively, you may provide the integer index of the column to access.
+
+        Raises:
+            ValueError:
+                If ``index_or_name`` is not in column names.
+                If the integer index is greater than the number of columns.
+            TypeError:
+                If ``index_or_name`` is neither a string nor an integer.
+
+        Returns:
+            Any: Column with its original type preserved.
+        """
+
+        warn(
+            "Method 'column' is an in-place operation, use 'get_column' instead",
+            DeprecationWarning,
+        )
+
+        return self.get_column(index_or_name)
 
     def row(self, index_or_name: Union[str, int]) -> dict:
         """Access a row by index or row name.
