@@ -75,8 +75,8 @@ class Factor:
 
     @property
     def codes(self) -> List[int]:
-        """List of codes, used as indices into the levels from
-        :py:attr:`~get_levels`. Values may also be None (read-only property).
+        """List of codes, used as indices into the levels from :py:attr:`~get_levels`. Values may also be None (read-
+        only property).
 
         Returns:
             List[int]: List of codes.
@@ -387,6 +387,7 @@ class Factor:
             Categorical: A :py:class:`~pandas.Categorical` object.
         """
         from pandas import Categorical
+
         return Categorical(
             values=[self._levels[c] for c in self._codes],
             ordered=self._ordered,
