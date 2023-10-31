@@ -186,7 +186,7 @@ class Factor:
                 Alternatively an integer specifying a single element.
 
         Returns:
-            If ``args`` is a sequence, returns same type as caller (a bew ``Factor``) containing
+            If ``args`` is a sequence, returns same type as caller (a new ``Factor``) containing
             only the elements of interest from ``args``.
 
             If ``args`` is an integer, a string is returned containing the
@@ -251,7 +251,7 @@ class Factor:
             in_place: Whether to perform this modification in-place.
 
         Returns:
-            If ``in_place = False``, a new ``Factor`` object is returned
+            If ``in_place = False``, returns same type as caller (a new ``Factor`` object)
             where all unused levels have been removed.
 
             If ``in_place = True``, unused levels are removed from the
@@ -307,7 +307,7 @@ class Factor:
                 Whether to perform this modification in-place.
 
         Returns:
-            If ``in_place = False``, a new ``Factor`` object is returned where
+            If ``in_place = False``, returns same type as caller (a new ``Factor`` object) where
             the levels have been replaced. This will automatically adjust the
             codes so that they still refer to the same level in the new
             ``levels``. If a code refers to a level that is not present in the
