@@ -1134,7 +1134,7 @@ class BiocFrame:
         Returns:
             list: list of column names.
         """
-        self.get_column_names()
+        return self.get_column_names()
 
     @colnames.setter
     def colnames(self, names: list):
