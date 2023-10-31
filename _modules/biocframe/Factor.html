@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>biocframe.Factor - BiocFrame 0.3.20 documentation</title>
+        <title>biocframe.Factor - BiocFrame 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">BiocFrame 0.3.20 documentation</div></a>
+      <a href="../../index.html"><div class="brand">BiocFrame 0.4.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.20 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.4.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -202,6 +202,7 @@
           <h1>Source code for biocframe.Factor</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
 
 <span class="kn">import</span> <span class="nn">biocutils</span> <span class="k">as</span> <span class="nn">ut</span>
 <span class="kn">from</span> <span class="nn">biocgenerics.combine</span> <span class="kn">import</span> <span class="n">combine</span>
@@ -223,7 +224,8 @@
         <span class="n">ordered</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize a Factor object.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            codes:</span>
 <span class="sd">                List of codes. Each value should be a non-negative</span>
@@ -269,7 +271,8 @@
 <div class="viewcode-block" id="Factor.get_codes">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.Factor.Factor.get_codes">[docs]</a>
     <span class="k">def</span> <span class="nf">get_codes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of codes.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            List of codes, used as indices into the levels from</span>
 <span class="sd">            :py:attr:`~get_levels`. Values may also be None.</span>
@@ -277,30 +280,76 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_codes</span></div>
 
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">codes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List of codes, used as indices into the levels from :py:attr:`~get_levels`. Values may also be None (read-</span>
+<span class="sd">        only property).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[int]: List of codes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_codes</span><span class="p">()</span>
+
 <div class="viewcode-block" id="Factor.get_levels">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.Factor.Factor.get_levels">[docs]</a>
     <span class="k">def</span> <span class="nf">get_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get unique factor levels.</span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            List of unique factor levels.</span>
+<span class="sd">            List[str]: List of factor levels.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span></div>
 
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">levels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of unique factor levels.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_levels</span><span class="p">()</span>
+
+    <span class="nd">@levels</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">levels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">levels</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify levels in the list (in-place operation).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            levels (Union[str, List[str]]): A list of replacement levels. These should be unique strings</span>
+<span class="sd">                with no missing values.</span>
+
+<span class="sd">                Alternatively a single string containing an existing level in</span>
+<span class="sd">                this object. The new levels are defined as a permutation of the</span>
+<span class="sd">                existing levels where the provided string is now the first</span>
+<span class="sd">                level. The order of all other levels is preserved.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Setting property &#39;levels&#39;is an in-place operation, use &#39;set_levels&#39; instead&quot;</span><span class="p">,</span>
+            <span class="ne">UserWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_levels</span><span class="p">(</span><span class="n">levels</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
 <div class="viewcode-block" id="Factor.get_ordered">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.Factor.Factor.get_ordered">[docs]</a>
     <span class="k">def</span> <span class="nf">get_ordered</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get whether the levels are ordered.</span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">            Whether the levels are ordered.</span>
+<span class="sd">            bool: True if ordered, otherwise False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span></div>
 
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ordered</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get whether the levels are ordered (read-only).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if ordered, otherwise False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_ordered</span><span class="p">()</span>
+
 <div class="viewcode-block" id="Factor.__len__">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.Factor.Factor.__len__">[docs]</a>
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get length.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            Length of the factor in terms of the number of codes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -350,14 +399,15 @@
 <div class="viewcode-block" id="Factor.__getitem__">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.Factor.Factor.__getitem__">[docs]</a>
     <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;Factor&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subset the ``Factor`` list.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            args:</span>
 <span class="sd">                Sequence of integers specifying the elements of interest.</span>
 <span class="sd">                Alternatively an integer specifying a single element.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            If ``args`` is a sequence, a new ``Factor`` is returned containing</span>
+<span class="sd">            If ``args`` is a sequence, returns same type as caller (a new ``Factor``) containing</span>
 <span class="sd">            only the elements of interest from ``args``.</span>
 
 <span class="sd">            If ``args`` is an integer, a string is returned containing the</span>
@@ -374,13 +424,18 @@
         <span class="n">new_codes</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="n">new_codes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_codes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">Factor</span><span class="p">(</span><span class="n">new_codes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+        <span class="n">current_class_const</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">current_class_const</span><span class="p">(</span>
+            <span class="n">new_codes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Factor.__setitem__">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.Factor.Factor.__setitem__">[docs]</a>
     <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="s2">&quot;Factor&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the ``Factor`` list.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            args: Sequence of integers specifying the elements to be replaced.</span>
 
@@ -417,12 +472,13 @@
 <div class="viewcode-block" id="Factor.drop_unused_levels">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.Factor.Factor.drop_unused_levels">[docs]</a>
     <span class="k">def</span> <span class="nf">drop_unused_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_place</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Factor&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Drop unused levels.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            in_place: Whether to perform this modification in-place.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            If ``in_place = False``, a new ``Factor`` object is returned</span>
+<span class="sd">            If ``in_place = False``, returns same type as caller (a new ``Factor`` object)</span>
 <span class="sd">            where all unused levels have been removed.</span>
 
 <span class="sd">            If ``in_place = True``, unused levels are removed from the</span>
@@ -454,7 +510,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">=</span> <span class="n">new_levels</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Factor</span><span class="p">(</span><span class="n">new_codes</span><span class="p">,</span> <span class="n">new_levels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+            <span class="n">current_class_const</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">current_class_const</span><span class="p">(</span>
+                <span class="n">new_codes</span><span class="p">,</span> <span class="n">new_levels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Factor.set_levels">
@@ -462,7 +521,8 @@
     <span class="k">def</span> <span class="nf">set_levels</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">levels</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">in_place</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Factor&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or replace levels.</span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            levels:</span>
 <span class="sd">                A list of replacement levels. These should be unique strings</span>
@@ -477,7 +537,7 @@
 <span class="sd">                Whether to perform this modification in-place.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            If ``in_place = False``, a new ``Factor`` object is returned where</span>
+<span class="sd">            If ``in_place = False``, returns same type as caller (a new ``Factor`` object) where</span>
 <span class="sd">            the levels have been replaced. This will automatically adjust the</span>
 <span class="sd">            codes so that they still refer to the same level in the new</span>
 <span class="sd">            ``levels``. If a code refers to a level that is not present in the</span>
@@ -522,7 +582,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span> <span class="o">=</span> <span class="n">new_levels</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Factor</span><span class="p">(</span><span class="n">new_codes</span><span class="p">,</span> <span class="n">new_levels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+            <span class="n">current_class_const</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">current_class_const</span><span class="p">(</span>
+                <span class="n">new_codes</span><span class="p">,</span> <span class="n">new_levels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Factor.__copy__">
@@ -532,7 +595,10 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A shallow copy of the ``Factor`` object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Factor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_codes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="n">current_class_const</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">current_class_const</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_codes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Factor.__deepcopy__">
@@ -542,7 +608,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A deep copy of the ``Factor`` object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Factor</span><span class="p">(</span>
+        <span class="n">current_class_const</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">current_class_const</span><span class="p">(</span>
             <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_codes</span><span class="p">,</span> <span class="n">memo</span><span class="p">),</span>
             <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_levels</span><span class="p">,</span> <span class="n">memo</span><span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ordered</span><span class="p">,</span>
@@ -582,7 +649,6 @@
 <span class="sd">            Factor: A Factor object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">levels</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">ut</span><span class="o">.</span><span class="n">factor</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">Factor</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">)</span></div>
 </div>
 
@@ -658,7 +724,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=3226d6c8"></script>
+</div><script src="../../_static/documentation_options.js?v=6c02275b"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>

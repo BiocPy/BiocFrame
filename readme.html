@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="biocframe" href="api/modules.html" /><link rel="prev" title="BiocFrame" href="index.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>BiocFrame - BiocFrame 0.3.20 documentation</title>
+        <title>BiocFrame - BiocFrame 0.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.3.20 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.4.0 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.20 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.4.0 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -217,14 +217,21 @@
 <img alt="Unit tests" src="https://github.com/BiocPy/BiocFrame/actions/workflows/pypi-test.yml/badge.svg" /></p>
 <section class="tex2jax_ignore mathjax_ignore" id="biocframe">
 <h1>BiocFrame<a class="headerlink" href="#biocframe" title="Link to this heading">#</a></h1>
-<p>This package provides <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> class, an alternative to Pandas DataFrame’s.</p>
+<p>This package provides</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> class, an alternative to Pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> makes no assumption on the types of the columns, the minimum requirement is each column implements length: <code class="docutils literal notranslate"><span class="pre">__len__</span></code> and slice: <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> dunder methods. This allows <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> to accept nested representations or any supported class as columns.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Factor</span></code> class, equivalent to R’s <code class="docutils literal notranslate"><span class="pre">factor</span></code>.</p>
+<p>The aim is to encode a list of strings as integers for easier numerical analysis.</p>
+</li>
+</ul>
 <p>To get started, install the package from <a class="reference external" href="https://pypi.org/project/biocframe/">PyPI</a></p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>biocframe
 </pre></div>
 </div>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<section id="id1">
+<h2>BiocFrame<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
 <p>To construct a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> object, simply provide the data as a dictionary.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
 <span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
@@ -377,8 +384,26 @@ BiocFrame with 10 rows and 2 columns
 </pre></div>
 </div>
 <p>For more details, check out the BiocFrame class <a class="reference external" href="https://biocpy.github.io/BiocFrame/api/biocframe.html#biocframe.BiocFrame.BiocFrame">reference</a>.</p>
-<!-- pyscaffold-notes -->
 </section>
+</section>
+<section id="factor">
+<h2>Factor<a class="headerlink" href="#factor" title="Link to this heading">#</a></h2>
+<p>Convert a list into a Factor object,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">Factor</span>
+
+<span class="n">f1</span> <span class="o">=</span> <span class="n">Factor</span><span class="o">.</span><span class="n">from_list</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
+Factor of length 5 with 3 levels
+values: [&#39;A&#39;, &#39;B&#39;, &#39;A&#39;, &#39;B&#39;, &#39;E&#39;]
+levels: [&#39;A&#39;, &#39;B&#39;, &#39;E&#39;]
+ordered: False
+</pre></div>
+</div>
+<p>The Factor class behaves as a list and most operations to slice or replace should work here. Check out the docs for more information!</p>
+<!-- pyscaffold-notes -->
 </section>
 <section id="note">
 <h2>Note<a class="headerlink" href="#note" title="Link to this heading">#</a></h2>
@@ -443,7 +468,7 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">BiocFrame</a><ul>
-<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#id1">BiocFrame</a><ul>
 <li><a class="reference internal" href="#properties">Properties</a><ul>
 <li><a class="reference internal" href="#setters">Setters</a></li>
 </ul>
@@ -452,6 +477,7 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
 <li><a class="reference internal" href="#combine">Combine</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#factor">Factor</a></li>
 <li><a class="reference internal" href="#note">Note</a></li>
 </ul>
 </li>
@@ -464,7 +490,7 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=3226d6c8"></script>
+</div><script src="_static/documentation_options.js?v=6c02275b"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
