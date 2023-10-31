@@ -16,10 +16,10 @@
 
 # BiocFrame
 
-This package provides 
+This package provides
 
 - `BiocFrame` class, an alternative to Pandas `DataFrame`.
-  
+
     `BiocFrame` makes no assumption on the types of the columns, the minimum requirement is each column implements length: `__len__` and slice: `__getitem__` dunder methods. This allows `BiocFrame` to accept nested representations or any supported class as columns.
 
 - `Factor` class, equivalent to R's `factor`.
