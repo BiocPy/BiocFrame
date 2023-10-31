@@ -599,8 +599,7 @@ class BiocFrame:
         return self[None, index_or_name]
 
     def column(self, index_or_name: Union[str, int]) -> Any:
-        """Access a column by index or column label. Alias to
-        :py:meth:`~biocframe.BiocFrame.BiocFrame.get_column`.
+        """Access a column by index or column label. Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_column`.
 
         Args:
             index_or_name (Union[str, int]): Name of the column, which must a valid name in
