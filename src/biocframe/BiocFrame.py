@@ -225,12 +225,12 @@ class BiocFrame:
 
         if len(self._metadata):
             meta_blobs = []
-            for k, v in self._data.items():
+            for k, v in self._metadata.items():
                 if isinstance(v, list):
                     meta_blobs.append(repr(k) + ": " + print_truncated_list(v))
                 else:
                     meta_blobs.append(repr(k) + ": " + repr(v))
-            output += "{" + ", ".join(data_blobs) + "}"
+            output += ", metadata={" + ", ".join(data_blobs) + "}"
 
         output += ")"
         return output
@@ -277,7 +277,7 @@ class BiocFrame:
         if self.mcols is not None and self.mcols.shape[1]:
             footer.append(
                 "mcols ("
-                + str(len(self.mcols.shape[1]))
+                + str(self.mcols.shape[1])
                 + "): "
                 + print_truncated_list(
                     self.mcols.column_names, sep=" ", include_brackets=False
