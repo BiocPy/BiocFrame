@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="biocframe" href="api/modules.html" /><link rel="prev" title="BiocFrame" href="index.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>BiocFrame - BiocFrame 0.3.19 documentation</title>
+        <title>BiocFrame - BiocFrame 0.3.20 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.3.19 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.3.20 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.3.19 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.3.20 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -238,14 +238,12 @@
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
-BiocFrame with 3 rows &amp; 2 columns
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
-┃ ensembl &lt;list&gt; ┃ symbol &lt;list&gt; ┃
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-│ ENS00001       │ MAP1A         │
-│ ENS00002       │ BIN1          │
-│ ENS00003       │ ESR1          │
-└────────────────┴───────────────┘
+BiocFrame with 3 rows and 2 columns
+    ensembl symbol
+    &lt;list&gt; &lt;list&gt;
+[0] ENS00001  MAP1A
+[1] ENS00002   BIN1
+[2] ENS00003   ESR1
 </pre></div>
 </div>
 <p>You can specify complex representations as columns, for example</p>
@@ -264,14 +262,12 @@ BiocFrame with 3 rows &amp; 2 columns
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
-BiocFrame with 3 rows &amp; 3 columns
-┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ row_names ┃ ensembl &lt;list&gt; ┃ symbol &lt;list&gt; ┃ ranges &lt;BiocFrame&gt;                          ┃
-┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ row1      │ ENS00001       │ MAP1A         │ {&#39;chr&#39;: &#39;chr1&#39;, &#39;start&#39;: 1000, &#39;end&#39;: 1100} │
-│ row2      │ ENS00002       │ BIN1          │ {&#39;chr&#39;: &#39;chr2&#39;, &#39;start&#39;: 1100, &#39;end&#39;: 4000} │
-│ row3      │ ENS00002       │ ESR1          │ {&#39;chr&#39;: &#39;chr3&#39;, &#39;start&#39;: 5000, &#39;end&#39;: 5500} │
-└───────────┴────────────────┴───────────────┴─────────────────────────────────────────────┘
+BiocFrame with 3 rows and 3 columns
+    ensembl symbol         ranges
+    &lt;list&gt; &lt;list&gt;    &lt;BiocFrame&gt;
+row1 ENS00001  MAP1A chr1:1000:1100
+row2 ENS00002   BIN1 chr2:1100:4000
+row3 ENS00002   ESR1 chr3:5000:5500
 </pre></div>
 </div>
 <section id="properties">
@@ -299,14 +295,12 @@ BiocFrame with 3 rows &amp; 3 columns
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
-BiocFrame with 3 rows &amp; 2 columns
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
-┃ column1 &lt;list&gt; ┃ column2 &lt;list&gt; ┃
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
-│ ENS00001       │ MAP1A          │
-│ ENS00002       │ BIN1           │
-│ ENS00003       │ ESR1           │
-└────────────────┴────────────────┘
+BiocFrame with 3 rows and 2 columns
+    column1 column2
+    &lt;list&gt;  &lt;list&gt;
+[0] ENS00001   MAP1A
+[1] ENS00002    BIN1
+[2] ENS00003    ESR1
 </pre></div>
 </div>
 <p>To add new columns,</p>
@@ -315,14 +309,12 @@ BiocFrame with 3 rows &amp; 2 columns
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
-BiocFrame with 3 rows &amp; 3 columns
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
-┃ column1 &lt;list&gt; ┃ column2 &lt;list&gt; ┃ score &lt;range&gt; ┃
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-│ ENS00001       │ MAP1A          │ 2             │
-│ ENS00002       │ BIN1           │ 3             │
-│ ENS00003       │ ESR1           │ 4             │
-└────────────────┴────────────────┴───────────────┘
+BiocFrame with 3 rows and 3 columns
+    column1 column2   score
+    &lt;list&gt;  &lt;list&gt; &lt;range&gt;
+[0] ENS00001   MAP1A       2
+[1] ENS00002    BIN1       3
+[2] ENS00003    ESR1       4
 </pre></div>
 </div>
 </section>
@@ -335,12 +327,10 @@ BiocFrame with 3 rows &amp; 3 columns
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
-BiocFrame with 1 row &amp; 1 column
-┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
-┃ row_names ┃ column1 &lt;list&gt; ┃
-┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
-│ 1         │ ENS00002       │
-└───────────┴────────────────┘
+BiocFrame with 1 row and 1 column
+    column1
+    &lt;list&gt;
+[0] ENS00002
 </pre></div>
 </div>
 <p>This operation accepts different slice input types, you can either specify a boolean vector, a <code class="docutils literal notranslate"><span class="pre">slice</span></code> object, a list of indices, or row/column names to subset.</p>
@@ -367,20 +357,23 @@ BiocFrame with 1 row &amp; 1 column
 
 <span class="c1"># OR an object oriented approach</span>
 
-<span class="n">combined</span> <span class="o">=</span> <span class="n">bframe</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">bframe2</span><span class="p">)</span>
+<span class="n">combined</span> <span class="o">=</span> <span class="n">bframe1</span><span class="o">.</span><span class="n">combine</span><span class="p">(</span><span class="n">bframe2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
-BiocFrame with 10 rows &amp; 2
-        columns
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
-┃ odd &lt;list&gt; ┃ even &lt;list&gt; ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
-│ 1          │ 0           │
-│ 3          │ 2           │
-│ ...        │ ...         │
-│ 99         │ 88          │
-└────────────┴─────────────┘
+BiocFrame with 10 rows and 2 columns
+    odd   even
+    &lt;list&gt; &lt;list&gt;
+[0]      1      0
+[1]      3      2
+[2]      5      4
+[3]      7      6
+[4]      9      8
+[5]     11      0
+[6]     33     22
+[7]     55     44
+[8]     77     66
+[9]     99     88
 </pre></div>
 </div>
 <p>For more details, check out the BiocFrame class <a class="reference external" href="https://biocpy.github.io/BiocFrame/api/biocframe.html#biocframe.BiocFrame.BiocFrame">reference</a>.</p>
@@ -471,7 +464,7 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=189d1112"></script>
+</div><script src="_static/documentation_options.js?v=3226d6c8"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
