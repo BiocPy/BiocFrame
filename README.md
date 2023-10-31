@@ -44,14 +44,12 @@ print(bframe)
 ```
 
     ## output
-    BiocFrame with 3 rows & 2 columns
-    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
-    ┃ ensembl <list> ┃ symbol <list> ┃
-    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-    │ ENS00001       │ MAP1A         │
-    │ ENS00002       │ BIN1          │
-    │ ENS00003       │ ESR1          │
-    └────────────────┴───────────────┘
+    BiocFrame with 3 rows and 2 columns
+        ensembl symbol
+        <list> <list>
+    [0] ENS00001  MAP1A
+    [1] ENS00002   BIN1
+    [2] ENS00003   ESR1
 
 You can specify complex representations as columns, for example
 
@@ -71,14 +69,12 @@ print(bframe2)
 ```
 
     ## output
-    BiocFrame with 3 rows & 3 columns
-    ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-    ┃ row_names ┃ ensembl <list> ┃ symbol <list> ┃ ranges <BiocFrame>                          ┃
-    ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-    │ row1      │ ENS00001       │ MAP1A         │ {'chr': 'chr1', 'start': 1000, 'end': 1100} │
-    │ row2      │ ENS00002       │ BIN1          │ {'chr': 'chr2', 'start': 1100, 'end': 4000} │
-    │ row3      │ ENS00002       │ ESR1          │ {'chr': 'chr3', 'start': 5000, 'end': 5500} │
-    └───────────┴────────────────┴───────────────┴─────────────────────────────────────────────┘
+    BiocFrame with 3 rows and 3 columns
+        ensembl symbol         ranges
+        <list> <list>    <BiocFrame>
+    row1 ENS00001  MAP1A chr1:1000:1100
+    row2 ENS00002   BIN1 chr2:1100:4000
+    row3 ENS00002   ESR1 chr3:5000:5500
 
 ### Properties
 
@@ -109,14 +105,12 @@ print(bframe)
 ```
 
     ## output
-    BiocFrame with 3 rows & 2 columns
-    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
-    ┃ column1 <list> ┃ column2 <list> ┃
-    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
-    │ ENS00001       │ MAP1A          │
-    │ ENS00002       │ BIN1           │
-    │ ENS00003       │ ESR1           │
-    └────────────────┴────────────────┘
+    BiocFrame with 3 rows and 2 columns
+        column1 column2
+        <list>  <list>
+    [0] ENS00001   MAP1A
+    [1] ENS00002    BIN1
+    [2] ENS00003    ESR1
 
 To add new columns,
 
@@ -126,14 +120,12 @@ print(bframe)
 ```
 
     ## output
-    BiocFrame with 3 rows & 3 columns
-    ┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
-    ┃ column1 <list> ┃ column2 <list> ┃ score <range> ┃
-    ┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
-    │ ENS00001       │ MAP1A          │ 2             │
-    │ ENS00002       │ BIN1           │ 3             │
-    │ ENS00003       │ ESR1           │ 4             │
-    └────────────────┴────────────────┴───────────────┘
+    BiocFrame with 3 rows and 3 columns
+        column1 column2   score
+        <list>  <list> <range>
+    [0] ENS00001   MAP1A       2
+    [1] ENS00002    BIN1       3
+    [2] ENS00003    ESR1       4
 
 ### Subset `BiocFrame`
 
@@ -145,12 +137,10 @@ print(sliced)
 ```
 
     ## output
-    BiocFrame with 1 row & 1 column
-    ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
-    ┃ row_names ┃ column1 <list> ┃
-    ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
-    │ 1         │ ENS00002       │
-    └───────────┴────────────────┘
+    BiocFrame with 1 row and 1 column
+        column1
+        <list>
+    [0] ENS00002
 
 This operation accepts different slice input types, you can either specify a boolean vector, a `slice` object, a list of indices, or row/column names to subset.
 
@@ -179,20 +169,23 @@ combined = combine(bframe1, bframe2)
 
 # OR an object oriented approach
 
-combined = bframe.combine(bframe2)
+combined = bframe1.combine(bframe2)
 ```
 
     ## output
-    BiocFrame with 10 rows & 2
-            columns
-    ┏━━━━━━━━━━━━┳━━━━━━━━━━━━━┓
-    ┃ odd <list> ┃ even <list> ┃
-    ┡━━━━━━━━━━━━╇━━━━━━━━━━━━━┩
-    │ 1          │ 0           │
-    │ 3          │ 2           │
-    │ ...        │ ...         │
-    │ 99         │ 88          │
-    └────────────┴─────────────┘
+    BiocFrame with 10 rows and 2 columns
+        odd   even
+        <list> <list>
+    [0]      1      0
+    [1]      3      2
+    [2]      5      4
+    [3]      7      6
+    [4]      9      8
+    [5]     11      0
+    [6]     33     22
+    [7]     55     44
+    [8]     77     66
+    [9]     99     88
 
 For more details, check out the BiocFrame class [reference](https://biocpy.github.io/BiocFrame/api/biocframe.html#biocframe.BiocFrame.BiocFrame).
 

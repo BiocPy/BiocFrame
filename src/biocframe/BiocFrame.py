@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, Sequence
 from warnings import warn
 
 from biocgenerics.colnames import colnames as colnames_generic
@@ -9,7 +9,8 @@ from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
 from biocgenerics.rownames import rownames as rownames_generic
 from biocgenerics.rownames import set_rownames
-from biocutils import is_list_of_type, normalize_subscript
+from biocgenerics import show_as_cell, format_table
+from biocutils import is_list_of_type, normalize_subscript, print_truncated_list
 
 from ._validators import validate_cols, validate_rows, validate_unique_list
 from .Factor import Factor
@@ -201,89 +202,101 @@ class BiocFrame:
             self._number_of_rows = 0
 
     def __repr__(self) -> str:
-        if self.row_names is None:
-            if self.shape[0] == 0:
-                return f"Empty BiocFrame with no rows & {self.shape[1]} column{'s' if self.shape[1] != 1 else ''}."
+        output = "BiocFrame(data={"
+        data_blobs = []
+        for k, v in self._data.items():
+            if isinstance(v, list):
+                data_blobs.append(repr(k) + ": " + print_truncated_list(v))
+            else:
+                data_blobs.append(repr(k) + ": " + repr(v))
+        output += ", ".join(data_blobs)
+        output += "}"
 
-            if self.shape[1] == 0:
-                return f"Empty BiocFrame with {self.shape[0]} row{'s' if self.shape[0] != 1 else ''} & no columns."
+        output += ", number_of_rows=" + str(self.shape[0])
+        if self._row_names:
+            output += ", row_names=" + print_truncated_list(self._row_names)
 
-        return (
-            f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
-            f" & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
-        )
+        output += ", column_names=" + print_truncated_list(self._column_names)
+
+        if self._mcols is not None and self._mcols.shape[1] > 0:
+            # TODO: fix potential recursion here.
+            output += ", mcols=" + repr(self._mcols)
+
+        if len(self._metadata):
+            meta_blobs = []
+            for k, v in self._metadata.items():
+                if isinstance(v, list):
+                    meta_blobs.append(repr(k) + ": " + print_truncated_list(v))
+                else:
+                    meta_blobs.append(repr(k) + ": " + repr(v))
+            output += ", metadata={" + ", ".join(data_blobs) + "}"
+
+        output += ")"
+        return output
 
     def __str__(self) -> str:
-        if self.row_names is None:
-            if self.shape[0] == 0:
-                return f"Empty BiocFrame with no rows & {self.shape[1]} column{'s' if self.shape[1] != 1 else ''}."
+        output = f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
+        output += f" and {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}\n"
 
-            if self.shape[1] == 0:
-                return f"Empty BiocFrame with {self.shape[0]} row{'s' if self.shape[0] != 1 else ''} & no columns."
+        nr = self.shape[0]
+        added_table = False
+        if nr and self.shape[1]:
+            if nr <= 10:
+                indices = range(nr)
+                insert_ellipsis = False
+            else:
+                indices = [0, 1, 2, nr - 3, nr - 2, nr - 1]
+                insert_ellipsis = True
 
-        from io import StringIO
+            if self._row_names is not None:
+                raw_floating = _slice_or_index(self._row_names, indices)
+            else:
+                raw_floating = ["[" + str(i) + "]" for i in indices]
+            if insert_ellipsis:
+                raw_floating = raw_floating[:3] + [""] + raw_floating[3:]
+            floating = ["", ""] + raw_floating
 
-        from rich.console import Console
-        from rich.table import Table
+            columns = []
+            for col in self._column_names:
+                data = self._data[col]
+                showed = show_as_cell(data, indices)
+                header = [col, "<" + type(data).__name__ + ">"]
+                minwidth = max(40, len(header[0]), len(header[1]))
+                for i, y in enumerate(showed):
+                    if len(y) > minwidth:
+                        showed[i] = y[: minwidth - 3] + "..."
+                if insert_ellipsis:
+                    showed = showed[:3] + ["..."] + showed[3:]
+                columns.append(header + showed)
 
-        table = Table(
-            title=(
-                f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
-                f" & {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}"
-            ),
-            show_header=True,
-        )
-        if self.row_names is not None:
-            table.add_column("row_names")
+            output += format_table(columns, floating_names=floating)
+            added_table = True
 
-        for col in self.column_names:
-            table.add_column(f"{str(col)} [italic]<{type(self.column(col)).__name__}>")
+        footer = []
+        if self.mcols is not None and self.mcols.shape[1]:
+            footer.append(
+                "mcols ("
+                + str(self.mcols.shape[1])
+                + "): "
+                + print_truncated_list(
+                    self.mcols.column_names, sep=" ", include_brackets=False
+                )
+            )
+        if len(self.metadata):
+            footer.append(
+                "metadata ("
+                + str(len(self.metadata))
+                + "): "
+                + print_truncated_list(
+                    list(self.metadata.keys()), sep=" ", include_brackets=False
+                )
+            )
+        if len(footer):
+            if added_table:
+                output += "\n------\n"
+            output += "\n".join(footer)
 
-        _rows = []
-        rows_to_show = 2
-        _top = self.shape[0]
-        if _top > rows_to_show:
-            _top = rows_to_show
-
-        # top two rows
-        for r in range(_top):
-            _row = self.row(r)
-            vals = list(_row.values())
-            res = [str(v) for v in vals]
-            if self.row_names:
-                res = [str(self.row_names[r])] + res
-            _rows.append(res)
-
-        if self.shape[0] > 2 * rows_to_show:
-            # add ...
-            _dots = []
-            if self.row_names:
-                _dots = ["..."]
-
-            _dots.extend(["..." for _ in range(len(self.column_names))])
-            _rows.append(_dots)
-
-        _last = self.shape[0] - _top
-        if _last < rows_to_show:
-            _last += 1
-
-        # last set of rows
-        for r in range(_last, len(self)):
-            _row = self.row(r)
-            vals = list(_row.values())
-            res = [str(v) for v in vals]
-            if self.row_names:
-                res = [str(self.row_names[r])] + res
-            _rows.append(res)
-
-        for _row in _rows:
-            table.add_row(*_row)
-
-        console = Console(file=StringIO())
-        with console.capture() as capture:
-            console.print(table)
-
-        return capture.get()
+        return output
 
     @property
     def shape(self) -> Tuple[int, int]:
@@ -1102,3 +1115,20 @@ def _colnames_bframe(x: BiocFrame):
 @set_colnames.register(BiocFrame)
 def _set_colnames_bframe(x: BiocFrame, names: List[str]):
     x.column_names = names
+
+
+@show_as_cell.register(BiocFrame)
+def _show_as_cell_BiocFrame(x: BiocFrame, indices: Sequence[int]) -> List[str]:
+    constructs = []
+    for i in indices:
+        constructs.append([])
+
+    for k in x._column_names:
+        col = show_as_cell(x._data[k], indices)
+        for i, v in enumerate(col):
+            constructs[i].append(v)
+
+    for i, x in enumerate(constructs):
+        constructs[i] = ":".join(x)
+
+    return constructs
