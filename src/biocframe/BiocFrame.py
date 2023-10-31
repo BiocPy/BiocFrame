@@ -1,7 +1,8 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple, Union, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
 
+from biocgenerics import format_table, show_as_cell
 from biocgenerics.colnames import colnames as colnames_generic
 from biocgenerics.colnames import set_colnames
 from biocgenerics.combine import combine
@@ -9,7 +10,6 @@ from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
 from biocgenerics.rownames import rownames as rownames_generic
 from biocgenerics.rownames import set_rownames
-from biocgenerics import show_as_cell, format_table
 from biocutils import is_list_of_type, normalize_subscript, print_truncated_list
 
 from ._validators import validate_cols, validate_rows, validate_unique_list
@@ -620,14 +620,15 @@ class BiocFrame:
         """
 
         warn(
-            "Method 'column' is an in-place operation, use 'get_column' instead",
+            "Method 'column' is deprecated, use 'get_column' instead",
             DeprecationWarning,
         )
 
         return self.get_column(index_or_name)
 
-    def row(self, index_or_name: Union[str, int]) -> dict:
-        """Access a row by index or row name.
+    def get_row(self, index_or_name: Union[str, int]) -> dict:
+        """Access a row by index or row name.Alias to
+        :py:meth:`~biocframe.BiocFrame.BiocFrame.get_row`.
 
         Args:
             index_or_name (Union[str, int]): Integer index of the row to access.
@@ -652,6 +653,33 @@ class BiocFrame:
             )
 
         return self[index_or_name, None]
+
+    def row(self, index_or_name: Union[str, int]) -> dict:
+        """Access a row by index or row name.
+
+        Args:
+            index_or_name (Union[str, int]): Integer index of the row to access.
+
+                Alternatively, you may provide a string specifying the row to access,
+                only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are available.
+
+        Raises:
+            ValueError:
+                If ``index_or_name`` is not in row names.
+                If the integer index is greater than the number of rows.
+            TypeError:
+                If ``index_or_name`` is neither a string nor an integer.
+
+        Returns:
+            dict: A dictionary with keys as column names and their values.
+        """
+
+        warn(
+            "Method 'row' is deprecated, use 'get_row' instead",
+            DeprecationWarning,
+        )
+
+        return self.get_row(index_or_name)
 
     def slice(
         self,
