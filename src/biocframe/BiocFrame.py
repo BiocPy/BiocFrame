@@ -1097,7 +1097,7 @@ class BiocFrame:
         Returns:
             list: List of column names.
         """
-        return self.column_names
+        return self.get_column_names()
 
     @property
     def index(self) -> Optional[list]:
@@ -1106,7 +1106,7 @@ class BiocFrame:
         Returns:
             (list, optional): List of row names if available, otherwise None.
         """
-        return self.row_names
+        return self.get_row_names()
 
     # compatibility with R interfaces
     @property
@@ -1116,7 +1116,15 @@ class BiocFrame:
         Returns:
             (list, optional): List of row names if available, otherwise None.
         """
-        return self.row_names
+        return self.get_row_names()
+
+    @rownames.setter
+    def rownames(self, names: list):
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names` (in-place operation).
+        Args:
+            names (list): New row names.
+        """
+        return self.set_row_names(names, in_place=True)
 
     @property
     def colnames(self) -> list:
@@ -1125,7 +1133,15 @@ class BiocFrame:
         Returns:
             list: list of column names.
         """
-        return self.column_names
+        self.get_column_names()
+
+    @colnames.setter
+    def colnames(self, names: list):
+        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names` (in-place operation).
+        Args:
+            names (list): New column names.
+        """
+        self.set_column_names(names, in_place=True)
 
     @property
     def dims(self) -> Tuple[int, int]:
