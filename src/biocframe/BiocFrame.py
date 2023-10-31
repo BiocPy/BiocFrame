@@ -57,7 +57,8 @@ class BiocFrameIter:
 
 
 class BiocFrame:
-    """`BiocFrame` is an alternative to :class:`~pandas.DataFrame`.
+    """`BiocFrame` is an alternative to :class:`~pandas.DataFrame`, with support for nested and flexible column types.
+    Similar to R's ``DataFrame`` class.
 
     Columns are required to implement the length (``__len__``) and slice (``__getitem__``) dunder
     methods. This allows :py:class:`~biocframe.BiocFrame.BiocFrame` to accept nested

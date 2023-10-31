@@ -1,5 +1,6 @@
 from copy import deepcopy
 from typing import List, Sequence, Union
+from warnings import warn
 
 import biocutils as ut
 from biocgenerics.combine import combine
@@ -19,7 +20,8 @@ class Factor:
         ordered: bool = False,
         validate: bool = True,
     ):
-        """
+        """Initialize a Factor object.
+
         Args:
             codes:
                 List of codes. Each value should be a non-negative
@@ -63,29 +65,76 @@ class Factor:
                 raise ValueError("all entries of 'levels' should be unique")
 
     def get_codes(self) -> List[int]:
-        """
+        """Get list of codes.
+
         Returns:
             List of codes, used as indices into the levels from
             :py:attr:`~get_levels`. Values may also be None.
         """
         return self._codes
 
-    def get_levels(self) -> List[str]:
-        """
+    @property
+    def codes(self) -> List[int]:
+        """List of codes, used as indices into the levels from
+        :py:attr:`~get_levels`. Values may also be None (read-only property).
+
         Returns:
-            List of unique factor levels.
+            List[int]: List of codes.
+        """
+        return self.get_codes()
+
+    def get_levels(self) -> List[str]:
+        """Get unique factor levels.
+
+        Returns:
+            List[str]: List of factor levels.
         """
         return self._levels
 
-    def get_ordered(self) -> bool:
+    @property
+    def levels(self) -> List[str]:
+        """Get list of unique factor levels."""
+        return self.get_levels()
+
+    @levels.setter
+    def levels(self, levels: Union[str, List[str]]):
+        """Modify levels in the list (in-place operation).
+
+        Args:
+            levels (Union[str, List[str]]): A list of replacement levels. These should be unique strings
+                with no missing values.
+
+                Alternatively a single string containing an existing level in
+                this object. The new levels are defined as a permutation of the
+                existing levels where the provided string is now the first
+                level. The order of all other levels is preserved.
         """
+        warn(
+            "Setting property 'levels'is an in-place operation, use 'set_levels' instead",
+            UserWarning,
+        )
+        self.set_levels(levels, in_place=True)
+
+    def get_ordered(self) -> bool:
+        """Get whether the levels are ordered.
+
         Returns:
-            Whether the levels are ordered.
+            bool: True if ordered, otherwise False.
         """
         return self._ordered
 
-    def __len__(self) -> int:
+    @property
+    def ordered(self) -> bool:
+        """Get whether the levels are ordered (read-only).
+
+        Returns:
+            bool: True if ordered, otherwise False.
         """
+        return self.get_ordered()
+
+    def __len__(self) -> int:
+        """Get length.
+
         Returns:
             Length of the factor in terms of the number of codes.
         """
@@ -129,14 +178,15 @@ class Factor:
         return message
 
     def __getitem__(self, args: Union[int, Sequence[int]]) -> Union[str, "Factor"]:
-        """
+        """Subset the ``Factor`` list.
+
         Args:
             args:
                 Sequence of integers specifying the elements of interest.
                 Alternatively an integer specifying a single element.
 
         Returns:
-            If ``args`` is a sequence, a new ``Factor`` is returned containing
+            If ``args`` is a sequence, returns same type as caller (a bew ``Factor``) containing
             only the elements of interest from ``args``.
 
             If ``args`` is an integer, a string is returned containing the
@@ -153,10 +203,15 @@ class Factor:
         new_codes = []
         for i in args:
             new_codes.append(self._codes[i])
-        return Factor(new_codes, self._levels, self._ordered, validate=False)
+
+        current_class_const = type(self)
+        return current_class_const(
+            new_codes, self._levels, self._ordered, validate=False
+        )
 
     def __setitem__(self, args: Sequence[int], value: "Factor"):
-        """
+        """Modify the ``Factor`` list.
+
         Args:
             args: Sequence of integers specifying the elements to be replaced.
 
@@ -190,7 +245,8 @@ class Factor:
                 self._codes[x] = mapping[value._codes[i]]
 
     def drop_unused_levels(self, in_place: bool = False) -> "Factor":
-        """
+        """Drop unused levels.
+
         Args:
             in_place: Whether to perform this modification in-place.
 
@@ -227,12 +283,16 @@ class Factor:
             self._levels = new_levels
             return self
         else:
-            return Factor(new_codes, new_levels, self._ordered, validate=False)
+            current_class_const = type(self)
+            return current_class_const(
+                new_codes, new_levels, self._ordered, validate=False
+            )
 
     def set_levels(
         self, levels: Union[str, List[str]], in_place: bool = False
     ) -> "Factor":
-        """
+        """Set or replace levels.
+
         Args:
             levels:
                 A list of replacement levels. These should be unique strings
@@ -292,21 +352,28 @@ class Factor:
             self._levels = new_levels
             return self
         else:
-            return Factor(new_codes, new_levels, self._ordered, validate=False)
+            current_class_const = type(self)
+            return current_class_const(
+                new_codes, new_levels, self._ordered, validate=False
+            )
 
     def __copy__(self) -> "Factor":
         """
         Returns:
             A shallow copy of the ``Factor`` object.
         """
-        return Factor(self._codes, self._levels, self._ordered, validate=False)
+        current_class_const = type(self)
+        return current_class_const(
+            self._codes, self._levels, self._ordered, validate=False
+        )
 
     def __deepcopy__(self, memo) -> "Factor":
         """
         Returns:
             A deep copy of the ``Factor`` object.
         """
-        return Factor(
+        current_class_const = type(self)
+        return current_class_const(
             deepcopy(self._codes, memo),
             deepcopy(self._levels, memo),
             self._ordered,
@@ -320,7 +387,6 @@ class Factor:
             Categorical: A :py:class:`~pandas.Categorical` object.
         """
         from pandas import Categorical
-
         return Categorical(
             values=[self._levels[c] for c in self._codes],
             ordered=self._ordered,
@@ -340,7 +406,6 @@ class Factor:
             Factor: A Factor object.
         """
         levels, indices = ut.factor(values)
-
         return Factor(indices, levels=levels)
 
 
