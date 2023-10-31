@@ -9,8 +9,9 @@ from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
 from biocgenerics.rownames import rownames as rownames_generic
 from biocgenerics.rownames import set_rownames
-from biocgenerics import show_as_cell, format_table
-from biocutils import is_list_of_type, normalize_subscript, print_truncated_list
+from biocgenerics import show_as_cell
+from biocutils import is_list_of_type, normalize_subscript
+import biocutils as ut
 
 from ._validators import validate_cols, validate_rows, validate_unique_list
 from .Factor import Factor
@@ -203,34 +204,18 @@ class BiocFrame:
             self._number_of_rows = 0
 
     def __repr__(self) -> str:
-        output = "BiocFrame(data={"
-        data_blobs = []
-        for k, v in self._data.items():
-            if isinstance(v, list):
-                data_blobs.append(repr(k) + ": " + print_truncated_list(v))
-            else:
-                data_blobs.append(repr(k) + ": " + repr(v))
-        output += ", ".join(data_blobs)
-        output += "}"
-
+        output = "BiocFrame(data=" + ut.print_truncated_dict(self._data)
         output += ", number_of_rows=" + str(self.shape[0])
-        if self._row_names:
-            output += ", row_names=" + print_truncated_list(self._row_names)
 
-        output += ", column_names=" + print_truncated_list(self._column_names)
+        if self._row_names:
+            output += ", row_names=" + ut.print_truncated_list(self._row_names)
+        output += ", column_names=" + ut.print_truncated_list(self._column_names)
 
         if self._mcols is not None and self._mcols.shape[1] > 0:
             # TODO: fix potential recursion here.
             output += ", mcols=" + repr(self._mcols)
-
         if len(self._metadata):
-            meta_blobs = []
-            for k, v in self._metadata.items():
-                if isinstance(v, list):
-                    meta_blobs.append(repr(k) + ": " + print_truncated_list(v))
-                else:
-                    meta_blobs.append(repr(k) + ": " + repr(v))
-            output += ", metadata={" + ", ".join(data_blobs) + "}"
+            output += ", metadata=" + ut.print_truncated_dict(self._metadata)
 
         output += ")"
         return output
@@ -249,10 +234,7 @@ class BiocFrame:
                 indices = [0, 1, 2, nr - 3, nr - 2, nr - 1]
                 insert_ellipsis = True
 
-            if self._row_names is not None:
-                raw_floating = _slice_or_index(self._row_names, indices)
-            else:
-                raw_floating = ["[" + str(i) + "]" for i in indices]
+            raw_floating = ut.create_floating_names(self._row_names, indices)
             if insert_ellipsis:
                 raw_floating = raw_floating[:3] + [""] + raw_floating[3:]
             floating = ["", ""] + raw_floating
@@ -261,35 +243,38 @@ class BiocFrame:
             for col in self._column_names:
                 data = self._data[col]
                 showed = show_as_cell(data, indices)
-                header = [col, "<" + type(data).__name__ + ">"]
-                minwidth = max(40, len(header[0]), len(header[1]))
-                for i, y in enumerate(showed):
-                    if len(y) > minwidth:
-                        showed[i] = y[: minwidth - 3] + "..."
+                header = [col, "<" + ut.print_type(data) + ">"]
+                showed = ut.truncate_strings(showed, width = max(40, len(header[0]), len(header[1])))
                 if insert_ellipsis:
                     showed = showed[:3] + ["..."] + showed[3:]
                 columns.append(header + showed)
 
-            output += format_table(columns, floating_names=floating)
+            output += ut.print_wrapped_table(columns, floating_names=floating)
             added_table = True
 
         footer = []
         if self.mcols is not None and self.mcols.shape[1]:
             footer.append(
-                "mcols ("
+                "mcols("
                 + str(self.mcols.shape[1])
                 + "): "
-                + print_truncated_list(
-                    self.mcols.column_names, sep=" ", include_brackets=False
+                + ut.print_truncated_list(
+                    self.mcols.column_names, 
+                    sep=" ", 
+                    include_brackets=False,
+                    transform=lambda y : y,
                 )
             )
         if len(self.metadata):
             footer.append(
-                "metadata ("
+                "metadata("
                 + str(len(self.metadata))
                 + "): "
-                + print_truncated_list(
-                    list(self.metadata.keys()), sep=" ", include_brackets=False
+                + ut.print_truncated_list(
+                    list(self.metadata.keys()), 
+                    sep=" ", 
+                    include_brackets=False,
+                    transform=lambda y : y,
                 )
             )
         if len(footer):
