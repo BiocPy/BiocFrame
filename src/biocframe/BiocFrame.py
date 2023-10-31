@@ -244,7 +244,9 @@ class BiocFrame:
                 data = self._data[col]
                 showed = show_as_cell(data, indices)
                 header = [col, "<" + ut.print_type(data) + ">"]
-                showed = ut.truncate_strings(showed, width = max(40, len(header[0]), len(header[1])))
+                showed = ut.truncate_strings(
+                    showed, width=max(40, len(header[0]), len(header[1]))
+                )
                 if insert_ellipsis:
                     showed = showed[:3] + ["..."] + showed[3:]
                 columns.append(header + showed)
@@ -259,10 +261,10 @@ class BiocFrame:
                 + str(self.mcols.shape[1])
                 + "): "
                 + ut.print_truncated_list(
-                    self.mcols.column_names, 
-                    sep=" ", 
+                    self.mcols.column_names,
+                    sep=" ",
                     include_brackets=False,
-                    transform=lambda y : y,
+                    transform=lambda y: y,
                 )
             )
         if len(self.metadata):
@@ -271,10 +273,10 @@ class BiocFrame:
                 + str(len(self.metadata))
                 + "): "
                 + ut.print_truncated_list(
-                    list(self.metadata.keys()), 
-                    sep=" ", 
+                    list(self.metadata.keys()),
+                    sep=" ",
                     include_brackets=False,
-                    transform=lambda y : y,
+                    transform=lambda y: y,
                 )
             )
         if len(footer):
