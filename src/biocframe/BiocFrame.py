@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, Sequence
 from warnings import warn
 
 from biocgenerics.colnames import colnames as colnames_generic
@@ -20,6 +20,7 @@ from .utils import _slice_or_index
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
+
 
 
 class BiocFrameIter:
@@ -260,9 +261,14 @@ class BiocFrame:
             for col in self._column_names:
                 data = self._data[col]
                 showed = show_as_cell(data, indices)
+                header = [col, "<" + type(data).__name__ + ">"]
+                minwidth = max(40, len(header[0]), len(header[1]))
+                for i, y in enumerate(showed):
+                    if len(y) > minwidth:
+                        showed[i] = y[:minwidth - 3] + "..."
                 if insert_ellipsis:
                     showed = showed[:3] + ["..."] + showed[3:]
-                columns.append([col, "<" + type(data).__name__ + ">"] + showed)
+                columns.append(header + showed)
 
             output += format_table(columns, floating_names=floating)
             added_table = True
@@ -1086,3 +1092,20 @@ def _colnames_bframe(x: BiocFrame):
 @set_colnames.register(BiocFrame)
 def _set_colnames_bframe(x: BiocFrame, names: List[str]):
     x.column_names = names
+
+
+@show_as_cell.register(BiocFrame)
+def _show_as_cell_BiocFrame(x: BiocFrame, indices: Sequence[int]) -> List[str]:
+    constructs = []
+    for i in indices:
+        constructs.append([])
+ 
+    for k in x._column_names:
+        col = show_as_cell(x._data[k], indices)
+        for i, v in enumerate(col):
+            constructs[i].append(v)
+
+    for i, x in enumerate(constructs):
+        constructs[i] = ":".join(x)
+
+    return constructs
