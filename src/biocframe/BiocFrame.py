@@ -1121,6 +1121,7 @@ class BiocFrame:
     @rownames.setter
     def rownames(self, names: list):
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names` (in-place operation).
+
         Args:
             names (list): New row names.
         """
@@ -1138,6 +1139,7 @@ class BiocFrame:
     @colnames.setter
     def colnames(self, names: list):
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names` (in-place operation).
+
         Args:
             names (list): New column names.
         """
