@@ -16,9 +16,15 @@
 
 # BiocFrame
 
-This package provides `BiocFrame` class, an alternative to Pandas DataFrame's.
+This package provides
 
-`BiocFrame` makes no assumption on the types of the columns, the minimum requirement is each column implements length: `__len__` and slice: `__getitem__` dunder methods. This allows `BiocFrame` to accept nested representations or any supported class as columns.
+- `BiocFrame` class, an alternative to Pandas `DataFrame`.
+
+    `BiocFrame` makes no assumption on the types of the columns, the minimum requirement is each column implements length: `__len__` and slice: `__getitem__` dunder methods. This allows `BiocFrame` to accept nested representations or any supported class as columns.
+
+- `Factor` class, equivalent to R's `factor`.
+
+    The aim is to encode a list of strings as integers for easier numerical analysis.
 
 
 To get started, install the package from [PyPI](https://pypi.org/project/biocframe/)
@@ -27,7 +33,7 @@ To get started, install the package from [PyPI](https://pypi.org/project/biocfra
 pip install biocframe
 ```
 
-## Usage
+## BiocFrame
 
 To construct a `BiocFrame` object, simply provide the data as a dictionary.
 
@@ -189,6 +195,25 @@ combined = bframe1.combine(bframe2)
 
 For more details, check out the BiocFrame class [reference](https://biocpy.github.io/BiocFrame/api/biocframe.html#biocframe.BiocFrame.BiocFrame).
 
+## Factor
+
+Convert a list into a Factor object,
+
+```python
+from biocframe import Factor
+
+f1 = Factor.from_list(["A", "B", "A", "B", "E"])
+print(f1)
+```
+
+    ## output
+    Factor of length 5 with 3 levels
+    values: ['A', 'B', 'A', 'B', 'E']
+    levels: ['A', 'B', 'E']
+    ordered: False
+
+
+The Factor class behaves as a list and most operations to slice or replace should work here. Check out the docs for more information!
 
 <!-- pyscaffold-notes -->
 
