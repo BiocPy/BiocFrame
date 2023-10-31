@@ -22,7 +22,6 @@ __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
-
 class BiocFrameIter:
     """An iterator to a :py:class:`~biocframe.BiocFrame.BiocFrame` object.
 
@@ -265,7 +264,7 @@ class BiocFrame:
                 minwidth = max(40, len(header[0]), len(header[1]))
                 for i, y in enumerate(showed):
                     if len(y) > minwidth:
-                        showed[i] = y[:minwidth - 3] + "..."
+                        showed[i] = y[: minwidth - 3] + "..."
                 if insert_ellipsis:
                     showed = showed[:3] + ["..."] + showed[3:]
                 columns.append(header + showed)
@@ -1099,7 +1098,7 @@ def _show_as_cell_BiocFrame(x: BiocFrame, indices: Sequence[int]) -> List[str]:
     constructs = []
     for i in indices:
         constructs.append([])
- 
+
     for k in x._column_names:
         col = show_as_cell(x._data[k], indices)
         for i, v in enumerate(col):
