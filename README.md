@@ -135,7 +135,7 @@ print(bframe)
 
 ##### Functional style
 
-Properties can also be accessed or set using a functional approach 
+Properties can also be accessed or set using a functional approach
 
 To get column names,
 
@@ -162,7 +162,7 @@ print(bframe)
     [1] ENS00002    BIN1
     [2] ENS00003    ESR1
 
-If **in_place** is `True`, we mutate the object, otherwise returns a new instance. 
+If **in_place** is `True`, we mutate the object, otherwise returns a new instance.
 
 ### Subset `BiocFrame`
 
