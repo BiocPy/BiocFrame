@@ -88,7 +88,7 @@ Properties can be accessed directly from the object, for e.g. column names, row 
 
 ```python
 # Dimensionality or shape
-print(bframe.dims)
+print(bframe.shape)
 
 ## output
 ## (3, 2)
@@ -132,6 +132,37 @@ print(bframe)
     [0] ENS00001   MAP1A       2
     [1] ENS00002    BIN1       3
     [2] ENS00003    ESR1       4
+
+##### Functional style
+
+Properties can also be accessed or set using a functional approach 
+
+To get column names,
+
+```python
+print(bframe.get_column_names())
+
+## output
+## ['ensembl', 'symbol']
+```
+
+To set new column names,
+
+```python
+# set new column names
+bframe.set_column_names(names = ["column1", "column2"], in_place=True)
+print(bframe)
+```
+
+    ## output
+    BiocFrame with 3 rows and 2 columns
+        column1 column2
+        <list>  <list>
+    [0] ENS00001   MAP1A
+    [1] ENS00002    BIN1
+    [2] ENS00003    ESR1
+
+If **in_place** is `True`, we mutate the object, otherwise returns a new instance. 
 
 ### Subset `BiocFrame`
 
