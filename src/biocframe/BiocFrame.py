@@ -2,7 +2,8 @@ from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
 
-from biocgenerics import format_table, show_as_cell
+import biocutils as ut
+from biocgenerics import show_as_cell
 from biocgenerics.colnames import colnames as colnames_generic
 from biocgenerics.colnames import set_colnames
 from biocgenerics.combine import combine
@@ -10,7 +11,6 @@ from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
 from biocgenerics.rownames import rownames as rownames_generic
 from biocgenerics.rownames import set_rownames
-from biocutils import is_list_of_type, normalize_subscript, print_truncated_list
 
 from ._validators import validate_cols, validate_rows, validate_unique_list
 from .Factor import Factor
@@ -203,34 +203,18 @@ class BiocFrame:
             self._number_of_rows = 0
 
     def __repr__(self) -> str:
-        output = "BiocFrame(data={"
-        data_blobs = []
-        for k, v in self._data.items():
-            if isinstance(v, list):
-                data_blobs.append(repr(k) + ": " + print_truncated_list(v))
-            else:
-                data_blobs.append(repr(k) + ": " + repr(v))
-        output += ", ".join(data_blobs)
-        output += "}"
-
+        output = "BiocFrame(data=" + ut.print_truncated_dict(self._data)
         output += ", number_of_rows=" + str(self.shape[0])
-        if self._row_names:
-            output += ", row_names=" + print_truncated_list(self._row_names)
 
-        output += ", column_names=" + print_truncated_list(self._column_names)
+        if self._row_names:
+            output += ", row_names=" + ut.print_truncated_list(self._row_names)
+        output += ", column_names=" + ut.print_truncated_list(self._column_names)
 
         if self._mcols is not None and self._mcols.shape[1] > 0:
             # TODO: fix potential recursion here.
             output += ", mcols=" + repr(self._mcols)
-
         if len(self._metadata):
-            meta_blobs = []
-            for k, v in self._metadata.items():
-                if isinstance(v, list):
-                    meta_blobs.append(repr(k) + ": " + print_truncated_list(v))
-                else:
-                    meta_blobs.append(repr(k) + ": " + repr(v))
-            output += ", metadata={" + ", ".join(data_blobs) + "}"
+            output += ", metadata=" + ut.print_truncated_dict(self._metadata)
 
         output += ")"
         return output
@@ -249,10 +233,7 @@ class BiocFrame:
                 indices = [0, 1, 2, nr - 3, nr - 2, nr - 1]
                 insert_ellipsis = True
 
-            if self._row_names is not None:
-                raw_floating = _slice_or_index(self._row_names, indices)
-            else:
-                raw_floating = ["[" + str(i) + "]" for i in indices]
+            raw_floating = ut.create_floating_names(self._row_names, indices)
             if insert_ellipsis:
                 raw_floating = raw_floating[:3] + [""] + raw_floating[3:]
             floating = ["", ""] + raw_floating
@@ -261,35 +242,40 @@ class BiocFrame:
             for col in self._column_names:
                 data = self._data[col]
                 showed = show_as_cell(data, indices)
-                header = [col, "<" + type(data).__name__ + ">"]
-                minwidth = max(40, len(header[0]), len(header[1]))
-                for i, y in enumerate(showed):
-                    if len(y) > minwidth:
-                        showed[i] = y[: minwidth - 3] + "..."
+                header = [col, "<" + ut.print_type(data) + ">"]
+                showed = ut.truncate_strings(
+                    showed, width=max(40, len(header[0]), len(header[1]))
+                )
                 if insert_ellipsis:
                     showed = showed[:3] + ["..."] + showed[3:]
                 columns.append(header + showed)
 
-            output += format_table(columns, floating_names=floating)
+            output += ut.print_wrapped_table(columns, floating_names=floating)
             added_table = True
 
         footer = []
         if self.mcols is not None and self.mcols.shape[1]:
             footer.append(
-                "mcols ("
+                "mcols("
                 + str(self.mcols.shape[1])
                 + "): "
-                + print_truncated_list(
-                    self.mcols.column_names, sep=" ", include_brackets=False
+                + ut.print_truncated_list(
+                    self.mcols.column_names,
+                    sep=" ",
+                    include_brackets=False,
+                    transform=lambda y: y,
                 )
             )
         if len(self.metadata):
             footer.append(
-                "metadata ("
+                "metadata("
                 + str(len(self.metadata))
                 + "): "
-                + print_truncated_list(
-                    list(self.metadata.keys()), sep=" ", include_brackets=False
+                + ut.print_truncated_list(
+                    list(self.metadata.keys()),
+                    sep=" ",
+                    include_brackets=False,
+                    transform=lambda y: y,
                 )
             )
         if len(footer):
@@ -711,7 +697,7 @@ class BiocFrame:
 
         # slice the columns and data
         if column_indices_or_names is not None:
-            new_column_indices, is_col_scalar = normalize_subscript(
+            new_column_indices, is_col_scalar = ut.normalize_subscript(
                 column_indices_or_names, len(new_column_names), new_column_names
             )
 
@@ -724,7 +710,7 @@ class BiocFrame:
         new_number_of_rows = None
         if row_indices_or_names is not None:
             new_row_names = self.row_names
-            new_row_indices, is_row_scalar = normalize_subscript(
+            new_row_indices, is_row_scalar = ut.normalize_subscript(
                 row_indices_or_names, self.shape[0], new_row_names
             )
 
@@ -852,9 +838,9 @@ class BiocFrame:
 
         if isinstance(args, list):
             # column names if everything is a string
-            if is_list_of_type(args, str):
+            if ut.is_list_of_type(args, str):
                 return self.slice(None, args)
-            elif is_list_of_type(args, int):
+            elif ut.is_list_of_type(args, int):
                 return self.slice(args, None)
             else:
                 raise TypeError(
@@ -917,13 +903,13 @@ class BiocFrame:
         if isinstance(args, tuple):
             rows, cols = args
 
-            row_idx, scalar = normalize_subscript(
+            row_idx, scalar = ut.normalize_subscript(
                 rows, self.shape[0], names=self._row_names
             )
             if scalar:
                 raise TypeError("row indices should be a sequence or slice")
 
-            col_idx, scalar = normalize_subscript(
+            col_idx, scalar = ut.normalize_subscript(
                 cols, self.shape[1], names=self._column_names
             )
             if scalar:
@@ -1009,13 +995,13 @@ class BiocFrame:
         if isinstance(args, tuple):
             rows, cols = args
 
-            row_idx, scalar = normalize_subscript(
+            row_idx, scalar = ut.normalize_subscript(
                 rows, output.shape[0], names=output._row_names
             )
             if scalar:
                 raise TypeError("row indices should be a sequence or slice")
 
-            col_idx, scalar = normalize_subscript(
+            col_idx, scalar = ut.normalize_subscript(
                 cols, output.shape[1], names=output._column_names
             )
             if scalar:
@@ -1224,7 +1210,7 @@ class BiocFrame:
         Returns:
             The same type as caller with the combined data.
         """
-        if not is_list_of_type(other, BiocFrame):
+        if not ut.is_list_of_type(other, BiocFrame):
             raise TypeError("All objects to combine must be BiocFrame objects.")
 
         all_objects = [self] + list(other)
@@ -1351,14 +1337,14 @@ class BiocFrame:
 
 @combine.register(BiocFrame)
 def _combine_bframes(*x: BiocFrame):
-    if not is_list_of_type(x, BiocFrame):
+    if not ut.is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine` must be `BiocFrame` objects.")
     return x[0].combine(*x[1:])
 
 
 @combine_rows.register(BiocFrame)
 def _combine_rows_bframes(*x: BiocFrame):
-    if not is_list_of_type(x, BiocFrame):
+    if not ut.is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine_rows` must be `BiocFrame` objects.")
 
     return x[0].combine(*x[1:])
@@ -1366,7 +1352,7 @@ def _combine_rows_bframes(*x: BiocFrame):
 
 @combine_cols.register(BiocFrame)
 def _combine_cols_bframes(*x: BiocFrame):
-    if not is_list_of_type(x, BiocFrame):
+    if not ut.is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine_cols` must be `BiocFrame` objects.")
 
     raise NotImplementedError(
