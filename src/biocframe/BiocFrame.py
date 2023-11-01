@@ -1,7 +1,9 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple, Union, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
 
+import biocutils as ut
+from biocgenerics import show_as_cell
 from biocgenerics.colnames import colnames as colnames_generic
 from biocgenerics.colnames import set_colnames
 from biocgenerics.combine import combine
@@ -9,9 +11,6 @@ from biocgenerics.combine_cols import combine_cols
 from biocgenerics.combine_rows import combine_rows
 from biocgenerics.rownames import rownames as rownames_generic
 from biocgenerics.rownames import set_rownames
-from biocgenerics import show_as_cell
-from biocutils import is_list_of_type, normalize_subscript
-import biocutils as ut
 
 from ._validators import validate_cols, validate_rows, validate_unique_list
 from .Factor import Factor
@@ -363,7 +362,7 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'row_names'is an in-place operation, use 'set_row_names' instead",
+            "Setting property 'row_names' is an in-place operation, use 'set_row_names' instead",
             UserWarning,
         )
 
@@ -444,7 +443,7 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'column_names'is an in-place operation, use 'set_column_names' instead",
+            "Setting property 'column_names' is an in-place operation, use 'set_column_names' instead",
             UserWarning,
         )
 
@@ -490,7 +489,7 @@ class BiocFrame:
             mcols (Union[None, BiocFrame]): New metadata about column to set.
         """
         warn(
-            "Setting property 'mcols'is an in-place operation, use 'set_mcols' instead",
+            "Setting property 'mcols' is an in-place operation, use 'set_mcols' instead",
             UserWarning,
         )
 
@@ -541,7 +540,7 @@ class BiocFrame:
             metadata (dict): New metadata object.
         """
         warn(
-            "Setting property 'metadata'is an in-place operation, use 'set_metadata' instead",
+            "Setting property 'metadata' is an in-place operation, use 'set_metadata' instead",
             UserWarning,
         )
 
@@ -558,7 +557,7 @@ class BiocFrame:
         """
         return name in self.column_names
 
-    def column(self, index_or_name: Union[str, int]) -> Any:
+    def get_column(self, index_or_name: Union[str, int]) -> Any:
         """Access a column by index or column label.
 
         Args:
@@ -585,8 +584,35 @@ class BiocFrame:
 
         return self[None, index_or_name]
 
-    def row(self, index_or_name: Union[str, int]) -> dict:
-        """Access a row by index or row name.
+    def column(self, index_or_name: Union[str, int]) -> Any:
+        """Access a column by index or column label. Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_column`.
+
+        Args:
+            index_or_name (Union[str, int]): Name of the column, which must a valid name in
+                :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
+
+                Alternatively, you may provide the integer index of the column to access.
+
+        Raises:
+            ValueError:
+                If ``index_or_name`` is not in column names.
+                If the integer index is greater than the number of columns.
+            TypeError:
+                If ``index_or_name`` is neither a string nor an integer.
+
+        Returns:
+            Any: Column with its original type preserved.
+        """
+
+        warn(
+            "Method 'column' is deprecated, use 'get_column' instead",
+            DeprecationWarning,
+        )
+
+        return self.get_column(index_or_name)
+
+    def get_row(self, index_or_name: Union[str, int]) -> dict:
+        """Access a row by index or row name.Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_row`.
 
         Args:
             index_or_name (Union[str, int]): Integer index of the row to access.
@@ -611,6 +637,33 @@ class BiocFrame:
             )
 
         return self[index_or_name, None]
+
+    def row(self, index_or_name: Union[str, int]) -> dict:
+        """Access a row by index or row name.
+
+        Args:
+            index_or_name (Union[str, int]): Integer index of the row to access.
+
+                Alternatively, you may provide a string specifying the row to access,
+                only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are available.
+
+        Raises:
+            ValueError:
+                If ``index_or_name`` is not in row names.
+                If the integer index is greater than the number of rows.
+            TypeError:
+                If ``index_or_name`` is neither a string nor an integer.
+
+        Returns:
+            dict: A dictionary with keys as column names and their values.
+        """
+
+        warn(
+            "Method 'row' is deprecated, use 'get_row' instead",
+            DeprecationWarning,
+        )
+
+        return self.get_row(index_or_name)
 
     def slice(
         self,
@@ -644,7 +697,7 @@ class BiocFrame:
 
         # slice the columns and data
         if column_indices_or_names is not None:
-            new_column_indices, is_col_scalar = normalize_subscript(
+            new_column_indices, is_col_scalar = ut.normalize_subscript(
                 column_indices_or_names, len(new_column_names), new_column_names
             )
 
@@ -657,7 +710,7 @@ class BiocFrame:
         new_number_of_rows = None
         if row_indices_or_names is not None:
             new_row_names = self.row_names
-            new_row_indices, is_row_scalar = normalize_subscript(
+            new_row_indices, is_row_scalar = ut.normalize_subscript(
                 row_indices_or_names, self.shape[0], new_row_names
             )
 
@@ -785,9 +838,9 @@ class BiocFrame:
 
         if isinstance(args, list):
             # column names if everything is a string
-            if is_list_of_type(args, str):
+            if ut.is_list_of_type(args, str):
                 return self.slice(None, args)
-            elif is_list_of_type(args, int):
+            elif ut.is_list_of_type(args, int):
                 return self.slice(args, None)
             else:
                 raise TypeError(
@@ -850,13 +903,13 @@ class BiocFrame:
         if isinstance(args, tuple):
             rows, cols = args
 
-            row_idx, scalar = normalize_subscript(
+            row_idx, scalar = ut.normalize_subscript(
                 rows, self.shape[0], names=self._row_names
             )
             if scalar:
                 raise TypeError("row indices should be a sequence or slice")
 
-            col_idx, scalar = normalize_subscript(
+            col_idx, scalar = ut.normalize_subscript(
                 cols, self.shape[1], names=self._column_names
             )
             if scalar:
@@ -942,13 +995,13 @@ class BiocFrame:
         if isinstance(args, tuple):
             rows, cols = args
 
-            row_idx, scalar = normalize_subscript(
+            row_idx, scalar = ut.normalize_subscript(
                 rows, output.shape[0], names=output._row_names
             )
             if scalar:
                 raise TypeError("row indices should be a sequence or slice")
 
-            col_idx, scalar = normalize_subscript(
+            col_idx, scalar = ut.normalize_subscript(
                 cols, output.shape[1], names=output._column_names
             )
             if scalar:
@@ -1157,7 +1210,7 @@ class BiocFrame:
         Returns:
             The same type as caller with the combined data.
         """
-        if not is_list_of_type(other, BiocFrame):
+        if not ut.is_list_of_type(other, BiocFrame):
             raise TypeError("All objects to combine must be BiocFrame objects.")
 
         all_objects = [self] + list(other)
@@ -1284,14 +1337,14 @@ class BiocFrame:
 
 @combine.register(BiocFrame)
 def _combine_bframes(*x: BiocFrame):
-    if not is_list_of_type(x, BiocFrame):
+    if not ut.is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine` must be `BiocFrame` objects.")
     return x[0].combine(*x[1:])
 
 
 @combine_rows.register(BiocFrame)
 def _combine_rows_bframes(*x: BiocFrame):
-    if not is_list_of_type(x, BiocFrame):
+    if not ut.is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine_rows` must be `BiocFrame` objects.")
 
     return x[0].combine(*x[1:])
@@ -1299,7 +1352,7 @@ def _combine_rows_bframes(*x: BiocFrame):
 
 @combine_cols.register(BiocFrame)
 def _combine_cols_bframes(*x: BiocFrame):
-    if not is_list_of_type(x, BiocFrame):
+    if not ut.is_list_of_type(x, BiocFrame):
         raise ValueError("All elements to `combine_cols` must be `BiocFrame` objects.")
 
     raise NotImplementedError(
