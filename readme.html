@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="biocframe" href="api/modules.html" /><link rel="prev" title="BiocFrame" href="index.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>BiocFrame - BiocFrame 0.4.0 documentation</title>
+        <title>BiocFrame - BiocFrame 0.4.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.4.0 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.4.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.4.0 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.4.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -281,7 +281,7 @@ row3 ENS00002   ESR1 chr3:5000:5500
 <h3>Properties<a class="headerlink" href="#properties" title="Link to this heading">#</a></h3>
 <p>Properties can be accessed directly from the object, for e.g. column names, row names and/or dimensions of the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dimensionality or shape</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
 <span class="c1">## output</span>
 <span class="c1">## (3, 2)</span>
@@ -324,6 +324,33 @@ BiocFrame with 3 rows and 3 columns
 [2] ENS00003    ESR1       4
 </pre></div>
 </div>
+<section id="functional-style">
+<h5>Functional style<a class="headerlink" href="#functional-style" title="Link to this heading">#</a></h5>
+<p>Properties can also be accessed or set using a functional approach</p>
+<p>To get column names,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="o">.</span><span class="n">get_column_names</span><span class="p">())</span>
+
+<span class="c1">## output</span>
+<span class="c1">## [&#39;ensembl&#39;, &#39;symbol&#39;]</span>
+</pre></div>
+</div>
+<p>To set new column names,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set new column names</span>
+<span class="n">bframe</span><span class="o">.</span><span class="n">set_column_names</span><span class="p">(</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;column1&quot;</span><span class="p">,</span> <span class="s2">&quot;column2&quot;</span><span class="p">],</span> <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bframe</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>## output
+BiocFrame with 3 rows and 2 columns
+    column1 column2
+    &lt;list&gt;  &lt;list&gt;
+[0] ENS00001   MAP1A
+[1] ENS00002    BIN1
+[2] ENS00003    ESR1
+</pre></div>
+</div>
+<p>If <strong>in_place</strong> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, we mutate the object, otherwise returns a new instance.</p>
+</section>
 </section>
 </section>
 <section id="subset-biocframe">
@@ -470,7 +497,10 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
 <li><a class="reference internal" href="#">BiocFrame</a><ul>
 <li><a class="reference internal" href="#id1">BiocFrame</a><ul>
 <li><a class="reference internal" href="#properties">Properties</a><ul>
-<li><a class="reference internal" href="#setters">Setters</a></li>
+<li><a class="reference internal" href="#setters">Setters</a><ul>
+<li><a class="reference internal" href="#functional-style">Functional style</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#subset-biocframe">Subset <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code></a></li>
@@ -490,7 +520,7 @@ information on PyScaffold see <a class="reference external" href="https://pyscaf
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=6c02275b"></script>
+</div><script src="_static/documentation_options.js?v=c87aa342"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
