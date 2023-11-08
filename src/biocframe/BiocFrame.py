@@ -59,9 +59,7 @@ def _validate_columns(
     mcols: Optional["BiocFrame"],
 ) -> Tuple[List[str], Dict[str, Any]]:
     if sorted(column_names) != sorted(data.keys()):
-        raise ValueError(
-            "Mismatch between `column_names` and the keys of `data`."
-        )
+        raise ValueError("Mismatch between `column_names` and the keys of `data`.")
 
     if mcols is not None:
         if mcols.shape[0] != len(column_names):
@@ -194,29 +192,29 @@ class BiocFrame:
         column_names: Optional[List[str]] = None,
         mcols: Optional["BiocFrame"] = None,
         metadata: Optional[dict] = None,
-        validate: bool = True
+        validate: bool = True,
     ) -> None:
         """Initialize a `BiocFrame` object.
 
         Args:
-            data (Dict[str, Any], optional): 
+            data (Dict[str, Any], optional):
                 Dictionary of column names as `keys` and
                 their values. All columns must have the same length. Defaults to {}.
 
-            number_of_rows (int, optional): 
+            number_of_rows (int, optional):
                 Number of rows. If not specified, inferred from ``data``.
 
-            row_names (list, optional): 
+            row_names (list, optional):
                 Row names.
 
-            column_names (list, optional): 
+            column_names (list, optional):
                 Column names. If not provided, inferred from the ``data``.
 
-            mcols (BiocFrame, optional): 
+            mcols (BiocFrame, optional):
                 Metadata about columns. Must have the same length as the number
                 of columns. Defaults to None.
 
-            metadata (dict): 
+            metadata (dict):
                 Additional metadata. Defaults to {}.
 
             validate (bool):
@@ -244,7 +242,6 @@ class BiocFrame:
         if validate:
             _validate_rows(self._number_of_rows, self._data, self._row_names)
             _validate_columns(self._column_names, self._data, self._mcols)
-
 
     def __repr__(self) -> str:
         output = "BiocFrame(data=" + ut.print_truncated_dict(self._data)
@@ -316,10 +313,10 @@ class BiocFrame:
                 + str(len(self.metadata))
                 + "): "
                 + ut.print_truncated_list(
-                    list(self.metadata.keys()), 
-                    sep=" ", 
+                    list(self.metadata.keys()),
+                    sep=" ",
                     include_brackets=False,
-                    transform=lambda y : y,
+                    transform=lambda y: y,
                 )
             )
         if len(footer):
@@ -1365,7 +1362,6 @@ class BiocFrame:
             The same type as caller.
         """
         return self.__copy__()
-
 
 
 @ut.combine_rows.register(BiocFrame)
