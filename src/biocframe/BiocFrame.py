@@ -50,7 +50,7 @@ def _validate_rows(
                 f"{len(row_names)} != {number_of_rows}"
             )
         if any(x is None for x in row_names):
-            raise ValueError("`row_names` cannot contain missing names.")
+            raise ValueError("`row_names` cannot contain None values.")
 
 
 def _validate_columns(
@@ -375,7 +375,7 @@ class BiocFrame:
                     f"{self.shape[0]} but provided {len(names)}."
                 )
             if any(x is None for x in names):
-                raise ValueError("`row_names` cannot contain missing names.")
+                raise ValueError("`row_names` cannot contain None values.")
             if not isinstance(names, ut.StringList):
                 names = ut.StringList(names)
 
@@ -451,7 +451,7 @@ class BiocFrame:
         new_data = {}
         for i, x in enumerate(names):
             if x is None:
-                raise ValueError("Column names cannot be None.")
+                raise ValueError("Column names cannot contain None values.")
             y = str(x)
             if y in new_data:
                 raise ValueError("Detected duplicate column name '" + y + "'.")

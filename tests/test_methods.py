@@ -2,7 +2,8 @@ import numpy as np
 import pytest
 import pandas as pd
 from biocframe.BiocFrame import BiocFrame
-from biocutils import Factor
+from biocutils import Factor, StringList
+import biocutils as ut
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -91,7 +92,7 @@ def test_bframe_setters():
     assert bframe.row_names is None
 
     bframe.row_names = ["row1", "row2", "row3"]
-    assert bframe.row_names is not None
+    assert isinstance(bframe.get_row_names(), StringList)
     assert len(bframe.row_names) == 3
 
     assert bframe.column_names is not None
@@ -487,3 +488,62 @@ def test_export_pandas():
     assert len(pdf) == len(obj)
     assert len(set(pdf.columns).difference(obj.colnames)) == 0
     assert pdf["factor"] is not None
+
+
+def test_names_generics():
+    obj = BiocFrame(
+        {
+            "column1": [1, 2, 3],
+            "nested": [
+                {
+                    "ncol1": [4, 5, 6],
+                    "ncol2": ["a", "b", "c"],
+                    "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
+                },
+                {
+                    "ncol2": ["a"],
+                    "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+                },
+                {
+                    "ncol1": [5, 6],
+                    "ncol2": ["b", "c"],
+                },
+            ],
+            "column2": ["b", "n", "m"],
+        }
+    )
+
+    assert ut.extract_row_names(obj) == None
+    assert ut.extract_column_names(obj) == ["column1", "nested", "column2"]
+    assert isinstance(ut.extract_column_names(obj), StringList)
+
+
+def test_set_names():
+    obj = BiocFrame(
+        {
+            "column1": [1, 2, 3],
+            "column2": [4, 5, 6],
+        }
+    )
+
+    latest = obj.set_column_names(["FOO", "BAR"])
+    assert isinstance(latest.get_column_names(), StringList)
+    assert latest.get_column_names() == ["FOO", "BAR"]
+    assert latest.column("FOO") == obj.column("column1")
+    assert latest.column("BAR") == obj.column("column2")
+
+    latest = obj.set_row_names(["A", "B", "C"])
+    assert isinstance(latest.get_row_names(), StringList)
+    assert latest.get_row_names() == ["A", "B", "C"]
+
+    with pytest.raises(ValueError) as ex:
+        obj.set_row_names([None, 1, 2])
+    assert str(ex.value).find("cannot contain None") >= 0
+
+    with pytest.raises(ValueError) as ex:
+        obj.set_column_names([None, None])
+    assert str(ex.value).find("cannot contain None") >= 0
+
+    with pytest.raises(ValueError) as ex:
+        obj.set_column_names(["A", "A"])
+    assert str(ex.value).find("duplicate column name") >= 0
