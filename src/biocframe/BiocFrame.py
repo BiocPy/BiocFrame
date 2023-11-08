@@ -282,7 +282,7 @@ class BiocFrame:
             columns = []
             for col in self._column_names:
                 data = self._data[col]
-                showed = show_as_cell(data, indices)
+                showed = ut.show_as_cell(data, indices)
                 header = [col, "<" + ut.print_type(data) + ">"]
                 showed = ut.truncate_strings(
                     showed, width=max(40, len(header[0]), len(header[1]))
