@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple, Union, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
 import biocutils as ut
 
@@ -285,9 +285,11 @@ class BiocFrame:
             columns = []
             for col in self._column_names:
                 data = self._data[col]
-                showed = ut.show_as_cell(data, indices)
+                showed = show_as_cell(data, indices)
                 header = [col, "<" + ut.print_type(data) + ">"]
-                showed = ut.truncate_strings(showed, width = max(40, len(header[0]), len(header[1])))
+                showed = ut.truncate_strings(
+                    showed, width=max(40, len(header[0]), len(header[1]))
+                )
                 if insert_ellipsis:
                     showed = showed[:3] + ["..."] + showed[3:]
                 columns.append(header + showed)
@@ -302,10 +304,10 @@ class BiocFrame:
                 + str(self.mcols.shape[1])
                 + "): "
                 + ut.print_truncated_list(
-                    self.mcols.column_names, 
-                    sep=" ", 
+                    self.mcols.column_names,
+                    sep=" ",
                     include_brackets=False,
-                    transform=lambda y : y,
+                    transform=lambda y: y,
                 )
             )
         if len(self.metadata):
@@ -405,7 +407,7 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'row_names'is an in-place operation, use 'set_row_names' instead",
+            "Setting property 'row_names' is an in-place operation, use 'set_row_names' instead",
             UserWarning,
         )
 
@@ -486,7 +488,7 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'column_names'is an in-place operation, use 'set_column_names' instead",
+            "Setting property 'column_names' is an in-place operation, use 'set_column_names' instead",
             UserWarning,
         )
 
@@ -532,7 +534,7 @@ class BiocFrame:
             mcols (Union[None, BiocFrame]): New metadata about column to set.
         """
         warn(
-            "Setting property 'mcols'is an in-place operation, use 'set_mcols' instead",
+            "Setting property 'mcols' is an in-place operation, use 'set_mcols' instead",
             UserWarning,
         )
 
@@ -583,7 +585,7 @@ class BiocFrame:
             metadata (dict): New metadata object.
         """
         warn(
-            "Setting property 'metadata'is an in-place operation, use 'set_metadata' instead",
+            "Setting property 'metadata' is an in-place operation, use 'set_metadata' instead",
             UserWarning,
         )
 
@@ -600,7 +602,7 @@ class BiocFrame:
         """
         return name in self.column_names
 
-    def column(self, index_or_name: Union[str, int]) -> Any:
+    def get_column(self, index_or_name: Union[str, int]) -> Any:
         """Access a column by index or column label.
 
         Args:
@@ -627,8 +629,35 @@ class BiocFrame:
 
         return self[None, index_or_name]
 
-    def row(self, index_or_name: Union[str, int]) -> dict:
-        """Access a row by index or row name.
+    def column(self, index_or_name: Union[str, int]) -> Any:
+        """Access a column by index or column label. Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_column`.
+
+        Args:
+            index_or_name (Union[str, int]): Name of the column, which must a valid name in
+                :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
+
+                Alternatively, you may provide the integer index of the column to access.
+
+        Raises:
+            ValueError:
+                If ``index_or_name`` is not in column names.
+                If the integer index is greater than the number of columns.
+            TypeError:
+                If ``index_or_name`` is neither a string nor an integer.
+
+        Returns:
+            Any: Column with its original type preserved.
+        """
+
+        warn(
+            "Method 'column' is deprecated, use 'get_column' instead",
+            DeprecationWarning,
+        )
+
+        return self.get_column(index_or_name)
+
+    def get_row(self, index_or_name: Union[str, int]) -> dict:
+        """Access a row by index or row name.Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_row`.
 
         Args:
             index_or_name (Union[str, int]): Integer index of the row to access.
@@ -653,6 +682,33 @@ class BiocFrame:
             )
 
         return self[index_or_name, None]
+
+    def row(self, index_or_name: Union[str, int]) -> dict:
+        """Access a row by index or row name.
+
+        Args:
+            index_or_name (Union[str, int]): Integer index of the row to access.
+
+                Alternatively, you may provide a string specifying the row to access,
+                only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are available.
+
+        Raises:
+            ValueError:
+                If ``index_or_name`` is not in row names.
+                If the integer index is greater than the number of rows.
+            TypeError:
+                If ``index_or_name`` is neither a string nor an integer.
+
+        Returns:
+            dict: A dictionary with keys as column names and their values.
+        """
+
+        warn(
+            "Method 'row' is deprecated, use 'get_row' instead",
+            DeprecationWarning,
+        )
+
+        return self.get_row(index_or_name)
 
     def slice(
         self,
