@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 
 from biocframe import BiocFrame
-from biocgenerics.combine import combine
 from copy import deepcopy
 
 __author__ = "jkanche"

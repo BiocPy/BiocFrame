@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import pandas as pd
 from biocframe.BiocFrame import BiocFrame
-from biocframe.Factor import Factor
+from biocutils import Factor
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"

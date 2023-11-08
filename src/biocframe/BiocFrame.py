@@ -1,26 +1,73 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Tuple, Union, Sequence
 from warnings import warn
-
-from biocgenerics.colnames import colnames as colnames_generic
-from biocgenerics.colnames import set_colnames
-from biocgenerics.combine import combine
-from biocgenerics.combine_cols import combine_cols
-from biocgenerics.combine_rows import combine_rows
-from biocgenerics.rownames import rownames as rownames_generic
-from biocgenerics.rownames import set_rownames
-from biocgenerics import show_as_cell
-from biocutils import is_list_of_type, normalize_subscript
 import biocutils as ut
 
-from ._validators import validate_cols, validate_rows, validate_unique_list
-from .Factor import Factor
 from .types import SlicerArgTypes, SlicerTypes
-from .utils import _slice_or_index
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
+
+
+def _guess_number_of_rows(
+    number_of_rows: Optional[int],
+    data: Dict[str, Any],
+    row_names: Optional[List[str]],
+):
+    if number_of_rows is not None:
+        return number_of_rows
+    if len(data) > 0:
+        return ut.get_height(next(iter(data.values())))
+    if row_names is not None:
+        return len(row_names)
+    return 0
+
+
+def _validate_rows(
+    number_of_rows: int,
+    data: Dict[str, Any],
+    row_names: Optional[List[str]],
+) -> int:
+    if not isinstance(data, dict):
+        raise TypeError("`data` must be a dictionary.")
+
+    incorrect_len_keys = []
+    for k, v in data.items():
+        if number_of_rows != ut.get_height(v):
+            incorrect_len_keys.append(k)
+
+    if len(incorrect_len_keys) > 0:
+        raise ValueError(
+            "All columns in ``data`` must be the same "
+            f"length, these columns do not: {', '.join(incorrect_len_keys)}."
+        )
+
+    if row_names is not None:
+        if len(row_names) != number_of_rows:
+            raise ValueError(
+                "Length of `row_names` and `number_of_rows` do not match, "
+                f"{len(row_names)} != {number_of_rows}"
+            )
+        if any(x is None for x in row_names):
+            raise ValueError("`row_names` cannot contain missing names.")
+
+
+def _validate_columns(
+    column_names: List[str],
+    data: Dict[str, Any],
+    mcols: Optional["BiocFrame"],
+) -> Tuple[List[str], Dict[str, Any]]:
+    if sorted(column_names) != sorted(data.keys()):
+        raise ValueError(
+            "Mismatch between `column_names` and the keys of `data`."
+        )
+
+    if mcols is not None:
+        if mcols.shape[0] != len(column_names):
+            raise ValueError(
+                "Number of rows in `mcols` should be equal to the number of columns."
+            )
 
 
 class BiocFrameIter:
@@ -137,18 +184,6 @@ class BiocFrame:
     .. code-block:: python
 
         combined = bframe1.combine(bframe2)
-
-    Attributes:
-        data (Dict[str, Any], optional): Dictionary of column names as `keys` and
-            their values.
-        number_of_rows (int, optional): Number of rows.
-        row_names (list, optional): Row names.
-        column_names (list, optional): Column names.
-        mcols (BiocFrame, optional): Metadata about columns.
-        metadata (dict): Additional metadata.
-
-    Raises:
-        ValueError: If there is a mismatch in the number of rows or columns in the data.
     """
 
     def __init__(
@@ -159,49 +194,57 @@ class BiocFrame:
         column_names: Optional[List[str]] = None,
         mcols: Optional["BiocFrame"] = None,
         metadata: Optional[dict] = None,
+        validate: bool = True
     ) -> None:
         """Initialize a `BiocFrame` object.
 
         Args:
-            data (Dict[str, Any], optional): Dictionary of column names as `keys` and
+            data (Dict[str, Any], optional): 
+                Dictionary of column names as `keys` and
                 their values. All columns must have the same length. Defaults to {}.
-            number_of_rows (int, optional): Number of rows. If not specified, inferred from ``data``.
-            row_names (list, optional): Row names.
-            column_names (list, optional): Column names. If not provided,
-                inferred from the ``data``.
-            mcols (BiocFrame, optional): Metadata about columns. Must have the same length as the number
+
+            number_of_rows (int, optional): 
+                Number of rows. If not specified, inferred from ``data``.
+
+            row_names (list, optional): 
+                Row names.
+
+            column_names (list, optional): 
+                Column names. If not provided, inferred from the ``data``.
+
+            mcols (BiocFrame, optional): 
+                Metadata about columns. Must have the same length as the number
                 of columns. Defaults to None.
-            metadata (dict): Additional metadata. Defaults to {}.
+
+            metadata (dict): 
+                Additional metadata. Defaults to {}.
+
+            validate (bool):
+                Internal use only.
         """
-        self._number_of_rows = number_of_rows
-        self._row_names = row_names
         self._data = {} if data is None else data
+        if row_names is not None and not isinstance(row_names, ut.StringList):
+            row_names = ut.StringList(row_names)
+        self._row_names = row_names
+        self._number_of_rows = _guess_number_of_rows(
+            number_of_rows,
+            self._data,
+            self._row_names,
+        )
+
+        if column_names is None:
+            column_names = ut.StringList(self._data.keys())
+        elif not isinstance(column_names, ut.StringList):
+            column_names = ut.StringList(column_names)
         self._column_names = column_names
+
         self._metadata = {} if metadata is None else metadata
         self._mcols = mcols
 
-        self._validate()
+        if validate:
+            _validate_rows(self._number_of_rows, self._data, self._row_names)
+            _validate_columns(self._column_names, self._data, self._mcols)
 
-    def _validate(self):
-        """Internal method to validate the object.
-
-        Raises:
-            ValueError: If all columns do not contain the same number of rows.
-            ValueError: If row names are not unique.
-        """
-
-        if not isinstance(self._data, dict):
-            raise TypeError("`data` must be a dictionary.")
-
-        self._number_of_rows = validate_rows(
-            self._data, self._number_of_rows, self._row_names
-        )
-        self._column_names, self._data, self._mcols = validate_cols(
-            self._column_names, self._data, self._mcols
-        )
-
-        if self._number_of_rows is None:
-            self._number_of_rows = 0
 
     def __repr__(self) -> str:
         output = "BiocFrame(data=" + ut.print_truncated_dict(self._data)
@@ -242,7 +285,7 @@ class BiocFrame:
             columns = []
             for col in self._column_names:
                 data = self._data[col]
-                showed = show_as_cell(data, indices)
+                showed = ut.show_as_cell(data, indices)
                 header = [col, "<" + ut.print_type(data) + ">"]
                 showed = ut.truncate_strings(showed, width = max(40, len(header[0]), len(header[1])))
                 if insert_ellipsis:
@@ -300,7 +343,7 @@ class BiocFrame:
         """
         return (self._number_of_rows, len(self._column_names))
 
-    def get_row_names(self) -> Optional[List]:
+    def get_row_names(self) -> Optional[ut.StringList]:
         """Row names of the BiocFrame.
 
         Returns:
@@ -309,7 +352,7 @@ class BiocFrame:
         return self._row_names
 
     def set_row_names(
-        self, names: Optional[list], in_place: bool = False
+        self, names: Optional[List], in_place: bool = False
     ) -> "BiocFrame":
         """Set new row names. All values in ``names`` must be unique.
 
@@ -331,16 +374,17 @@ class BiocFrame:
                     "Length of `names` does not match the number of rows, need to be "
                     f"{self.shape[0]} but provided {len(names)}."
                 )
-
-            if not validate_unique_list(names):
-                warn("row names are not unique!")
+            if any(x is None for x in names):
+                raise ValueError("`row_names` cannot contain missing names.")
+            if not isinstance(names, ut.StringList):
+                names = ut.StringList(names)
 
         output = self._define_output(in_place)
         output._row_names = names
         return output
 
     @property
-    def row_names(self) -> Optional[List]:
+    def row_names(self) -> Optional[ut.StringList]:
         """Row names of the BiocFrame.
 
         Returns:
@@ -376,7 +420,7 @@ class BiocFrame:
         """
         return self._data
 
-    def get_column_names(self) -> List[str]:
+    def get_column_names(self) -> ut.StringList:
         """Column names of the BiocFrame.
 
         Returns:
@@ -400,27 +444,27 @@ class BiocFrame:
             BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
-
-        if names is None:
-            raise ValueError("column names cannot be None!")
-
         if len(names) != len(self._column_names):
             raise ValueError("Provided `names` does not match number of columns.")
 
-        if not (validate_unique_list(names)):
-            raise ValueError("Column names must be unique!")
-
-        new_data = OrderedDict()
-        for idx in range(len(names)):
-            new_data[names[idx]] = self._data[self.column_names[idx]]
+        new_names = ut.StringList()
+        new_data = {}
+        for i, x in enumerate(names):
+            if x is None:
+                raise ValueError("Column names cannot be None.")
+            y = str(x)
+            if y in new_data:
+                raise ValueError("Detected duplicate column name '" + y + "'.")
+            new_names.append(y)
+            new_data[y] = self._data[self.column_names[i]]
 
         output = self._define_output(in_place)
-        output._column_names = names
+        output._column_names = new_names
         output._data = new_data
         return output
 
     @property
-    def column_names(self) -> List[str]:
+    def column_names(self) -> ut.StringList:
         """Column names of the BiocFrame.
 
         Returns:
@@ -633,49 +677,35 @@ class BiocFrame:
                 - If a single column is sliced, returns the same type of the column.
                 - For all other scenarios, returns the same type as the caller with the subsetted rows and columns.
         """
-
-        new_data = OrderedDict()
-        new_row_names = self.row_names
-        new_column_names = self.column_names
+        new_data = {}
+        new_row_names = self._row_names
+        new_column_names = self._column_names
         is_row_scalar = False
         is_col_scalar = False
 
         # slice the columns and data
         if column_indices_or_names is not None:
-            new_column_indices, is_col_scalar = normalize_subscript(
+            new_column_indices, is_col_scalar = ut.normalize_subscript(
                 column_indices_or_names, len(new_column_names), new_column_names
             )
-
-            new_column_names = _slice_or_index(new_column_names, new_column_indices)
+            new_column_names = ut.subset_sequence(new_column_names, new_column_indices)
 
         for col in new_column_names:
             new_data[col] = self._data[col]
 
         # slice the rows of the data
-        new_number_of_rows = None
+        new_number_of_rows = self.shape[0]
         if row_indices_or_names is not None:
             new_row_names = self.row_names
-            new_row_indices, is_row_scalar = normalize_subscript(
+            new_row_indices, is_row_scalar = ut.normalize_subscript(
                 row_indices_or_names, self.shape[0], new_row_names
             )
 
-            if new_row_names is not None:
-                new_row_names = _slice_or_index(new_row_names, new_row_indices)
-                new_number_of_rows = len(new_row_names)
-            else:
-                new_number_of_rows = len(
-                    _slice_or_index(list(range(self.shape[0])), new_row_indices)
-                )
-
+            new_number_of_rows = len(new_row_indices)
             for k, v in new_data.items():
-                if hasattr(v, "shape"):
-                    tmp = [slice(None)] * len(v.shape)
-                    tmp[0] = new_row_indices
-                    new_data[k] = v[(*tmp,)]
-                else:
-                    new_data[k] = _slice_or_index(v, new_row_indices)
-        else:
-            new_number_of_rows = self.shape[0]
+                new_data[k] = ut.subset(v, new_row_indices)
+            if new_row_names is not None:
+                new_row_names = ut.subset_sequence(new_row_names, new_row_indices)
 
         if is_row_scalar is True:
             rdata = {}
@@ -698,6 +728,7 @@ class BiocFrame:
             column_names=new_column_names,
             metadata=self._metadata,
             mcols=mcols,
+            validate=False,
         )
 
     def __getitem__(
@@ -783,9 +814,9 @@ class BiocFrame:
 
         if isinstance(args, list):
             # column names if everything is a string
-            if is_list_of_type(args, str):
+            if ut.is_list_of_type(args, str):
                 return self.slice(None, args)
-            elif is_list_of_type(args, int):
+            elif ut.is_list_of_type(args, int):
                 return self.slice(args, None)
             else:
                 raise TypeError(
@@ -848,13 +879,13 @@ class BiocFrame:
         if isinstance(args, tuple):
             rows, cols = args
 
-            row_idx, scalar = normalize_subscript(
+            row_idx, scalar = ut.normalize_subscript(
                 rows, self.shape[0], names=self._row_names
             )
             if scalar:
                 raise TypeError("row indices should be a sequence or slice")
 
-            col_idx, scalar = normalize_subscript(
+            col_idx, scalar = ut.normalize_subscript(
                 cols, self.shape[1], names=self._column_names
             )
             if scalar:
@@ -940,13 +971,13 @@ class BiocFrame:
         if isinstance(args, tuple):
             rows, cols = args
 
-            row_idx, scalar = normalize_subscript(
+            row_idx, scalar = ut.normalize_subscript(
                 rows, output.shape[0], names=output._row_names
             )
             if scalar:
                 raise TypeError("row indices should be a sequence or slice")
 
-            col_idx, scalar = normalize_subscript(
+            col_idx, scalar = ut.normalize_subscript(
                 cols, output.shape[1], names=output._column_names
             )
             if scalar:
@@ -1033,7 +1064,7 @@ class BiocFrame:
         _data_copy = OrderedDict()
         for col in self.column_names:
             _data_copy[col] = self.column(col)
-            if isinstance(self.column(col), Factor):
+            if isinstance(self.column(col), ut.Factor):
                 _data_copy[col] = _data_copy[col].to_pandas()
 
         return DataFrame(
@@ -1077,7 +1108,7 @@ class BiocFrame:
 
     # compatibility with Pandas
     @property
-    def columns(self) -> list:
+    def columns(self) -> ut.StringList:
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
         Returns:
@@ -1086,7 +1117,7 @@ class BiocFrame:
         return self.get_column_names()
 
     @property
-    def index(self) -> Optional[list]:
+    def index(self) -> Optional[ut.StringList]:
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
 
         Returns:
@@ -1096,7 +1127,7 @@ class BiocFrame:
 
     # compatibility with R interfaces
     @property
-    def rownames(self) -> Optional[list]:
+    def rownames(self) -> Optional[ut.StringList]:
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
 
         Returns:
@@ -1114,7 +1145,7 @@ class BiocFrame:
         return self.set_row_names(names, in_place=True)
 
     @property
-    def colnames(self) -> list:
+    def colnames(self) -> ut.StringList:
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
         Returns:
@@ -1123,7 +1154,7 @@ class BiocFrame:
         return self.get_column_names()
 
     @colnames.setter
-    def colnames(self, names: list):
+    def colnames(self, names: ut.StringList):
         """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names` (in-place operation).
 
         Args:
@@ -1155,7 +1186,7 @@ class BiocFrame:
         Returns:
             The same type as caller with the combined data.
         """
-        if not is_list_of_type(other, BiocFrame):
+        if not ut.is_list_of_type(other, BiocFrame):
             raise TypeError("All objects to combine must be BiocFrame objects.")
 
         all_objects = [self] + list(other)
@@ -1166,7 +1197,7 @@ class BiocFrame:
         )
 
         all_row_names = (
-            [None] * len(self) if self.row_names is None else self.row_names.copy()
+            [""] * len(self) if self.row_names is None else self.row_names.copy()
         )
         all_num_rows = sum([len(x) for x in all_objects])
         all_data = self.data.copy()
@@ -1183,11 +1214,11 @@ class BiocFrame:
                 else:
                     _tcol = obj.column(ocol)
 
-                all_data[ocol] = combine(all_data[ocol], _tcol)
+                all_data[ocol] = ut.combine(all_data[ocol], _tcol)
 
             rnames = obj.row_names
             if rnames is None:
-                rnames = [None] * len(obj)
+                rnames = [""] * len(obj)
 
             all_row_names.extend(rnames)
 
@@ -1280,59 +1311,37 @@ class BiocFrame:
         return self.__copy__()
 
 
-@combine.register(BiocFrame)
-def _combine_bframes(*x: BiocFrame):
-    if not is_list_of_type(x, BiocFrame):
-        raise ValueError("All elements to `combine` must be `BiocFrame` objects.")
-    return x[0].combine(*x[1:])
 
-
-@combine_rows.register(BiocFrame)
+@ut.combine_rows.register(BiocFrame)
 def _combine_rows_bframes(*x: BiocFrame):
-    if not is_list_of_type(x, BiocFrame):
-        raise ValueError("All elements to `combine_rows` must be `BiocFrame` objects.")
-
     return x[0].combine(*x[1:])
 
 
-@combine_cols.register(BiocFrame)
+@ut.combine_columns.register(BiocFrame)
 def _combine_cols_bframes(*x: BiocFrame):
-    if not is_list_of_type(x, BiocFrame):
-        raise ValueError("All elements to `combine_cols` must be `BiocFrame` objects.")
-
     raise NotImplementedError(
         "`combine_cols` is not implemented for `BiocFrame` objects."
     )
 
 
-@rownames_generic.register(BiocFrame)
+@ut.extract_row_names.register(BiocFrame)
 def _rownames_bframe(x: BiocFrame):
-    return x.row_names
+    return x.get_row_names()
 
 
-@set_rownames.register(BiocFrame)
-def _set_rownames_bframe(x: BiocFrame, names: List[str]):
-    x.row_names = names
-
-
-@colnames_generic.register(BiocFrame)
+@ut.extract_column_names.register(BiocFrame)
 def _colnames_bframe(x: BiocFrame):
-    return x.column_names
+    return x.get_column_names()
 
 
-@set_colnames.register(BiocFrame)
-def _set_colnames_bframe(x: BiocFrame, names: List[str]):
-    x.column_names = names
-
-
-@show_as_cell.register(BiocFrame)
+@ut.show_as_cell.register(BiocFrame)
 def _show_as_cell_BiocFrame(x: BiocFrame, indices: Sequence[int]) -> List[str]:
     constructs = []
     for i in indices:
         constructs.append([])
 
     for k in x._column_names:
-        col = show_as_cell(x._data[k], indices)
+        col = ut.show_as_cell(x._data[k], indices)
         for i, v in enumerate(col):
             constructs[i].append(v)
 

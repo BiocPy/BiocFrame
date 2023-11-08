@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from biocframe import BiocFrame
-from biocgenerics.combine import combine
+from biocutils import combine
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -67,7 +67,7 @@ def test_with_rownames():
     assert isinstance(merged, BiocFrame)
     assert merged.row_names is not None
     assert len(merged.row_names) == 10
-    assert merged.row_names == [None, None, None, None, None] + obj2.row_names
+    assert merged.row_names == [""] * 5 + obj2.row_names
     assert merged.shape[0] == 10
     assert merged.shape[1] == 2
 

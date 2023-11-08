@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 import biocframe
-from biocframe.BiocFrame import BiocFrame
+from biocframe import BiocFrame
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
