@@ -2,7 +2,8 @@ import pandas as pd
 import pytest
 
 import biocframe
-from biocframe.BiocFrame import BiocFrame
+from biocframe import BiocFrame
+from biocutils import StringList
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -32,6 +33,7 @@ def test_initialize_obj():
 
     bframe = BiocFrame(obj)
     assert bframe is not None
+    assert isinstance(bframe.get_column_names(), StringList)
 
 
 def test_initialize_pandas():
