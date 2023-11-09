@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Tuple, Union, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
 import biocutils as ut
 
@@ -59,9 +59,7 @@ def _validate_columns(
     mcols: Optional["BiocFrame"],
 ) -> Tuple[List[str], Dict[str, Any]]:
     if sorted(column_names) != sorted(data.keys()):
-        raise ValueError(
-            "Mismatch between `column_names` and the keys of `data`."
-        )
+        raise ValueError("Mismatch between `column_names` and the keys of `data`.")
 
     if mcols is not None:
         if mcols.shape[0] != len(column_names):
@@ -194,29 +192,29 @@ class BiocFrame:
         column_names: Optional[List[str]] = None,
         mcols: Optional["BiocFrame"] = None,
         metadata: Optional[dict] = None,
-        validate: bool = True
+        validate: bool = True,
     ) -> None:
         """Initialize a `BiocFrame` object.
 
         Args:
-            data (Dict[str, Any], optional): 
+            data (Dict[str, Any], optional):
                 Dictionary of column names as `keys` and
                 their values. All columns must have the same length. Defaults to {}.
 
-            number_of_rows (int, optional): 
+            number_of_rows (int, optional):
                 Number of rows. If not specified, inferred from ``data``.
 
-            row_names (list, optional): 
+            row_names (list, optional):
                 Row names.
 
-            column_names (list, optional): 
+            column_names (list, optional):
                 Column names. If not provided, inferred from the ``data``.
 
-            mcols (BiocFrame, optional): 
+            mcols (BiocFrame, optional):
                 Metadata about columns. Must have the same length as the number
                 of columns. Defaults to None.
 
-            metadata (dict): 
+            metadata (dict):
                 Additional metadata. Defaults to {}.
 
             validate (bool):
@@ -244,7 +242,6 @@ class BiocFrame:
         if validate:
             _validate_rows(self._number_of_rows, self._data, self._row_names)
             _validate_columns(self._column_names, self._data, self._mcols)
-
 
     def __repr__(self) -> str:
         output = "BiocFrame(data=" + ut.print_truncated_dict(self._data)
@@ -287,7 +284,9 @@ class BiocFrame:
                 data = self._data[col]
                 showed = ut.show_as_cell(data, indices)
                 header = [col, "<" + ut.print_type(data) + ">"]
-                showed = ut.truncate_strings(showed, width = max(40, len(header[0]), len(header[1])))
+                showed = ut.truncate_strings(
+                    showed, width=max(40, len(header[0]), len(header[1]))
+                )
                 if insert_ellipsis:
                     showed = showed[:3] + ["..."] + showed[3:]
                 columns.append(header + showed)
@@ -302,10 +301,10 @@ class BiocFrame:
                 + str(self.mcols.shape[1])
                 + "): "
                 + ut.print_truncated_list(
-                    self.mcols.column_names, 
-                    sep=" ", 
+                    self.mcols.column_names,
+                    sep=" ",
                     include_brackets=False,
-                    transform=lambda y : y,
+                    transform=lambda y: y,
                 )
             )
         if len(self.metadata):
@@ -314,10 +313,10 @@ class BiocFrame:
                 + str(len(self.metadata))
                 + "): "
                 + ut.print_truncated_list(
-                    list(self.metadata.keys()), 
-                    sep=" ", 
+                    list(self.metadata.keys()),
+                    sep=" ",
                     include_brackets=False,
-                    transform=lambda y : y,
+                    transform=lambda y: y,
                 )
             )
         if len(footer):
@@ -405,7 +404,7 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'row_names'is an in-place operation, use 'set_row_names' instead",
+            "Setting property 'row_names' is an in-place operation, use 'set_row_names' instead",
             UserWarning,
         )
 
@@ -486,7 +485,7 @@ class BiocFrame:
         """
 
         warn(
-            "Setting property 'column_names'is an in-place operation, use 'set_column_names' instead",
+            "Setting property 'column_names' is an in-place operation, use 'set_column_names' instead",
             UserWarning,
         )
 
@@ -532,7 +531,7 @@ class BiocFrame:
             mcols (Union[None, BiocFrame]): New metadata about column to set.
         """
         warn(
-            "Setting property 'mcols'is an in-place operation, use 'set_mcols' instead",
+            "Setting property 'mcols' is an in-place operation, use 'set_mcols' instead",
             UserWarning,
         )
 
@@ -583,7 +582,7 @@ class BiocFrame:
             metadata (dict): New metadata object.
         """
         warn(
-            "Setting property 'metadata'is an in-place operation, use 'set_metadata' instead",
+            "Setting property 'metadata' is an in-place operation, use 'set_metadata' instead",
             UserWarning,
         )
 
@@ -600,7 +599,7 @@ class BiocFrame:
         """
         return name in self.column_names
 
-    def column(self, index_or_name: Union[str, int]) -> Any:
+    def get_column(self, index_or_name: Union[str, int]) -> Any:
         """Access a column by index or column label.
 
         Args:
@@ -627,8 +626,35 @@ class BiocFrame:
 
         return self[None, index_or_name]
 
-    def row(self, index_or_name: Union[str, int]) -> dict:
-        """Access a row by index or row name.
+    def column(self, index_or_name: Union[str, int]) -> Any:
+        """Access a column by index or column label. Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_column`.
+
+        Args:
+            index_or_name (Union[str, int]): Name of the column, which must a valid name in
+                :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
+
+                Alternatively, you may provide the integer index of the column to access.
+
+        Raises:
+            ValueError:
+                If ``index_or_name`` is not in column names.
+                If the integer index is greater than the number of columns.
+            TypeError:
+                If ``index_or_name`` is neither a string nor an integer.
+
+        Returns:
+            Any: Column with its original type preserved.
+        """
+
+        warn(
+            "Method 'column' is deprecated, use 'get_column' instead",
+            DeprecationWarning,
+        )
+
+        return self.get_column(index_or_name)
+
+    def get_row(self, index_or_name: Union[str, int]) -> dict:
+        """Access a row by index or row name.Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_row`.
 
         Args:
             index_or_name (Union[str, int]): Integer index of the row to access.
@@ -653,6 +679,33 @@ class BiocFrame:
             )
 
         return self[index_or_name, None]
+
+    def row(self, index_or_name: Union[str, int]) -> dict:
+        """Access a row by index or row name.
+
+        Args:
+            index_or_name (Union[str, int]): Integer index of the row to access.
+
+                Alternatively, you may provide a string specifying the row to access,
+                only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are available.
+
+        Raises:
+            ValueError:
+                If ``index_or_name`` is not in row names.
+                If the integer index is greater than the number of rows.
+            TypeError:
+                If ``index_or_name`` is neither a string nor an integer.
+
+        Returns:
+            dict: A dictionary with keys as column names and their values.
+        """
+
+        warn(
+            "Method 'row' is deprecated, use 'get_row' instead",
+            DeprecationWarning,
+        )
+
+        return self.get_row(index_or_name)
 
     def slice(
         self,
@@ -1309,7 +1362,6 @@ class BiocFrame:
             The same type as caller.
         """
         return self.__copy__()
-
 
 
 @ut.combine_rows.register(BiocFrame)
