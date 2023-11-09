@@ -339,32 +339,30 @@ def test_bframe_unary_slice():
     assert len(unary_col) == 2
 
 
-def test_bframe_delete():
+def test_bframe_remove_column():
     obj = {
         "column1": [1, 2, 3],
-        "nested": [
-            {
-                "ncol1": [4, 5, 6],
-                "ncol2": ["a", "b", "c"],
-                "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
-            },
-            {
-                "ncol2": ["a"],
-                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
-            },
-            {
-                "ncol1": [5, 6],
-                "ncol2": ["b", "c"],
-            },
-        ],
         "column2": ["b", "n", "m"],
     }
 
     bframe = BiocFrame(obj)
-    del bframe["nested"]
+    bframe2 = bframe.remove_column("column2")
+    assert not bframe2.has_column("column2")
+    assert bframe.has_column("column2")
 
-    assert bframe is not None
-    assert bframe.dims == (3, 2)
+    bframe2 = bframe.remove_columns(["column2", "column1"])
+    assert bframe2.shape == (3, 0)
+
+    # Works in place.
+    copy = bframe.__deepcopy__()
+    copy.remove_column("column1", in_place=True)
+    assert copy.has_column("column2")
+    assert copy.shape == (3, 1)
+
+    # Handles the mcols correctly.
+    bframe2a = bframe.set_mcols(BiocFrame({ "prop1": [1,2] }))
+    bframe2b = bframe2a.remove_column("column1")
+    assert bframe2b.get_mcols().column("prop1") == [2]
 
 
 def test_bframe_ufuncs():
@@ -577,23 +575,3 @@ def test_set_names():
     with pytest.raises(ValueError) as ex:
         obj.set_column_names(["A", "A"])
     assert str(ex.value).find("duplicate column name") >= 0
-
-
-def test_remove_column():
-    obj = BiocFrame(
-        {
-            "column1": [1, 2, 3],
-            "column2": [4, 5, 6],
-        }
-    )
-
-    out = obj.remove_column("column2")
-    assert obj.has_column("column2")
-    assert not out.has_column("column2")
-
-    out = obj.remove_column("column1")
-    assert obj.has_column("column1")
-    assert not out.has_column("column1")
-
-    obj.remove_column("column2", in_place=True)
-    assert not obj.has_column("column2")

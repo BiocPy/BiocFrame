@@ -1087,11 +1087,13 @@ class BiocFrame:
 
         return output
 
-    def remove_column(self, name: str, in_place: bool = False) -> "BiocFrame":
-        """Remove a column.
+    def remove_column(self, column: str, in_place: bool = False) -> "BiocFrame":
+        """
+        Remove a column. This is a convenience wrapper around
+        :py:attr:`~remove_columns`.
 
         Args:
-            name (str): Name of the column to remove.
+            column (str): Name of the column to remove.
             in_place (bool): Whether to modify the object in place. Defaults to False.
 
         Raises:
@@ -1101,23 +1103,41 @@ class BiocFrame:
             BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
-        if name not in self.column_names:
-            raise ValueError(f"Column: '{name}' does not exist.")
+        return self.remove_columns([column], in_place=in_place)
 
+    def remove_columns(self, columns: Sequence[str], in_place: bool = False) -> "BiocFrame":
+        """
+        Remove any number of existing columns.
+
+        Args:
+            columns (str): Names of the columns to remove.
+            in_place (bool): Whether to modify the object in place. Defaults to False.
+
+        Raises:
+            ValueError: If column does not exist.
+
+        Returns:
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
         output = self._define_output(in_place)
         if not in_place:
             output._data = copy(output._data)
-            output._column_names = copy(output._column_names)
 
-        del output._data[name]
-        _col_idx = output._column_names.index(name)
+        for name in columns:
+            if name not in output._data:
+                raise ValueError(f"Column '{name}' does not exist.")
+            del output._data[name]
 
-        # TODO: do something better later!
-        _indices = [i for i in range(len(output._column_names)) if i != _col_idx]
+        killset = set(columns)
+        keep = []
+        for i, col in enumerate(output._column_names):
+            if not col in killset:
+                keep.append(i)
 
-        output._column_names.remove(name)
+        output._column_names = ut.subset_sequence(output._column_names, keep)
         if output._mcols is not None:
-            output._mcols = output._mcols[_indices, :]
+            output._mcols = output._mcols[keep, :]
 
         return output
 
