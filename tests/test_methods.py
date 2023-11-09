@@ -64,7 +64,7 @@ def test_bframe_basic_ops():
     assert bframe.dims == (3, 3)
 
 
-def test_bframe_set_columns():
+def test_bframe_setters():
     obj = {
         "column1": [1, 2, 3],
         "nested": [
@@ -127,6 +127,9 @@ def test_bframe_set_columns():
     assert bframe.column("column2") == ["b", "n", "m"]
     assert bframe2.dims == (3, 2)
 
+    bframe2 = bframe.set_column(1, [1, 2, 3])
+    assert bframe2.column("column2") == [1, 2, 3]
+
     # In-place modification works correctly.
     copy = bframe.__deepcopy__()
     copy.set_column("column2", [1, 2, 3], in_place=True)
@@ -139,6 +142,12 @@ def test_bframe_set_columns():
     assert bframe2.column("column1") == ["A", "B", "C"]
     assert bframe2.has_column("column3")
     assert bframe2.has_column("column4")
+
+    bframe2 = bframe.set_columns(
+        {0: ["A", "B", "C"], 1: ["a", "b", "c"]}
+    )
+    assert bframe2.column("column1") == ["A", "B", "C"]
+    assert bframe2.column("column2") == ["a", "b", "c"]
 
     # Making sure that the mcols is properly handled.
     bframe2a = bframe.set_mcols(
@@ -366,6 +375,10 @@ def test_bframe_remove_column():
 
     bframe2 = bframe.remove_columns(["column2", "column1"])
     assert bframe2.shape == (3, 0)
+
+    bframe2 = bframe.remove_columns([1])
+    assert bframe2.get_column_names() == ["column1"]
+    assert bframe2.shape == (3, 1)
 
     # Works in place.
     copy = bframe.__deepcopy__()
