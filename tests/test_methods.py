@@ -560,9 +560,9 @@ def test_remove_column():
     assert obj.has_column("column2")
     assert not out.has_column("column2")
 
-    out = obj.remove_column(0)
+    out = obj.remove_column("column1")
     assert obj.has_column("column1")
     assert not out.has_column("column1")
 
-    obj.remove_column(1, in_place=True)
+    obj.remove_column("column2", in_place=True)
     assert not obj.has_column("column2")
