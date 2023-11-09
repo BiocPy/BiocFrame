@@ -900,10 +900,8 @@ class BiocFrame:
         raise TypeError("Provided slice arguments are not supported!")
 
     def __setitem__(self, args, value):
-        """
-        If ``args`` is a string, it is assumed to be a column name and
-        ``value`` is expected to be the column contents; these are passed onto
-        :py:attr:`~set_column` with `in_place = True`.
+        """If ``args`` is a string, it is assumed to be a column name and ``value`` is expected to be the column
+        contents; these are passed onto :py:attr:`~set_column` with `in_place = True`.
 
         If ``args`` is a tuple, it is assumed to contain row and column indices.
         ``value`` is expected to be a ``BiocFrame`` containing replacement values.
@@ -922,9 +920,10 @@ class BiocFrame:
             )
             self.set_column(args, value, in_place=True)
 
-    def set_slice(self, rows, columns, value: "BiocFrame", in_place: bool = True) -> "BiocFrame":
-        """
-        Replace a slice of the ``BiocFrame`` given the row and columns of the slice.
+    def set_slice(
+        self, rows, columns, value: "BiocFrame", in_place: bool = True
+    ) -> "BiocFrame":
+        """Replace a slice of the ``BiocFrame`` given the row and columns of the slice.
 
         Args:
             rows:
@@ -963,9 +962,9 @@ class BiocFrame:
         for i, x in enumerate(col_idx):
             nm = output._column_names[x]
             output._data[nm] = ut.assign(
-                output._data[nm], 
-                row_idx, 
-                replacement = value._data[value._column_names[i]]
+                output._data[nm],
+                row_idx,
+                replacement=value._data[value._column_names[i]],
             )
 
         return output
@@ -1086,7 +1085,7 @@ class BiocFrame:
                         ex = [None] * newly_added
                     extras.set_column(mcol, ex, in_place=True)
 
-                output._mcols = ut.combine_rows(output._mcols, extras) 
+                output._mcols = ut.combine_rows(output._mcols, extras)
 
         return output
 
