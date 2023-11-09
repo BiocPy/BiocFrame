@@ -936,8 +936,10 @@ class BiocFrame:
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
 
             value (BiocFrame):
-                A ``BiocFrame`` containing replacement values. This should have
-                dimensions corresponding to the indices specified in ``args``.
+                A ``BiocFrame`` containing replacement values. Each row
+                corresponds to a row in ``rows``, while each column corresponds
+                to a column in ``columns``. Note that the replacement is based
+                on position, so row and column names in ``value`` are ignored.
 
         Raises:
             ValueError: If the length of ``value`` does not match the number of rows.
@@ -958,8 +960,8 @@ class BiocFrame:
         if scalar:
             raise TypeError("Column indices should be a sequence.")
 
-        for i in col_idx:
-            nm = output._column_names[i]
+        for i, x in enumerate(col_idx):
+            nm = output._column_names[x]
             output._data[nm] = ut.assign(
                 output._data[nm], 
                 row_idx, 
