@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
+from copy import copy
 
 import biocutils as ut
 
@@ -1022,6 +1023,9 @@ class BiocFrame:
             or as a reference to the (in-place-modified) original.
         """
         output = self._define_output(in_place)
+        if not in_place:
+            output._data = copy(output._data)
+
         if isinstance(args, tuple):
             rows, cols = args
 
@@ -1053,6 +1057,8 @@ class BiocFrame:
                 )
 
             if args not in output.column_names:
+                if not in_place:
+                    output._column_names = copy(output._column_names)
                 output._column_names.append(args)
 
                 if output._mcols is not None:
@@ -1082,6 +1088,9 @@ class BiocFrame:
             raise ValueError(f"Column: '{name}' does not exist.")
 
         output = self._define_output(in_place)
+        if not in_place:
+            output._data = copy(output._data)
+            output._column_names = copy(output._column_names)
 
         del output._data[name]
         _col_idx = output._column_names.index(name)
