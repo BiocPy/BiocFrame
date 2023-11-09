@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
+
 import biocutils as ut
 
 from .types import SlicerArgTypes, SlicerTypes
@@ -1275,7 +1276,7 @@ class BiocFrame:
 
             all_row_names.extend(rnames)
 
-        if all([x is None for x in all_row_names]) or len(all_row_names) == 0:
+        if all([x is None or len(x) == 0 for x in all_row_names]) or len(all_row_names) == 0:
             all_row_names = None
 
         combined_mcols = None
