@@ -109,17 +109,17 @@ def test_bframe_setters():
     assert bframe.metadata is not None
 
     bframe2 = bframe.set_column("new_col", [1, 2, 3])
-    assert bframe2.column("new_col") == [1,2,3]
+    assert bframe2.column("new_col") == [1, 2, 3]
     assert not bframe.has_column("new_col")
     assert bframe2.dims == (3, 4)
 
     bframe2 = bframe.set_column("col3", [1, 2, 3])
-    assert bframe2.column("col3") == [1,2,3]
+    assert bframe2.column("col3") == [1, 2, 3]
     assert bframe.column("col3") == ["b", "n", "m"]
     assert bframe2.dims == (3, 3)
 
     bframe.set_column("col3", [1, 2, 3], in_place=True)
-    assert bframe.column("col3") == [1,2,3]
+    assert bframe.column("col3") == [1, 2, 3]
 
 
 def test_bframe_setters_with_rows():
