@@ -1002,10 +1002,10 @@ class BiocFrame:
         )
         self.remove_column(name, in_place=True)
 
-    def set_column(self, column: str, value: Any, in_place: bool = False) -> "BiocFrame":
-        """
-        Modify an existing column or add a new column. This is a convenience
-        wrapper around :py:attr:`~set_columns`.
+    def set_column(
+        self, column: str, value: Any, in_place: bool = False
+    ) -> "BiocFrame":
+        """Modify an existing column or add a new column. This is a convenience wrapper around :py:attr:`~set_columns`.
 
         Args:
             args (str): Name of an existing or new column.
@@ -1022,13 +1022,13 @@ class BiocFrame:
             BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
-        return self.set_columns({ column: value }, in_place=in_place)
+        return self.set_columns({column: value}, in_place=in_place)
 
-    def set_columns(self, columns: dict[str, Any], in_place: bool = False) -> "BiocFrame":
-        """
-        Modify existing columns or add new columns. This has the same effect as
-        repeated calls to :py:attr:`~set_column` for multiple columns but is
-        slightly more efficient when `in_place = False`.
+    def set_columns(
+        self, columns: dict[str, Any], in_place: bool = False
+    ) -> "BiocFrame":
+        """Modify existing columns or add new columns. This has the same effect as repeated calls to
+        :py:attr:`~set_column` for multiple columns but is slightly more efficient when `in_place = False`.
 
         Args:
             args (str): Name of an existing or new column.
@@ -1067,7 +1067,7 @@ class BiocFrame:
             output._data[column] = value
 
         if output._mcols is not None:
-            newly_added = len(output._column_names) - previous 
+            newly_added = len(output._column_names) - previous
             if newly_added:
                 mcols = output._mcols._define_output(in_place)
                 if not in_place:
@@ -1078,7 +1078,15 @@ class BiocFrame:
                     if isinstance(mcolumn, numpy.ndarray):
                         if not numpy.ma.is_masked(mcolumn):
                             mcolumn = numpy.ma.array(mcolumn, mask=False)
-                        mcolumn = numpy.ma.concatenate([mcolumn, numpy.ma.array(numpy.zeros(newly_added, dtype=mcolumn.dtype), mask=True)])
+                        mcolumn = numpy.ma.concatenate(
+                            [
+                                mcolumn,
+                                numpy.ma.array(
+                                    numpy.zeros(newly_added, dtype=mcolumn.dtype),
+                                    mask=True,
+                                ),
+                            ]
+                        )
                     else:
                         mcolumn = ut.combine_sequences(mcolumn, [None] * newly_added)
                     mcols._data[mcol] = mcolumn
@@ -1088,9 +1096,7 @@ class BiocFrame:
         return output
 
     def remove_column(self, column: str, in_place: bool = False) -> "BiocFrame":
-        """
-        Remove a column. This is a convenience wrapper around
-        :py:attr:`~remove_columns`.
+        """Remove a column. This is a convenience wrapper around :py:attr:`~remove_columns`.
 
         Args:
             column (str): Name of the column to remove.
@@ -1105,9 +1111,10 @@ class BiocFrame:
         """
         return self.remove_columns([column], in_place=in_place)
 
-    def remove_columns(self, columns: Sequence[str], in_place: bool = False) -> "BiocFrame":
-        """
-        Remove any number of existing columns.
+    def remove_columns(
+        self, columns: Sequence[str], in_place: bool = False
+    ) -> "BiocFrame":
+        """Remove any number of existing columns.
 
         Args:
             columns (str): Names of the columns to remove.
@@ -1132,7 +1139,7 @@ class BiocFrame:
         killset = set(columns)
         keep = []
         for i, col in enumerate(output._column_names):
-            if not col in killset:
+            if col not in killset:
                 keep.append(i)
 
         output._column_names = ut.subset_sequence(output._column_names, keep)
