@@ -108,19 +108,18 @@ def test_bframe_setters():
     bframe.metadata = {"a": "b"}
     assert bframe.metadata is not None
 
-    bframe["new_col"] = [1, 2, 3]
+    bframe2 = bframe.set_column("new_col", [1, 2, 3])
+    assert bframe2.column("new_col") == [1, 2, 3]
+    assert not bframe.has_column("new_col")
+    assert bframe2.dims == (3, 4)
 
-    assert bframe is not None
+    bframe2 = bframe.set_column("col3", [1, 2, 3])
+    assert bframe2.column("col3") == [1, 2, 3]
+    assert bframe.column("col3") == ["b", "n", "m"]
+    assert bframe2.dims == (3, 3)
 
-    assert len(bframe.dims) == 2
-    assert bframe.dims == (3, 4)
-
-    bframe["col2"] = [1, 2, 3]
-
-    assert bframe is not None
-
-    assert len(bframe.dims) == 2
-    assert bframe.dims == (3, 4)
+    bframe.set_column("col3", [1, 2, 3], in_place=True)
+    assert bframe.column("col3") == [1, 2, 3]
 
 
 def test_bframe_setters_with_rows():
@@ -547,3 +546,23 @@ def test_set_names():
     with pytest.raises(ValueError) as ex:
         obj.set_column_names(["A", "A"])
     assert str(ex.value).find("duplicate column name") >= 0
+
+
+def test_remove_column():
+    obj = BiocFrame(
+        {
+            "column1": [1, 2, 3],
+            "column2": [4, 5, 6],
+        }
+    )
+
+    out = obj.remove_column("column2")
+    assert obj.has_column("column2")
+    assert not out.has_column("column2")
+
+    out = obj.remove_column("column1")
+    assert obj.has_column("column1")
+    assert not out.has_column("column1")
+
+    obj.remove_column("column2", in_place=True)
+    assert not obj.has_column("column2")
