@@ -143,9 +143,7 @@ def test_bframe_set_columns():
     assert bframe2.has_column("column3")
     assert bframe2.has_column("column4")
 
-    bframe2 = bframe.set_columns(
-        {0: ["A", "B", "C"], 1: ["a", "b", "c"]}
-    )
+    bframe2 = bframe.set_columns({0: ["A", "B", "C"], 1: ["a", "b", "c"]})
     assert bframe2.column("column1") == ["A", "B", "C"]
     assert bframe2.column("column2") == ["a", "b", "c"]
 

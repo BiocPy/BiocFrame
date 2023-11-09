@@ -1008,7 +1008,7 @@ class BiocFrame:
         """Modify an existing column or add a new column. This is a convenience wrapper around :py:attr:`~set_columns`.
 
         Args:
-            args (Union[int, str]): 
+            args (Union[int, str]):
                 Name of an existing or new column. Alternatively, an index
                 specifying the position of an existing column.
 
@@ -1033,7 +1033,7 @@ class BiocFrame:
         :py:attr:`~set_column` for multiple columns but is slightly more efficient when `in_place = False`.
 
         Args:
-            columns (Dict[Union[str, int], Any]): 
+            columns (Dict[Union[str, int], Any]):
                 Contents of the columns to set. Keys may be strings containing
                 new or existing column names, or integers containing the position
                 of the column. Values should be the contents of each column.
@@ -1100,7 +1100,9 @@ class BiocFrame:
 
         return output
 
-    def remove_column(self, column: Union[int, str], in_place: bool = False) -> "BiocFrame":
+    def remove_column(
+        self, column: Union[int, str], in_place: bool = False
+    ) -> "BiocFrame":
         """Remove a column. This is a convenience wrapper around :py:attr:`~remove_columns`.
 
         Args:
@@ -1122,10 +1124,10 @@ class BiocFrame:
         """Remove any number of existing columns.
 
         Args:
-            columns (Sequence[Union[int, str]]): 
+            columns (Sequence[Union[int, str]]):
                 Names or indices of the columns to remove.
 
-            in_place (bool): 
+            in_place (bool):
                 Whether to modify the object in place. Defaults to False.
 
         Raises:
