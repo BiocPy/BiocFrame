@@ -1024,7 +1024,7 @@ class BiocFrame:
         """
         return self.set_columns({ column: value }, in_place=in_place)
 
-    def set_columns(self, columns: dict[str, Any], in_place: bool = False) -> "BiocFrame":
+    def set_columns(self, columns: Dict[str, Any], in_place: bool = False) -> "BiocFrame":
         """
         Modify existing columns or add new columns. This has the same effect as
         repeated calls to :py:attr:`~set_column` for multiple columns but is
@@ -1033,7 +1033,7 @@ class BiocFrame:
         Args:
             args (str): Name of an existing or new column.
 
-            columns (dict[str, Any]): Names and values of the new columns.
+            columns (Dict[str, Any]): Names and values of the new columns.
 
             in_place (bool): Whether to modify the object in place. Defaults to False.
 
