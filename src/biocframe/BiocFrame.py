@@ -1003,12 +1003,14 @@ class BiocFrame:
         self.remove_column(name, in_place=True)
 
     def set_column(
-        self, column: str, value: Any, in_place: bool = False
+        self, column: Union[int, str], value: Any, in_place: bool = False
     ) -> "BiocFrame":
         """Modify an existing column or add a new column. This is a convenience wrapper around :py:attr:`~set_columns`.
 
         Args:
-            args (str): Name of an existing or new column.
+            args (Union[int, str]):
+                Name of an existing or new column. Alternatively, an index
+                specifying the position of an existing column.
 
             value (Any): Value of the new column.
 
@@ -1031,9 +1033,10 @@ class BiocFrame:
         :py:attr:`~set_column` for multiple columns but is slightly more efficient when `in_place = False`.
 
         Args:
-            args (str): Name of an existing or new column.
-
-            columns (Dict[str, Any]): Names and values of the new columns.
+            columns (Dict[Union[str, int], Any]):
+                Contents of the columns to set. Keys may be strings containing
+                new or existing column names, or integers containing the position
+                of the column. Values should be the contents of each column.
 
             in_place (bool): Whether to modify the object in place. Defaults to False.
 
@@ -1058,7 +1061,9 @@ class BiocFrame:
                     f"need to be {output.shape[0]} but provided {len(value)}."
                 )
 
-            if column not in output._column_names:
+            if isinstance(column, int):
+                column = output._column_names[column]
+            elif column not in output._data:
                 if not in_place and not is_colnames_copied:
                     output._column_names = copy(output._column_names)
                     is_colnames_copied = True
@@ -1095,11 +1100,13 @@ class BiocFrame:
 
         return output
 
-    def remove_column(self, column: str, in_place: bool = False) -> "BiocFrame":
+    def remove_column(
+        self, column: Union[int, str], in_place: bool = False
+    ) -> "BiocFrame":
         """Remove a column. This is a convenience wrapper around :py:attr:`~remove_columns`.
 
         Args:
-            column (str): Name of the column to remove.
+            column (str): Name or positional index of the column to remove.
             in_place (bool): Whether to modify the object in place. Defaults to False.
 
         Raises:
@@ -1112,13 +1119,16 @@ class BiocFrame:
         return self.remove_columns([column], in_place=in_place)
 
     def remove_columns(
-        self, columns: Sequence[str], in_place: bool = False
+        self, columns: Sequence[Union[int, str]], in_place: bool = False
     ) -> "BiocFrame":
         """Remove any number of existing columns.
 
         Args:
-            columns (str): Names of the columns to remove.
-            in_place (bool): Whether to modify the object in place. Defaults to False.
+            columns (Sequence[Union[int, str]]):
+                Names or indices of the columns to remove.
+
+            in_place (bool):
+                Whether to modify the object in place. Defaults to False.
 
         Raises:
             ValueError: If column does not exist.
@@ -1131,12 +1141,15 @@ class BiocFrame:
         if not in_place:
             output._data = copy(output._data)
 
+        killset = set()
         for name in columns:
+            if isinstance(name, int):
+                name = output._column_names[name]
             if name not in output._data:
                 raise ValueError(f"Column '{name}' does not exist.")
             del output._data[name]
+            killset.add(name)
 
-        killset = set(columns)
         keep = []
         for i, col in enumerate(output._column_names):
             if col not in killset:
