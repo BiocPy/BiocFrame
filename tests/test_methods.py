@@ -64,7 +64,7 @@ def test_bframe_basic_ops():
     assert bframe.dims == (3, 3)
 
 
-def test_bframe_setters():
+def test_bframe_set_columns():
     obj = {
         "column1": [1, 2, 3],
         "nested": [
@@ -108,18 +108,63 @@ def test_bframe_setters():
     bframe.metadata = {"a": "b"}
     assert bframe.metadata is not None
 
+
+def test_bframe_set_columns():
+    obj = {
+        "column1": [1, 2, 3],
+        "column2": ["b", "n", "m"],
+    }
+
+    bframe = BiocFrame(obj)
+
     bframe2 = bframe.set_column("new_col", [1, 2, 3])
     assert bframe2.column("new_col") == [1, 2, 3]
     assert not bframe.has_column("new_col")
-    assert bframe2.dims == (3, 4)
-
-    bframe2 = bframe.set_column("col3", [1, 2, 3])
-    assert bframe2.column("col3") == [1, 2, 3]
-    assert bframe.column("col3") == ["b", "n", "m"]
     assert bframe2.dims == (3, 3)
 
-    bframe.set_column("col3", [1, 2, 3], in_place=True)
-    assert bframe.column("col3") == [1, 2, 3]
+    bframe2 = bframe.set_column("column2", [1, 2, 3])
+    assert bframe2.column("column2") == [1, 2, 3]
+    assert bframe.column("column2") == ["b", "n", "m"]
+    assert bframe2.dims == (3, 2)
+
+    # In-place modification works correctly.
+    copy = bframe.__deepcopy__()
+    copy.set_column("column2", [1, 2, 3], in_place=True)
+    assert copy.column("column2") == [1, 2, 3]
+
+    # Now trying multiple columns.
+    bframe2 = bframe.set_columns(
+        {"column1": ["A", "B", "C"], "column3": ["a", "b", "c"], "column4": [9, 8, 7]}
+    )
+    assert bframe2.column("column1") == ["A", "B", "C"]
+    assert bframe2.has_column("column3")
+    assert bframe2.has_column("column4")
+
+    # Making sure that the mcols is properly handled.
+    bframe2a = bframe.set_mcols(
+        BiocFrame(
+            {
+                "prop1": [1, 2],
+                "prop2": np.array([1, 2], dtype=np.int32),
+                "prop3": np.ma.array(np.array([-1, -2], dtype=np.int8)),
+            }
+        )
+    )
+    bframe2b = bframe2a.set_columns(
+        {"column1": ["A", "B", "C"], "column3": ["a", "b", "c"], "column4": [9, 8, 7]}
+    )
+    final_mcols = bframe2b.get_mcols()
+    assert final_mcols.column("prop1") == [1, 2, None, None]
+    assert final_mcols.column("prop2").dtype == np.int32
+    assert (
+        list(final_mcols.column("prop2"))
+        == list(bframe2a.get_mcols().column("prop2")) + [np.ma.masked] * 2
+    )
+    assert final_mcols.column("prop3").dtype == np.int8
+    assert (
+        list(final_mcols.column("prop3"))
+        == list(bframe2a.get_mcols().column("prop3")) + [np.ma.masked] * 2
+    )
 
 
 def test_bframe_setters_with_rows():
@@ -308,32 +353,30 @@ def test_bframe_unary_slice():
     assert len(unary_col) == 2
 
 
-def test_bframe_delete():
+def test_bframe_remove_column():
     obj = {
         "column1": [1, 2, 3],
-        "nested": [
-            {
-                "ncol1": [4, 5, 6],
-                "ncol2": ["a", "b", "c"],
-                "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
-            },
-            {
-                "ncol2": ["a"],
-                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
-            },
-            {
-                "ncol1": [5, 6],
-                "ncol2": ["b", "c"],
-            },
-        ],
         "column2": ["b", "n", "m"],
     }
 
     bframe = BiocFrame(obj)
-    del bframe["nested"]
+    bframe2 = bframe.remove_column("column2")
+    assert not bframe2.has_column("column2")
+    assert bframe.has_column("column2")
 
-    assert bframe is not None
-    assert bframe.dims == (3, 2)
+    bframe2 = bframe.remove_columns(["column2", "column1"])
+    assert bframe2.shape == (3, 0)
+
+    # Works in place.
+    copy = bframe.__deepcopy__()
+    copy.remove_column("column1", in_place=True)
+    assert copy.has_column("column2")
+    assert copy.shape == (3, 1)
+
+    # Handles the mcols correctly.
+    bframe2a = bframe.set_mcols(BiocFrame({"prop1": [1, 2]}))
+    bframe2b = bframe2a.remove_column("column1")
+    assert bframe2b.get_mcols().column("prop1") == [2]
 
 
 def test_bframe_ufuncs():
@@ -546,23 +589,3 @@ def test_set_names():
     with pytest.raises(ValueError) as ex:
         obj.set_column_names(["A", "A"])
     assert str(ex.value).find("duplicate column name") >= 0
-
-
-def test_remove_column():
-    obj = BiocFrame(
-        {
-            "column1": [1, 2, 3],
-            "column2": [4, 5, 6],
-        }
-    )
-
-    out = obj.remove_column("column2")
-    assert obj.has_column("column2")
-    assert not out.has_column("column2")
-
-    out = obj.remove_column("column1")
-    assert obj.has_column("column1")
-    assert not out.has_column("column1")
-
-    obj.remove_column("column2", in_place=True)
-    assert not obj.has_column("column2")

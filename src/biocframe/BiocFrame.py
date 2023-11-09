@@ -2,6 +2,7 @@ from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
 from copy import copy
+import numpy
 
 import biocutils as ut
 
@@ -1002,16 +1003,38 @@ class BiocFrame:
         self.remove_column(name, in_place=True)
 
     def set_column(
-        self,
-        args: SlicerArgTypes,
-        value: Union[List, "BiocFrame"],
-        in_place: bool = False,
+        self, column: str, value: Any, in_place: bool = False
     ) -> "BiocFrame":
-        """Set or Modify a column.
+        """Modify an existing column or add a new column. This is a convenience wrapper around :py:attr:`~set_columns`.
 
         Args:
-            args (SlicerArgTypes): Name of the column.
-            value (Union[List, "BiocFrame"]): New value to set.
+            args (str): Name of an existing or new column.
+
+            value (Any): Value of the new column.
+
+            in_place (bool): Whether to modify the object in place. Defaults to False.
+
+        Raises:
+            TypeError: If row indices are not a sequence or slice.
+            ValueError: If length of `value` does not match the number of rows.
+
+        Returns:
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
+        return self.set_columns({column: value}, in_place=in_place)
+
+    def set_columns(
+        self, columns: Dict[str, Any], in_place: bool = False
+    ) -> "BiocFrame":
+        """Modify existing columns or add new columns. This has the same effect as repeated calls to
+        :py:attr:`~set_column` for multiple columns but is slightly more efficient when `in_place = False`.
+
+        Args:
+            args (str): Name of an existing or new column.
+
+            columns (Dict[str, Any]): Names and values of the new columns.
+
             in_place (bool): Whether to modify the object in place. Defaults to False.
 
         Raises:
@@ -1025,56 +1048,58 @@ class BiocFrame:
         output = self._define_output(in_place)
         if not in_place:
             output._data = copy(output._data)
+        is_colnames_copied = False
+        previous = len(output._column_names)
 
-        if isinstance(args, tuple):
-            rows, cols = args
-
-            row_idx, scalar = ut.normalize_subscript(
-                rows, output.shape[0], names=output._row_names
-            )
-            if scalar:
-                raise TypeError("row indices should be a sequence or slice")
-
-            col_idx, scalar = ut.normalize_subscript(
-                cols, output.shape[1], names=output._column_names
-            )
-            if scalar:
-                current = output._data[output._column_names[col_idx[0]]]
-                for j, k in enumerate(row_idx):
-                    current[k] = value[j]
-            else:
-                for i in col_idx:
-                    nm = output._column_names[i]
-                    current = output._data[nm]
-                    replacement = value._data[nm]
-                    for j, k in enumerate(row_idx):
-                        current[k] = replacement[j]
-        else:
-            if len(value) != output.shape[0]:
+        for column, value in columns.items():
+            if ut.get_height(value) != output.shape[0]:
                 raise ValueError(
                     "Length of `value`, does not match the number of the rows,"
                     f"need to be {output.shape[0]} but provided {len(value)}."
                 )
 
-            if args not in output.column_names:
-                if not in_place:
+            if column not in output._column_names:
+                if not in_place and not is_colnames_copied:
                     output._column_names = copy(output._column_names)
-                output._column_names.append(args)
+                    is_colnames_copied = True
+                output._column_names.append(column)
 
-                if output._mcols is not None:
-                    output._mcols = output._mcols.combine(
-                        BiocFrame({}, number_of_rows=1)
-                    )
+            output._data[column] = value
 
-            output._data[args] = value
+        if output._mcols is not None:
+            newly_added = len(output._column_names) - previous
+            if newly_added:
+                mcols = output._mcols._define_output(in_place)
+                if not in_place:
+                    mcols._data = copy(mcols._data)
+
+                for mcol in mcols.get_column_names():
+                    mcolumn = mcols.column(mcol)
+                    if isinstance(mcolumn, numpy.ndarray):
+                        if not numpy.ma.is_masked(mcolumn):
+                            mcolumn = numpy.ma.array(mcolumn, mask=False)
+                        mcolumn = numpy.ma.concatenate(
+                            [
+                                mcolumn,
+                                numpy.ma.array(
+                                    numpy.zeros(newly_added, dtype=mcolumn.dtype),
+                                    mask=True,
+                                ),
+                            ]
+                        )
+                    else:
+                        mcolumn = ut.combine_sequences(mcolumn, [None] * newly_added)
+                    mcols._data[mcol] = mcolumn
+
+                output._mcols = mcols
 
         return output
 
-    def remove_column(self, name: str, in_place: bool = False) -> "BiocFrame":
-        """Remove a column.
+    def remove_column(self, column: str, in_place: bool = False) -> "BiocFrame":
+        """Remove a column. This is a convenience wrapper around :py:attr:`~remove_columns`.
 
         Args:
-            name (str): Name of the column to remove.
+            column (str): Name of the column to remove.
             in_place (bool): Whether to modify the object in place. Defaults to False.
 
         Raises:
@@ -1084,23 +1109,42 @@ class BiocFrame:
             BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
-        if name not in self.column_names:
-            raise ValueError(f"Column: '{name}' does not exist.")
+        return self.remove_columns([column], in_place=in_place)
 
+    def remove_columns(
+        self, columns: Sequence[str], in_place: bool = False
+    ) -> "BiocFrame":
+        """Remove any number of existing columns.
+
+        Args:
+            columns (str): Names of the columns to remove.
+            in_place (bool): Whether to modify the object in place. Defaults to False.
+
+        Raises:
+            ValueError: If column does not exist.
+
+        Returns:
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
         output = self._define_output(in_place)
         if not in_place:
             output._data = copy(output._data)
-            output._column_names = copy(output._column_names)
 
-        del output._data[name]
-        _col_idx = output._column_names.index(name)
+        for name in columns:
+            if name not in output._data:
+                raise ValueError(f"Column '{name}' does not exist.")
+            del output._data[name]
 
-        # TODO: do something better later!
-        _indices = [i for i in range(len(output._column_names)) if i != _col_idx]
+        killset = set(columns)
+        keep = []
+        for i, col in enumerate(output._column_names):
+            if col not in killset:
+                keep.append(i)
 
-        output._column_names.remove(name)
+        output._column_names = ut.subset_sequence(output._column_names, keep)
         if output._mcols is not None:
-            output._mcols = output._mcols[_indices, :]
+            output._mcols = output._mcols[keep, :]
 
         return output
 
