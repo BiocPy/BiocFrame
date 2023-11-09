@@ -1022,7 +1022,7 @@ class BiocFrame:
             BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
-        return self.set_columns({ column: value }, in_place=True)
+        return self.set_columns({ column: value }, in_place=in_place)
 
     def set_columns(self, columns: dict[str, Any], in_place: bool = False) -> "BiocFrame":
         """
@@ -1066,21 +1066,21 @@ class BiocFrame:
 
             output._data[column] = value
 
-        if output._mcols is None:
+        if output._mcols is not None:
             newly_added = len(output._column_names) - previous 
             if newly_added:
-                mcols = output._mcols.define_output(in_place)
+                mcols = output._mcols._define_output(in_place)
                 if not in_place:
                     mcols._data = copy(mcols._data)
 
                 for mcol in mcols.get_column_names():
                     mcolumn = mcols.column(mcol)
                     if isinstance(mcolumn, numpy.ndarray):
-                        if not isinstance(mcolumn, numpy.ma.array):
-                            mcolumns = numpy.ma.array(mcolumn, mask=False)
-                        mcolumn = numpy.concatenate([mcolumn, numpy.ma.array(numpy.zeros(newly_added, dtype=mcolumn.dtype), mask=True)])
+                        if not numpy.ma.is_masked(mcolumn):
+                            mcolumn = numpy.ma.array(mcolumn, mask=False)
+                        mcolumn = numpy.ma.concatenate([mcolumn, numpy.ma.array(numpy.zeros(newly_added, dtype=mcolumn.dtype), mask=True)])
                     else:
-                        mcolumn = ut.combine_sequences(mcolumns, [None] * newly_added)
+                        mcolumn = ut.combine_sequences(mcolumn, [None] * newly_added)
                     mcols._data[mcol] = mcolumn
 
                 output._mcols = mcols
