@@ -3,12 +3,11 @@ import numpy
 
 
 def relaxed_combine_rows(*x: "BiocFrame") -> "BiocFrame":
-    """
-    A relaxed version of the :py:meth:`~biocutils.combine_rows.combine_rows`
-    generic that handles differences in the columns between objects.
+    """A relaxed version of the :py:meth:`~biocutils.combine_rows.combine_rows` generic that handles differences in the
+    columns between objects.
 
     Args:
-        x: 
+        x:
             One or more ``BiocFrame`` objects, possibly with differences in the
             number and identity of their columns.
 
@@ -34,7 +33,9 @@ def relaxed_combine_rows(*x: "BiocFrame") -> "BiocFrame":
             if not df.has_column(col):
                 firstcol = first_occurrence[col]
                 if isinstance(firstcol, numpy.ndarray):
-                    ex = numpy.ma.array(numpy.zeros(df.shape[0], dtype=firstcol.dtype), mask=True)
+                    ex = numpy.ma.array(
+                        numpy.zeros(df.shape[0], dtype=firstcol.dtype), mask=True
+                    )
                 else:
                     ex = [None] * df.shape[0]
                 extras[col] = ex
@@ -43,6 +44,6 @@ def relaxed_combine_rows(*x: "BiocFrame") -> "BiocFrame":
             edited.append(df.set_columns(extras))
         else:
             edited.append(df)
-   
+
     # Now slapping everything together.
     return combine_rows(*edited)

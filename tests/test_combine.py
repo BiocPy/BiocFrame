@@ -126,21 +126,31 @@ def test_relaxed_combine_rows():
     )
 
     obj2 = BiocFrame(
-        {
-            "column1": [-1, -2, -3],
-            "column3": ["A", "B", "C"]
-        },
+        {"column1": [-1, -2, -3], "column3": ["A", "B", "C"]},
     )
 
     obj3 = BiocFrame(
-        {
-            "column2": np.array([-4, -5, -6], dtype=np.int8)
-        },
+        {"column2": np.array([-4, -5, -6], dtype=np.int8)},
     )
 
     merged = relaxed_combine_rows(obj1, obj2, obj3)
-    assert merged.get_column_names() == [ "column1", "column2", "column3" ]
-    assert merged.column("column1") == [ 1, 2, 3, -1, -2, -3, None, None, None ]
-    assert (merged.column("column2").mask == np.ma.array([False, False, False, True, True, True, False, False, False])).all()
-    assert (merged.column("column2").data == np.ma.array([4, 5, 6, 0, 0, 0, -4, -5, -6])).all()
-    assert merged.column("column3") == [ None, None, None, "A", "B", "C", None, None, None ]
+    assert merged.get_column_names() == ["column1", "column2", "column3"]
+    assert merged.column("column1") == [1, 2, 3, -1, -2, -3, None, None, None]
+    assert (
+        merged.column("column2").mask
+        == np.ma.array([False, False, False, True, True, True, False, False, False])
+    ).all()
+    assert (
+        merged.column("column2").data == np.ma.array([4, 5, 6, 0, 0, 0, -4, -5, -6])
+    ).all()
+    assert merged.column("column3") == [
+        None,
+        None,
+        None,
+        "A",
+        "B",
+        "C",
+        None,
+        None,
+        None,
+    ]
