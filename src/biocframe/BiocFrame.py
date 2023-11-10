@@ -724,7 +724,7 @@ class BiocFrame:
         self,
         rows: Union[str, int, bool, Sequence],
         columns: Union[str, int, bool, Sequence],
-    ) -> Union["BiocFrame", dict, Any]:
+    ) -> "BiocFrame":
         """Slice ``BiocFrame`` along the rows and/or columns, based on their indices or names.
 
         Args:
@@ -732,28 +732,18 @@ class BiocFrame:
                 Rows to be extracted. This may be an integer, boolean, string,
                 or any sequence thereof, as supported by
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
+                Scalars are treated as length-1 sequences.
 
             columns:
                 Columns to be extracted. This may be an integer, boolean,
                 string, or any sequence thereof, as supported by
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
+                Scalars are treated as length-1 sequences.
 
         Returns:
-            If both ``rows`` and ``columns`` are sequences, a ``BiocFrame``
-            is returned with the specified rows and columns.
-
-            If only ``rows`` is a sequence, the contents of the specified
-            column sliced to the specified rows and returned.
-
-            If only ``columns`` is a sequence, a dictionary is returned
-            containing the entries of all specified columns at the specified
-            row.
-
-            If neither are sequences, the entry of the specified column
-            at the specified row is returned.
+            A ``BiocFrame`` with the specified rows and columns.
         """
         new_column_names = self._column_names
-        is_col_scalar = False
         if columns != slice(None):
             new_column_indices, is_col_scalar = ut.normalize_subscript(
                 columns, len(new_column_names), new_column_names
@@ -765,7 +755,6 @@ class BiocFrame:
             new_data[col] = self._data[col]
 
         new_row_names = self._row_names
-        is_row_scalar = False
         new_number_of_rows = self.shape[0]
         if rows != slice(None):
             new_row_names = self.row_names
@@ -778,16 +767,6 @@ class BiocFrame:
                 new_data[k] = ut.subset(v, new_row_indices)
             if new_row_names is not None:
                 new_row_names = ut.subset_sequence(new_row_names, new_row_indices)
-
-        if is_row_scalar:
-            if is_col_scalar:
-                return new_data[new_column_names[0]][0]
-            rdata = {}
-            for col in new_column_names:
-                rdata[col] = new_data[col][0]
-            return rdata
-        elif is_col_scalar:
-            return new_data[new_column_names[0]]
 
         mcols = self._mcols
         if mcols is not None:
@@ -884,7 +863,7 @@ class BiocFrame:
 
         return self.get_slice(slice(None), args)
 
-    def __setitem__(self, args, value):
+    def __setitem__(self, args: Union[int, str, Sequence, tuple], value: "BiocFrame"):
         """If ``args`` is a string, it is assumed to be a column name and ``value`` is expected to be the column
         contents; these are passed onto :py:attr:`~set_column` with `in_place = True`.
 
@@ -907,8 +886,8 @@ class BiocFrame:
 
     def set_slice(
         self,
-        rows: Sequence,
-        columns: Sequence,
+        rows: Union[int, str, bool, Sequence],
+        columns: Union[int, str, bool, Sequence],
         value: "BiocFrame",
         in_place: bool = True,
     ) -> "BiocFrame":
@@ -919,11 +898,13 @@ class BiocFrame:
                 Rows to be replaced. This may be any sequence of strings,
                 integers, or booleans (or mixture thereof), as supported by
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
+                Scalars are treated as length-1 sequences.
 
             columns:
                 Columns to be replaced. This may be any sequence of strings,
                 integers, or booleans (or mixture thereof), as supported by
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
+                Scalars are treated as length-1 sequences.
 
             value:
                 A ``BiocFrame`` containing replacement values. Each row
@@ -941,14 +922,10 @@ class BiocFrame:
         row_idx, scalar = ut.normalize_subscript(
             rows, output.shape[0], names=output._row_names
         )
-        if scalar:
-            raise TypeError("Row indices should be a sequence.")
 
         col_idx, scalar = ut.normalize_subscript(
             columns, output.shape[1], names=output._column_names
         )
-        if scalar:
-            raise TypeError("Column indices should be a sequence.")
 
         for i, x in enumerate(col_idx):
             nm = output._column_names[x]
