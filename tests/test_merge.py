@@ -44,10 +44,10 @@ def test_merge_BiocFrame_simple():
     # Works with integers.
     combined = merge([obj1, obj2, obj3], by=[0, 1, 1], join="outer")
     assert combined.get_column_names() == ["A", "B", "C", "D"]
-    assert combined.column("A") == [1,2,3,4,-1,0]
-    assert combined.column("B") == [3,4,5,6,None,None]
-    assert combined.column("C") == [None,"A","B",None,None,None]
-    assert combined.column("D") == [None,None,False,None,True,False]
+    assert combined.column("A") == [1, 2, 3, 4, -1, 0]
+    assert combined.column("B") == [3, 4, 5, 6, None, None]
+    assert combined.column("C") == [None, "A", "B", None, None, None]
+    assert combined.column("D") == [None, None, False, None, True, False]
 
 
 def test_merge_BiocFrame_row_names():
