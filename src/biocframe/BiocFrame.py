@@ -2,11 +2,11 @@ from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
 from copy import copy
-import numpy
 
 import biocutils as ut
 
 from .types import SlicerArgTypes, SlicerTypes
+from .relaxed_combine import relaxed_combine_rows
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -1074,18 +1074,7 @@ class BiocFrame:
             newly_added = len(output._column_names) - previous
             if newly_added:
                 extras = BiocFrame({}, number_of_rows=newly_added)
-                for mcol in output._mcols.get_column_names():
-                    mcolumn = output._mcols.column(mcol)
-                    if isinstance(mcolumn, numpy.ndarray):
-                        ex = numpy.ma.array(
-                            numpy.zeros(newly_added, dtype=mcolumn.dtype),
-                            mask=True,
-                        )
-                    else:
-                        ex = [None] * newly_added
-                    extras.set_column(mcol, ex, in_place=True)
-
-                output._mcols = ut.combine_rows(output._mcols, extras)
+                output._mcols = relaxed_combine_rows(output._mcols, extras)
 
         return output
 
@@ -1149,6 +1138,20 @@ class BiocFrame:
             output._mcols = output._mcols[keep, :]
 
         return output
+
+    def combine(self, *other):
+        """Combine multiple ``BiocFrame`` objects by row. This is just a wrapper around the
+        :py:meth:`~biocframe.relaxed_combine.relaxed_combine_rows`.
+
+        Args:
+            other:
+                The other ``BiocFrame`` objects to combine, possibly with
+                different columns.
+
+        Returns:
+            A combined ``BiocFrame`` object.
+        """
+        return relaxed_combine_rows([self] + other)
 
     def __len__(self) -> int:
         """Number of rows.
@@ -1281,82 +1284,6 @@ class BiocFrame:
         """
         return self.shape
 
-    def combine(self, *other):
-        """Combine multiple BiocFrame objects by row.
-
-        Note: Fills missing columns with an array of `None`s.
-
-        Args:
-            *other (BiocFrame): BiocFrame objects.
-
-        Raises:
-            TypeError: If all objects are not of type BiocFrame.
-
-        Returns:
-            The same type as caller with the combined data.
-        """
-        if not ut.is_list_of_type(other, BiocFrame):
-            raise TypeError("All objects to combine must be BiocFrame objects.")
-
-        all_objects = [self] + list(other)
-
-        all_columns = [x.column_names for x in all_objects]
-        all_unique_columns = list(
-            set([item for sublist in all_columns for item in sublist])
-        )
-
-        all_row_names = (
-            [""] * len(self) if self.row_names is None else self.row_names.copy()
-        )
-        all_num_rows = sum([len(x) for x in all_objects])
-        all_data = self.data.copy()
-
-        for ocol in all_unique_columns:
-            if ocol not in all_data:
-                all_data[ocol] = [None] * len(self)
-
-        for obj in other:
-            for ocol in all_unique_columns:
-                _tcol = None
-                if ocol not in obj.column_names:
-                    _tcol = [None] * len(obj)
-                else:
-                    _tcol = obj.column(ocol)
-
-                all_data[ocol] = ut.combine(all_data[ocol], _tcol)
-
-            rnames = obj.row_names
-            if rnames is None:
-                rnames = [""] * len(obj)
-
-            all_row_names.extend(rnames)
-
-        if (
-            all([x is None or len(x) == 0 for x in all_row_names])
-            or len(all_row_names) == 0
-        ):
-            all_row_names = None
-
-        combined_mcols = None
-        if self.mcols is not None:
-            combined_mcols = self.mcols
-            if len(all_unique_columns) > len(self.mcols):
-                combined_mcols = self.mcols.combine(
-                    BiocFrame(
-                        {}, number_of_rows=len(all_unique_columns) - len(self.mcols)
-                    )
-                )
-
-        current_class_const = type(self)
-        return current_class_const(
-            all_data,
-            number_of_rows=all_num_rows,
-            row_names=all_row_names,
-            column_names=all_unique_columns,
-            metadata=self._metadata,
-            mcols=combined_mcols,
-        )
-
     def __deepcopy__(self, memo=None, _nil=[]):
         """Make a deep copy of the object.
 
@@ -1425,7 +1352,59 @@ class BiocFrame:
 
 @ut.combine_rows.register(BiocFrame)
 def _combine_rows_bframes(*x: BiocFrame):
-    return x[0].combine(*x[1:])
+    if not ut.is_list_of_type(x, BiocFrame):
+        raise TypeError("All objects to combine must be BiocFrame objects.")
+
+    first = x[0]
+    total_nrows = 0
+    first_nc = first.shape[1]
+    has_rownames = False
+    for df in x:
+        total_nrows += df.shape[0]
+        if df._row_names is not None:
+            has_rownames = True
+        if df.shape[1] != first_nc:
+            raise ValueError(
+                "All objects to combine must have the same number of columns (expected "
+                + str(first_nr)
+                + ", got "
+                + str(x.shape[1])
+                + ")."
+            )
+
+    new_data = {}
+    for i, col in enumerate(x[0]._column_names):
+        current = []
+        for df in x:
+            if not df.has_column(col):
+                raise ValueError(
+                    "All objects to combine must have the same columns (missing '"
+                    + col
+                    + "' in object "
+                    + str(i)
+                    + ")."
+                )
+            current.append(df.column(col))
+        new_data[col] = ut.combine(*current)
+
+    new_rownames = None
+    if has_rownames:
+        new_rownames = []
+        for df in x:
+            other_names = df._row_names
+            if other_names is None:
+                other_names = [""] * df.shape[0]
+            new_rownames += other_names
+
+    current_class_const = type(first)
+    return current_class_const(
+        new_data,
+        number_of_rows=total_nrows,
+        row_names=new_rownames,
+        column_names=first._column_names,
+        metadata=first._metadata,
+        mcols=first._mcols,
+    )
 
 
 @ut.combine_columns.register(BiocFrame)

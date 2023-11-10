@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from biocframe import BiocFrame
+from biocframe import BiocFrame, relaxed_combine_rows
 from biocutils import combine, StringList
 
 __author__ = "jkanche"
@@ -24,7 +24,7 @@ obj2 = BiocFrame(
 
 
 def test_basic():
-    merged = obj1.combine(obj2)
+    merged = combine(obj1, obj2)
 
     assert isinstance(merged, BiocFrame)
     assert merged.shape[0] == obj1.shape[0] + obj2.shape[0]
@@ -32,7 +32,7 @@ def test_basic():
 
 
 def test_multiple():
-    merged = obj1.combine(obj2, obj1)
+    merged = combine(obj1, obj2, obj1)
 
     assert isinstance(merged, BiocFrame)
     assert merged.shape[0] == 2 * obj1.shape[0] + obj2.shape[0]
@@ -43,7 +43,7 @@ def test_empty():
     o1 = BiocFrame(number_of_rows=10)
     o2 = BiocFrame(number_of_rows=5)
 
-    merged = o1.combine(o2)
+    merged = combine(o1, o2)
 
     assert isinstance(merged, BiocFrame)
     assert merged.shape[0] == 15
@@ -53,7 +53,7 @@ def test_empty():
 def test_with_rownames():
     obj1.row_names = ["a", "b", "c", "d", "e"]
     obj2.row_names = ["AA", "BB", "CC", "DD", "EE"]
-    merged = obj1.combine(obj2)
+    merged = combine(obj1, obj2)
 
     assert isinstance(merged, BiocFrame)
     assert isinstance(merged.get_row_names(), StringList)
@@ -62,7 +62,7 @@ def test_with_rownames():
     assert merged.shape[1] == 2
 
     obj1.row_names = None
-    merged = obj1.combine(obj2)
+    merged = combine(obj1, obj2)
 
     assert isinstance(merged, BiocFrame)
     assert merged.row_names is not None
@@ -115,3 +115,42 @@ def test_combine_with_extras():
     merged = combine(obj1, obj2)
     assert merged.metadata == obj1.metadata
     assert merged.mcols.shape == obj1.mcols.shape
+
+
+def test_relaxed_combine_rows():
+    obj1 = BiocFrame(
+        {
+            "column1": [1, 2, 3],
+            "column2": np.array([4, 5, 6], dtype=np.int8),
+        },
+    )
+
+    obj2 = BiocFrame(
+        {"column1": [-1, -2, -3], "column3": ["A", "B", "C"]},
+    )
+
+    obj3 = BiocFrame(
+        {"column2": np.array([-4, -5, -6], dtype=np.int8)},
+    )
+
+    merged = relaxed_combine_rows(obj1, obj2, obj3)
+    assert merged.get_column_names() == ["column1", "column2", "column3"]
+    assert merged.column("column1") == [1, 2, 3, -1, -2, -3, None, None, None]
+    assert (
+        merged.column("column2").mask
+        == np.ma.array([False, False, False, True, True, True, False, False, False])
+    ).all()
+    assert (
+        merged.column("column2").data == np.ma.array([4, 5, 6, 0, 0, 0, -4, -5, -6])
+    ).all()
+    assert merged.column("column3") == [
+        None,
+        None,
+        None,
+        "A",
+        "B",
+        "C",
+        None,
+        None,
+        None,
+    ]

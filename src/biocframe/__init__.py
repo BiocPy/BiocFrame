@@ -16,4 +16,5 @@ finally:
     del version, PackageNotFoundError
 
 from .BiocFrame import BiocFrame
+from .relaxed_combine import relaxed_combine_rows
 from .io import from_pandas
