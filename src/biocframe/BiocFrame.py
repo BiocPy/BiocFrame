@@ -6,11 +6,14 @@ from copy import copy
 import biocutils as ut
 
 from .types import SlicerArgTypes, SlicerTypes
-from .relaxed_combine import relaxed_combine_rows
+from .relaxed_combine import relaxed_combine_rows, _construct_missing
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
+
+
+############################
 
 
 def _guess_number_of_rows(
@@ -71,6 +74,9 @@ def _validate_columns(
             )
 
 
+############################
+
+
 class BiocFrameIter:
     """An iterator to a :py:class:`~biocframe.BiocFrame.BiocFrame` object.
 
@@ -103,6 +109,9 @@ class BiocFrameIter:
             return (iter_row_index, iter_slice)
 
         raise StopIteration
+
+
+############################
 
 
 class BiocFrame:
@@ -1350,6 +1359,9 @@ class BiocFrame:
         return self.__copy__()
 
 
+############################
+
+
 @ut.combine_rows.register(BiocFrame)
 def _combine_rows_bframes(*x: BiocFrame):
     if not ut.is_list_of_type(x, BiocFrame):
@@ -1439,7 +1451,6 @@ def _combine_cols_bframes(*x: BiocFrame):
             all_data[n] = df._data[n]
 
     combined_mcols = None
-    print(all_mcols)
     if not all(y is None for y in all_mcols):
         for i, val in enumerate(all_mcols):
             if val is None:
@@ -1495,3 +1506,182 @@ def _assign_rows_BiocFrame(
     x: BiocFrame, indices: Sequence[int], replacement: BiocFrame
 ) -> BiocFrame:
     return x.set_slice(indices, replacement.get_column_names(), replacement)
+
+
+############################
+
+
+def _normalize_merge_key_to_index(x, i, by):
+    if by is None:
+        if x[i]._row_names is None:
+            raise ValueError("Row names required as key but are absent in object " + str(i) + ".")
+        return None
+    elif isinstance(by, int):
+        nc = x[i].shape[1]
+        if by < -nc or by >= nc:
+            raise ValueError("Integer 'by' is out of range for object " + str(i) + " (" + str(nc) + " columns).")
+        if by < 0:
+            return by + nc
+        else:
+            return by
+    elif isinstance(by, str):
+        ib = x[i]._column_names.find(by)
+        if ib < 0:
+            raise ValueError("No key column '" + b + "' in object " + str(i) + ".")
+        return ib
+    else:
+        raise TypeError("Unknown type '" + type(by).__name__ + "' for the 'by' argument.")
+
+
+def _get_merge_key(x, i, by):
+    if by[i] is None:
+        return x[i]._row_names
+    else:
+        return x[i].get_column(by[i])
+
+
+def merge(
+    x: Sequence[BiocFrame],
+    by: Union[None, str, Sequence] = None,
+    join: Literal["inner", "left", "right", "outer"] = "left",
+    rename_duplicate_columns: bool = False,
+) -> "BiocFrame":
+    """
+    Merge multiple ``BiocFrame`` objects together by common columns or row names,
+    yielding a combined object with a union of columns across all objects.
+
+    Args:
+        x (Sequence[BiocFrame]):
+            Sequence of ``BiocFrame`` objects. Each object may have any
+            number and identity of rows and columns.
+
+        by (Union[None, str, Sequence]):
+            If string, the name of column containing the keys. Each entry of
+            ``x`` is assumed to have this column.
+
+            If integer, the index of column containing the keys. The same
+            index is used for each entry of ``x``.
+
+            If None, keys are assumed to be present in the row names.
+
+            Alternatively a sequence of strings, integers or None, specifying
+            the location of the keys in each entry of ``x``.
+
+        join (Literal["inner", "left", "right", "outer"]):
+            Strategy for the merge. For left and right joins, we consider the
+            keys for the first and last object in ``x``, respectively.
+
+        rename_duplicate_columns (bool):
+            Whether duplicated non-key columns across ``x`` should be
+            automatically renamed in the merged object. If False, an error is
+            raised instead.
+
+    Returns:
+        BiocFrame: A BiocFrame containing the merged contents.
+
+        If ``by = None``, the keys are stored in the row names.
+
+        If ``by`` is a string, keys are stored in the column of the same name.
+
+        If ``by`` is a sequence, keys are stored in the row names if ``by[0] =
+        None``, otherwise they are stored in the column named ``by[0]``.
+    """
+    if not ut.is_list_of_type(x, BiocFrame):
+        raise TypeError("All objects to combine must be BiocFrame objects.")
+
+    if by is None or isinstance(by, str) or isinstance(by, int):
+        by = [_normalize_merge_key_for_index(x, i, by) for i in range(len(x))]
+    else:
+        if len(by) != len(x):
+            raise ValueError("'by' list should have the same length as 'x'.")
+        by = [_normalize_merge_key_for_index(x, i, b) for i, b in enumerate(by)]
+
+    if join == "left":
+        all_keys = _get_merge_key(x, 0, by)
+    elif join == "right":
+        all_keys = _get_merge_key(x, -1, by)
+    elif join == "inner":
+        tmp_keys = [_get_merge_key(x, i, by) for i in range(len(x))]
+        all_keys = ut.intersect(*tmp_keys)
+    elif join == "outer":
+        tmp_keys = [_get_merge_key(x, i, by) for i in range(len(x))]
+        all_keys = ut.union(*tmp_keys)
+    else:
+        raise ValueError("Unknown joining strategy '" + join + "'")
+
+    new_data = {}
+    new_columns = []
+    raw_mcols = []
+    for i, df in enumerate(x):
+        noop = False
+        if join == "left":
+            noop = (i == 0)
+        elif join == "right":
+            noop = (i == len(x) - 1)
+
+        if not noop:
+            keep = match(all_keys, get_key(x, i, by))
+            has_missing = (m < 0).sum()
+            if has_missing:
+                non_missing = len(m) - has_missing
+                reorg_keep = []
+                reorg_permute = []
+                for i, k in enumerate(m):
+                    if m < 0:
+                        reorg_permute.append(non_missing)
+                    else:
+                        reorg_permute.append(len(reorg_keep))
+                        reorg_keep.append(i)
+
+        keep = []
+        for j, y in enumerate(df._column_names):
+            if by[i] == j:
+                continue
+            val = df._data[y]
+            keep.append(j)
+
+            if rename_duplicate_columns:
+                original = y
+                counter = 1
+                while y in new_data:
+                    counter += 1
+                    y = original + " (" + str(counter) + ")"
+            elif y in new_data:
+                raise ValueError("Detected duplicate columns across objects to be merged ('" + y + "').")
+
+            new_columns.append(y)
+            if noop:
+                new_data[y] = val
+            elif not has_missing:
+                new_data[y] = ut.subset(val, keep)
+            else:
+                retained = ut.subset(val, reorg_keep)
+                combined = ut.combine(retained, _construct_missing(val, 1))
+                new_data[y] = ut.subset(combined, reorg_permute)
+
+        if df._mcols is not None:
+            raw_mcols.append(ut.subset_rows(df._mcols, keep))
+        else:
+            raw_mcols.append(len(keep))
+
+    new_mcols = None
+    if not all(isinstance(y, int) for y in raw_mcols):
+        for i, val in enumerate(raw_mcols):
+            if isinstance(val, int):
+                raw_mcols[i] = BiocFrame({}, number_of_rows=val)
+        new_mcols = flexible_combine_rows(*raw_mcols)
+
+    output = type(x[0])(
+        new_data,
+        column_names = new_column_names,
+        number_of_rows = ut.get_height(all_keys),
+        mcols = new_mcols,
+        metadata = x[0]._metadata,
+    )
+
+    if by[0] is None:
+        output.set_row_names(all_keys, in_place=True)
+    else:
+        output.set_column(x[0]._column_names[by[0]], all_keys, in_place=True)
+
+    return output
