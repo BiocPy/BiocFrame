@@ -1705,8 +1705,5 @@ def merge(
 
 
 def relaxed_combine_columns(*x: BiocFrame) -> BiocFrame:
-    """
-    Wrapper around :py:meth:`~biocframe.BiocFrame.merge` that
-    performs a left join on the row names.
-    """
+    """Wrapper around :py:meth:`~biocframe.BiocFrame.merge` that performs a left join on the row names."""
     return merge(x, join="left", by=None)
