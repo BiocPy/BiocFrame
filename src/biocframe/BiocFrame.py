@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union, Literal
 from warnings import warn
 from copy import copy
 
@@ -1525,7 +1525,7 @@ def _normalize_merge_key_to_index(x, i, by):
         else:
             return by
     elif isinstance(by, str):
-        ib = x[i]._column_names.find(by)
+        ib = x[i]._column_names.index(by)
         if ib < 0:
             raise ValueError("No key column '" + b + "' in object " + str(i) + ".")
         return ib
@@ -1590,11 +1590,11 @@ def merge(
         raise TypeError("All objects to combine must be BiocFrame objects.")
 
     if by is None or isinstance(by, str) or isinstance(by, int):
-        by = [_normalize_merge_key_for_index(x, i, by) for i in range(len(x))]
+        by = [_normalize_merge_key_to_index(x, i, by) for i in range(len(x))]
     else:
         if len(by) != len(x):
             raise ValueError("'by' list should have the same length as 'x'.")
-        by = [_normalize_merge_key_for_index(x, i, b) for i, b in enumerate(by)]
+        by = [_normalize_merge_key_to_index(x, i, b) for i, b in enumerate(by)]
 
     if join == "left":
         all_keys = _get_merge_key(x, 0, by)
@@ -1620,25 +1620,26 @@ def merge(
             noop = (i == len(x) - 1)
 
         if not noop:
-            keep = match(all_keys, get_key(x, i, by))
-            has_missing = (m < 0).sum()
+            keep = ut.match(all_keys, _get_merge_key(x, i, by))
+            has_missing = (keep < 0).sum()
             if has_missing:
-                non_missing = len(m) - has_missing
+                non_missing = len(keep) - has_missing
                 reorg_keep = []
                 reorg_permute = []
-                for i, k in enumerate(m):
-                    if m < 0:
+                for k in keep:
+                    if k < 0:
                         reorg_permute.append(non_missing)
                     else:
                         reorg_permute.append(len(reorg_keep))
-                        reorg_keep.append(i)
+                        reorg_keep.append(k)
 
-        keep = []
+        survivor_columns = []
         for j, y in enumerate(df._column_names):
-            if by[i] == j:
+            on_key = by[i] == j
+            if on_key and i > 0: # skipping the key columns, except for the first.
                 continue
             val = df._data[y]
-            keep.append(j)
+            survivor_columns.append(j)
 
             if rename_duplicate_columns:
                 original = y
@@ -1652,7 +1653,9 @@ def merge(
             new_columns.append(y)
             if noop:
                 new_data[y] = val
-            elif not has_missing:
+            elif on_key:
+                new_data[y] = all_keys
+            elif has_missing == 0:
                 new_data[y] = ut.subset(val, keep)
             else:
                 retained = ut.subset(val, reorg_keep)
@@ -1660,9 +1663,9 @@ def merge(
                 new_data[y] = ut.subset(combined, reorg_permute)
 
         if df._mcols is not None:
-            raw_mcols.append(ut.subset_rows(df._mcols, keep))
+            raw_mcols.append(ut.subset_rows(df._mcols, survivor_columns))
         else:
-            raw_mcols.append(len(keep))
+            raw_mcols.append(len(survivor_columns))
 
     new_mcols = None
     if not all(isinstance(y, int) for y in raw_mcols):
@@ -1673,7 +1676,7 @@ def merge(
 
     output = type(x[0])(
         new_data,
-        column_names = new_column_names,
+        column_names = new_columns,
         number_of_rows = ut.get_height(all_keys),
         mcols = new_mcols,
         metadata = x[0]._metadata,
@@ -1681,7 +1684,5 @@ def merge(
 
     if by[0] is None:
         output.set_row_names(all_keys, in_place=True)
-    else:
-        output.set_column(x[0]._column_names[by[0]], all_keys, in_place=True)
 
     return output

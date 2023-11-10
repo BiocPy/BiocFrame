@@ -1,0 +1,103 @@
+from biocframe import BiocFrame, merge
+
+
+def test_merge_BiocFrame_simple():
+    obj1 = BiocFrame({
+        "A": [1,2,3,4],
+        "B": [3,4,5,6]
+    })
+    obj2 = BiocFrame({
+        "C": ["A", "B"],
+        "A": [2, 3],
+    })
+    obj3 = BiocFrame({
+        "D": [True, False, False],
+        "A": [-1, 0, 3],
+    })
+
+    combined = merge([obj1, obj2], by="A", join="left")
+    assert combined.get_column_names() == ["A", "B", "C"]
+    assert combined.column("A") == [1,2,3,4] 
+    assert combined.column("B") == [3,4,5,6]
+    assert combined.column("C") == [None,"A","B",None]
+
+    combined = merge([obj2, obj3], by="A", join="right")
+    assert combined.get_column_names() == ["C", "A", "D"]
+    assert combined.column("C") == [None, None, "B"] 
+    assert combined.column("A") == [-1, 0, 3]
+    assert combined.column("D") == [True, False, False]
+
+    combined = merge([obj2, obj1], by="A", join="inner")
+    assert combined.get_column_names() == ["C", "A", "B"]
+    assert combined.column("A") == [2,3] 
+    assert combined.column("B") == [4,5]
+    assert combined.column("C") == ["A","B"]
+
+    combined = merge([obj3, obj1], by="A", join="outer")
+    assert combined.get_column_names() == ["D", "A", "B"]
+    assert combined.column("D") == [True, False, False, None, None, None] 
+    assert combined.column("A") == [-1, 0, 3, 1, 2, 4]
+    assert combined.column("B") == [None, None, 5, 3, 4, 6]
+
+
+def test_merge_BiocFrame_row_names():
+    obj1 = BiocFrame(
+        { "B": [3,4,5,6] }, 
+        row_names=[1,2,3,4]
+    )
+    obj2 = BiocFrame(
+        { "C": ["A", "B"] },
+        row_names=[2, 3],
+    )
+    obj3 = BiocFrame({ 
+        "D": [True, False, False], 
+        "A": ["1", "0", "3"],
+    })
+
+    combined = merge([obj1, obj2], by=None, join="left")
+    assert combined.get_column_names() == ["B", "C"]
+    assert combined.get_row_names() == ['1','2','3','4']
+    assert combined.column("B") == [3,4,5,6]
+    assert combined.column("C") == [None,"A","B",None]
+
+    combined = merge([obj3, obj2], by=["A", None], join="inner")
+    assert combined.get_column_names() == ["D", "A", "C"]
+    assert combined.column("D") == [False]
+    assert combined.column("A") == ['3']
+    assert combined.column("C") == ["B"]
+
+    combined = merge([obj2, obj3], by=[None, "A"], join="outer")
+    assert combined.get_column_names() == ["C", "D"]
+    assert combined.get_row_names() == ['2','3','1','0']
+    assert combined.column("D") == [None, False, True, False]
+    assert combined.column("C") == ["A", "B", None, None]
+
+
+def test_merge_BiocFrame_duplicate_keys():
+    obj1 = BiocFrame(
+        { "B": [3,4,5,6] }, 
+        row_names=[1,1,2,3]
+    )
+    obj2 = BiocFrame(
+        { "C": ["A", "B"] },
+        row_names=[3,3],
+    )
+
+    combined = merge([obj1, obj2], by=None, join="left")
+    assert combined.get_column_names() == ["B", "C"]
+    assert combined.get_row_names() == ['1','1','2','3']
+    assert combined.column("B") == [3,4,5,6]
+    assert combined.column("C") == [None,None,None,"A"]
+
+    combined = merge([obj1, obj2], by=None, join="right")
+    assert combined.get_column_names() == ["B", "C"]
+    assert combined.get_row_names() == ['3','3']
+    assert combined.column("B") == [6,6]
+    assert combined.column("C") == ["A","B"]
+
+    # Intersects/unions will eventually just deduplicate, though.
+    combined = merge([obj1, obj2], by=None, join="outer")
+    assert combined.get_column_names() == ["B", "C"]
+    assert combined.get_row_names() == ['0','2','3']
+    assert combined.column("B") == [3,5,6]
+    assert combined.column("C") == [None,None,"A"]
