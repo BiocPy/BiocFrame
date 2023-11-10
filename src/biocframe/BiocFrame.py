@@ -2,11 +2,11 @@ from collections import OrderedDict
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from warnings import warn
 from copy import copy
-import numpy
 
 import biocutils as ut
 
 from .types import SlicerArgTypes, SlicerTypes
+from .relaxed_combine import relaxed_combine_rows
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -1074,18 +1074,7 @@ class BiocFrame:
             newly_added = len(output._column_names) - previous
             if newly_added:
                 extras = BiocFrame({}, number_of_rows=newly_added)
-                for mcol in output._mcols.get_column_names():
-                    mcolumn = output._mcols.column(mcol)
-                    if isinstance(mcolumn, numpy.ndarray):
-                        ex = numpy.ma.array(
-                            numpy.zeros(newly_added, dtype=mcolumn.dtype),
-                            mask=True,
-                        )
-                    else:
-                        ex = [None] * newly_added
-                    extras.set_column(mcol, ex, in_place=True)
-
-                output._mcols = ut.combine_rows(output._mcols, extras)
+                output._mcols = relaxed_combine_rows(output._mcols, extras)
 
         return output
 
