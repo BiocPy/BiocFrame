@@ -1445,7 +1445,7 @@ def _combine_cols_bframes(*x: BiocFrame):
             if n in all_data:
                 raise ValueError(
                     "All objects to combine must have different columns (duplicated '"
-                    + n 
+                    + n
                     + "')."
                 )
             all_data[n] = df._data[n]
@@ -1514,12 +1514,20 @@ def _assign_rows_BiocFrame(
 def _normalize_merge_key_to_index(x, i, by):
     if by is None:
         if x[i]._row_names is None:
-            raise ValueError("Row names required as key but are absent in object " + str(i) + ".")
+            raise ValueError(
+                "Row names required as key but are absent in object " + str(i) + "."
+            )
         return None
     elif isinstance(by, int):
         nc = x[i].shape[1]
         if by < -nc or by >= nc:
-            raise ValueError("Integer 'by' is out of range for object " + str(i) + " (" + str(nc) + " columns).")
+            raise ValueError(
+                "Integer 'by' is out of range for object "
+                + str(i)
+                + " ("
+                + str(nc)
+                + " columns)."
+            )
         if by < 0:
             return by + nc
         else:
@@ -1530,7 +1538,9 @@ def _normalize_merge_key_to_index(x, i, by):
             raise ValueError("No key column '" + b + "' in object " + str(i) + ".")
         return ib
     else:
-        raise TypeError("Unknown type '" + type(by).__name__ + "' for the 'by' argument.")
+        raise TypeError(
+            "Unknown type '" + type(by).__name__ + "' for the 'by' argument."
+        )
 
 
 def _get_merge_key(x, i, by):
@@ -1546,9 +1556,8 @@ def merge(
     join: Literal["inner", "left", "right", "outer"] = "left",
     rename_duplicate_columns: bool = False,
 ) -> "BiocFrame":
-    """
-    Merge multiple ``BiocFrame`` objects together by common columns or row names,
-    yielding a combined object with a union of columns across all objects.
+    """Merge multiple ``BiocFrame`` objects together by common columns or row names, yielding a combined object with a
+    union of columns across all objects.
 
     Args:
         x (Sequence[BiocFrame]):
@@ -1615,9 +1624,9 @@ def merge(
     for i, df in enumerate(x):
         noop = False
         if join == "left":
-            noop = (i == 0)
+            noop = i == 0
         elif join == "right":
-            noop = (i == len(x) - 1)
+            noop = i == len(x) - 1
 
         if not noop:
             keep = ut.match(all_keys, _get_merge_key(x, i, by))
@@ -1636,7 +1645,7 @@ def merge(
         survivor_columns = []
         for j, y in enumerate(df._column_names):
             on_key = by[i] == j
-            if on_key and i > 0: # skipping the key columns, except for the first.
+            if on_key and i > 0:  # skipping the key columns, except for the first.
                 continue
             val = df._data[y]
             survivor_columns.append(j)
@@ -1648,7 +1657,11 @@ def merge(
                     counter += 1
                     y = original + " (" + str(counter) + ")"
             elif y in new_data:
-                raise ValueError("Detected duplicate columns across objects to be merged ('" + y + "').")
+                raise ValueError(
+                    "Detected duplicate columns across objects to be merged ('"
+                    + y
+                    + "')."
+                )
 
             new_columns.append(y)
             if noop:
@@ -1676,10 +1689,10 @@ def merge(
 
     output = type(x[0])(
         new_data,
-        column_names = new_columns,
-        number_of_rows = ut.get_height(all_keys),
-        mcols = new_mcols,
-        metadata = x[0]._metadata,
+        column_names=new_columns,
+        number_of_rows=ut.get_height(all_keys),
+        mcols=new_mcols,
+        metadata=x[0]._metadata,
     )
 
     if by[0] is None:

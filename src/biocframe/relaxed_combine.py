@@ -1,5 +1,4 @@
 import biocutils as ut
-from typing import Sequence, Union, Literal
 import numpy
 
 
