@@ -1460,3 +1460,10 @@ def _show_as_cell_BiocFrame(x: BiocFrame, indices: Sequence[int]) -> List[str]:
         constructs[i] = ":".join(x)
 
     return constructs
+
+
+@ut.assign_rows.register(BiocFrame)
+def _assign_rows_BiocFrame(
+    x: BiocFrame, indices: Sequence[int], replacement: BiocFrame
+) -> BiocFrame:
+    return x.set_slice(indices, replacement.get_column_names(), replacement)
