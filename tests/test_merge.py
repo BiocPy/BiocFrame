@@ -102,18 +102,15 @@ def test_merge_BiocFrame_duplicate_keys():
 
 
 def test_merge_BiocFrame_duplicate_columns():
-    obj1 = BiocFrame({ 
-        "B": [3,4,5,6],
-        "A": [0,1,2,3]
-    })
+    obj1 = BiocFrame({"B": [3, 4, 5, 6], "A": [0, 1, 2, 3]})
 
     with pytest.raises(ValueError) as ex:
         merge([obj1, obj1], by="A")
-    assert str(ex.value).find("duplicate columns") 
+    assert str(ex.value).find("duplicate columns")
 
     combined = merge([obj1, obj1], by="A", rename_duplicate_columns=True)
     assert combined.get_column_names() == ["B", "A", "B (2)"]
-    assert combined.column("B (2)") == [3,4,5,6]
+    assert combined.column("B (2)") == [3, 4, 5, 6]
 
 
 def test_merge_BiocFrame_mcols():
