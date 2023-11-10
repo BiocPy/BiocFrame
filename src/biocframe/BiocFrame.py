@@ -1281,13 +1281,13 @@ class BiocFrame:
         """
         return self.shape
 
-    def combine(self, *other):
+    def combine_rows(self, *other):
         """Combine multiple BiocFrame objects by row.
 
-        Note: Fills missing columns with an array of `None`s.
-
         Args:
-            *other (BiocFrame): BiocFrame objects.
+            *other (BiocFrame): 
+                BiocFrame objects. Each object should have the same column names,
+                though not necessarily in the same order.
 
         Raises:
             TypeError: If all objects are not of type BiocFrame.
@@ -1298,63 +1298,41 @@ class BiocFrame:
         if not ut.is_list_of_type(other, BiocFrame):
             raise TypeError("All objects to combine must be BiocFrame objects.")
 
-        all_objects = [self] + list(other)
+        total_nrows = self.shape[0]
+        has_rownames = (self._row_names is not None)
+        for x in other:
+            total_nrows += x.shape[0]
+            if x._row_names is not None:
+                has_rownames = True
+            if x.shape[1] != self.shape[1]:
+                raise ValueError("All objects to combine must have the same number of columns (expected " + str(self.shape[1]) + ", got " + str(x.shape[1]) + ")")
 
-        all_columns = [x.column_names for x in all_objects]
-        all_unique_columns = list(
-            set([item for sublist in all_columns for item in sublist])
-        )
+        new_data = {}
+        for col in self._column_names:
+            current = [self._data[col]]
+            for x in other:
+                current.append(x.column(col))
+            new_data[col] = ut.combine(*current)
 
-        all_row_names = (
-            [""] * len(self) if self.row_names is None else self.row_names.copy()
-        )
-        all_num_rows = sum([len(x) for x in all_objects])
-        all_data = self.data.copy()
-
-        for ocol in all_unique_columns:
-            if ocol not in all_data:
-                all_data[ocol] = [None] * len(self)
-
-        for obj in other:
-            for ocol in all_unique_columns:
-                _tcol = None
-                if ocol not in obj.column_names:
-                    _tcol = [None] * len(obj)
-                else:
-                    _tcol = obj.column(ocol)
-
-                all_data[ocol] = ut.combine(all_data[ocol], _tcol)
-
-            rnames = obj.row_names
-            if rnames is None:
-                rnames = [""] * len(obj)
-
-            all_row_names.extend(rnames)
-
-        if (
-            all([x is None or len(x) == 0 for x in all_row_names])
-            or len(all_row_names) == 0
-        ):
-            all_row_names = None
-
-        combined_mcols = None
-        if self.mcols is not None:
-            combined_mcols = self.mcols
-            if len(all_unique_columns) > len(self.mcols):
-                combined_mcols = self.mcols.combine(
-                    BiocFrame(
-                        {}, number_of_rows=len(all_unique_columns) - len(self.mcols)
-                    )
-                )
+        new_rownames = None
+        if has_rownames:
+            new_rownames = self._row_names
+            if new_rownames is None:
+                new_rownames = [""] * self.shape[0]
+            for x in other:
+                other_names = x._row_names
+                if other_names is None:
+                    other_names = [""] * x.shape[0]
+                new_rownames += other_names
 
         current_class_const = type(self)
         return current_class_const(
-            all_data,
-            number_of_rows=all_num_rows,
-            row_names=all_row_names,
-            column_names=all_unique_columns,
+            new_data,
+            number_of_rows=total_nrows,
+            row_names=new_rownames,
+            column_names=self._column_names,
             metadata=self._metadata,
-            mcols=combined_mcols,
+            mcols=self._mcols,
         )
 
     def __deepcopy__(self, memo=None, _nil=[]):
