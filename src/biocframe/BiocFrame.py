@@ -1139,6 +1139,21 @@ class BiocFrame:
 
         return output
 
+    def combine(self, *other):
+        """
+        Combine multiple ``BiocFrame`` objects by row. This is just a wrapper
+        around the :py:meth:`~biocframe.relaxed_combine.relaxed_combine_rows`.
+
+        Args:
+            other:
+                The other ``BiocFrame`` objects to combine, possibly with
+                different columns.
+
+        Returns:
+            A combined ``BiocFrame`` object.
+        """
+        return relaxed_combine_rows([self] + other)
+
     def __len__(self) -> int:
         """Number of rows.
 
