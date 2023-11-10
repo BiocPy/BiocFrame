@@ -1281,60 +1281,6 @@ class BiocFrame:
         """
         return self.shape
 
-    def combine_rows(self, *other):
-        """Combine multiple BiocFrame objects by row.
-
-        Args:
-            *other (BiocFrame): 
-                BiocFrame objects. Each object should have the same column names,
-                though not necessarily in the same order.
-
-        Raises:
-            TypeError: If all objects are not of type BiocFrame.
-
-        Returns:
-            The same type as caller with the combined data.
-        """
-        if not ut.is_list_of_type(other, BiocFrame):
-            raise TypeError("All objects to combine must be BiocFrame objects.")
-
-        total_nrows = self.shape[0]
-        has_rownames = (self._row_names is not None)
-        for x in other:
-            total_nrows += x.shape[0]
-            if x._row_names is not None:
-                has_rownames = True
-            if x.shape[1] != self.shape[1]:
-                raise ValueError("All objects to combine must have the same number of columns (expected " + str(self.shape[1]) + ", got " + str(x.shape[1]) + ")")
-
-        new_data = {}
-        for col in self._column_names:
-            current = [self._data[col]]
-            for x in other:
-                current.append(x.column(col))
-            new_data[col] = ut.combine(*current)
-
-        new_rownames = None
-        if has_rownames:
-            new_rownames = self._row_names
-            if new_rownames is None:
-                new_rownames = [""] * self.shape[0]
-            for x in other:
-                other_names = x._row_names
-                if other_names is None:
-                    other_names = [""] * x.shape[0]
-                new_rownames += other_names
-
-        current_class_const = type(self)
-        return current_class_const(
-            new_data,
-            number_of_rows=total_nrows,
-            row_names=new_rownames,
-            column_names=self._column_names,
-            metadata=self._metadata,
-            mcols=self._mcols,
-        )
-
     def __deepcopy__(self, memo=None, _nil=[]):
         """Make a deep copy of the object.
 
@@ -1403,7 +1349,47 @@ class BiocFrame:
 
 @ut.combine_rows.register(BiocFrame)
 def _combine_rows_bframes(*x: BiocFrame):
-    return x[0].combine(*x[1:])
+    if not ut.is_list_of_type(x, BiocFrame):
+        raise TypeError("All objects to combine must be BiocFrame objects.")
+
+    first = x[0]
+    total_nrows = 0
+    first_nc = first.shape[1]
+    has_rownames = False
+    for df in x:
+        total_nrows += df.shape[0]
+        if df._row_names is not None:
+            has_rownames = True
+        if df.shape[1] != first_nc:
+            raise ValueError("All objects to combine must have the same number of columns (expected " + str(first_nr) + ", got " + str(x.shape[1]) + ").")
+
+    new_data = {}
+    for i, col in enumerate(x[0]._column_names):
+        current = []
+        for df in x:
+            if not df.has_column(col):
+                raise ValueError("All objects to combine must have the same columns (missing '" + col + "' in object " + str(i) + ").")
+            current.append(df.column(col))
+        new_data[col] = ut.combine(*current)
+
+    new_rownames = None
+    if has_rownames:
+        new_rownames = []
+        for df in x:
+            other_names = df._row_names
+            if other_names is None:
+                other_names = [""] * df.shape[0]
+            new_rownames += other_names
+
+    current_class_const = type(first)
+    return current_class_const(
+        new_data,
+        number_of_rows=total_nrows,
+        row_names=new_rownames,
+        column_names=first._column_names,
+        metadata=first._metadata,
+        mcols=first._mcols,
+    )
 
 
 @ut.combine_columns.register(BiocFrame)
