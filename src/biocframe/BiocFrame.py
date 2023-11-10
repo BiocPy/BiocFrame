@@ -1366,9 +1366,9 @@ def _combine_rows_bframes(*x: BiocFrame):
         if df.shape[1] != first_nc:
             raise ValueError(
                 "All objects to combine must have the same number of columns (expected "
-                + str(first_nr)
+                + str(first_nc)
                 + ", got "
-                + str(x.shape[1])
+                + str(df.shape[1])
                 + ")."
             )
 
@@ -1409,8 +1409,57 @@ def _combine_rows_bframes(*x: BiocFrame):
 
 @ut.combine_columns.register(BiocFrame)
 def _combine_cols_bframes(*x: BiocFrame):
-    raise NotImplementedError(
-        "`combine_cols` is not implemented for `BiocFrame` objects."
+    if not ut.is_list_of_type(x, BiocFrame):
+        raise TypeError("All objects to combine must be BiocFrame objects.")
+
+    first = x[0]
+    first_nr = first.shape[0]
+    all_column_names = ut.StringList()
+    all_data = {}
+    all_mcols = []
+    for df in x:
+        if df.shape[0] != first_nr:
+            raise ValueError(
+                "All objects to combine must have the same number of rows (expected "
+                + str(first_nr)
+                + ", got "
+                + str(df.shape[0])
+                + ")."
+            )
+
+        all_column_names += df._column_names
+        all_mcols.append(df._mcols)
+        for n in df._column_names:
+            if n in all_data:
+                raise ValueError(
+                    "All objects to combine must have different columns (duplicated '"
+                    + n 
+                    + "')."
+                )
+            all_data[n] = df._data[n]
+
+    combined_mcols = None
+    print(all_mcols)
+    if not all(y is None for y in all_mcols):
+        for i, val in enumerate(all_mcols):
+            if val is None:
+                all_mcols[i] = BiocFrame({}, number_of_rows=x[i].shape[0])
+        try:
+            combined_mcols = ut.combine_rows(*all_mcols)
+        except Exception as ex:
+            raise ValueError(
+                "Failed to combine 'mcols' when combining 'BiocFrame' objects by column. "
+                + str(ex)
+            )
+
+    current_class_const = type(first)
+    return current_class_const(
+        all_data,
+        number_of_rows=first_nr,
+        row_names=first._row_names,
+        column_names=all_column_names,
+        metadata=first._metadata,
+        mcols=combined_mcols,
     )
 
 
