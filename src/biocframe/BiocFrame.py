@@ -5,8 +5,6 @@ from copy import copy
 import biocutils as ut
 import numpy
 
-from .types import SlicerArgTypes, SlicerTypes
-
 __author__ = "jkanche"
 __copyright__ = "jkanche"
 __license__ = "MIT"
@@ -610,48 +608,46 @@ class BiocFrame:
         """
         return name in self.column_names
 
-    def get_column(self, index_or_name: Union[str, int]) -> Any:
+    def get_column(self, column: Union[str, int]) -> Any:
         """Access a column by index or column label.
 
         Args:
-            index_or_name (Union[str, int]): Name of the column, which must a valid name in
+            column (Union[str, int]): Name of the column, which must a valid name in
                 :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
                 Alternatively, you may provide the integer index of the column to access.
 
         Raises:
             ValueError:
-                If ``index_or_name`` is not in column names.
+                If ``column`` is not in column names.
                 If the integer index is greater than the number of columns.
             TypeError:
-                If ``index_or_name`` is neither a string nor an integer.
+                If ``column`` is neither a string nor an integer.
 
         Returns:
             Any: Column with its original type preserved.
         """
+        if isinstance(column, int):
+            column = self._column_names[column]
+        elif not isinstance(column, str):
+            raise TypeError("`column` must be either an integer index or column name.")
+        return self._data[column]
 
-        if not isinstance(index_or_name, (int, str)):
-            raise TypeError(
-                "`index_or_name` must be either an integer index or column name."
-            )
-
-        return self[None, index_or_name]
-
-    def column(self, index_or_name: Union[str, int]) -> Any:
+    def column(self, column: Union[str, int]) -> Any:
         """Access a column by index or column label. Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_column`.
 
         Args:
-            index_or_name (Union[str, int]): Name of the column, which must a valid name in
+            column (Union[str, int]): Name of the column, which must a valid name in
                 :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
 
                 Alternatively, you may provide the integer index of the column to access.
 
         Raises:
             ValueError:
-                If ``index_or_name`` is not in column names.
+                If ``column`` is not in column names.
                 If the integer index is greater than the number of columns.
             TypeError:
-                If ``index_or_name`` is neither a string nor an integer.
+                If ``column`` is neither a string nor an integer.
 
         Returns:
             Any: Column with its original type preserved.
@@ -662,50 +658,56 @@ class BiocFrame:
             DeprecationWarning,
         )
 
-        return self.get_column(index_or_name)
+        return self.get_column(column)
 
-    def get_row(self, index_or_name: Union[str, int]) -> dict:
-        """Access a row by index or row name.Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_row`.
+    def get_row(self, row: Union[str, int]) -> dict:
+        """Access a row by index or row name.
 
         Args:
-            index_or_name (Union[str, int]): Integer index of the row to access.
+            row (Union[str, int]): Integer index of the row to access.
 
                 Alternatively, you may provide a string specifying the row to access,
                 only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are available.
 
         Raises:
             ValueError:
-                If ``index_or_name`` is not in row names.
+                If ``row`` is not in row names.
                 If the integer index is greater than the number of rows.
             TypeError:
-                If ``index_or_name`` is neither a string nor an integer.
+                If ``row`` is neither a string nor an integer.
 
         Returns:
             dict: A dictionary with keys as column names and their values.
         """
+        if isinstance(row, str):
+            if self._row_names is None:
+                raise ValueError("No row names present to find row '" + row + "'.")
+            row = self._row_names.index(row)
+            if row < 0:
+                raise ValueError("Could not find row '" + row + "'.")
+        elif not isinstance(row, int):
+            raise TypeError("`row` must be either an integer index or row name.")
 
-        if not isinstance(index_or_name, (int, str)):
-            raise TypeError(
-                "`index_or_name` must be either an integer index or row name."
-            )
+        collected = {}
+        for col in self._column_names:
+            collected[col] = self._data[col][row]
+        return collected
 
-        return self[index_or_name, None]
-
-    def row(self, index_or_name: Union[str, int]) -> dict:
-        """Access a row by index or row name.
+    def row(self, row: Union[str, int]) -> dict:
+        """Access a row by index or row name. Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_row`.
 
         Args:
-            index_or_name (Union[str, int]): Integer index of the row to access.
+            row (Union[str, int]): Integer index of the row to access.
 
                 Alternatively, you may provide a string specifying the row to access,
                 only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are available.
 
         Raises:
             ValueError:
-                If ``index_or_name`` is not in row names.
+                If ``row`` is not in row names.
                 If the integer index is greater than the number of rows.
             TypeError:
-                If ``index_or_name`` is neither a string nor an integer.
+                If ``row`` is neither a string nor an integer.
 
         Returns:
             dict: A dictionary with keys as column names and their values.
@@ -716,53 +718,59 @@ class BiocFrame:
             DeprecationWarning,
         )
 
-        return self.get_row(index_or_name)
+        return self.get_row(row)
 
-    def slice(
+    def get_slice(
         self,
-        row_indices_or_names: Optional[SlicerTypes] = None,
-        column_indices_or_names: Optional[SlicerTypes] = None,
-    ) -> Union["BiocFrame", dict, list]:
-        """Slice ``BiocFrame`` by index or values.
+        rows: Union[str, int, bool, Sequence],
+        columns: Union[str, int, bool, Sequence],
+    ) -> Union["BiocFrame", dict, Any]:
+        """Slice ``BiocFrame`` along the rows and/or columns, based on their indices or names.
 
         Args:
-            row_indices_or_names (SlicerTypes, optional): Row indices (index positions)
-                or row names (string) to slice.
+            rows:
+                Rows to be extracted. This may be an integer, boolean, string,
+                or any sequence thereof, as supported by
+                :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
 
-                Object must contain :py:attr:`biocframe.BiocFrame.BiocFrame.row_names` to slice by names.
-                Defaults to None.
-
-            column_indices_or_names (SlicerTypes, optional): Column indices (index positions)
-                or column names (string) to slice. Defaults to None.
+            columns:
+                Columns to be extracted. This may be an integer, boolean,
+                string, or any sequence thereof, as supported by
+                :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
 
         Returns:
-            Union["BiocFrame", dict, list]:
-                - If a single row is sliced, returns a :py:class:`dict`.
-                - If a single column is sliced, returns the same type of the column.
-                - For all other scenarios, returns the same type as the caller with the subsetted rows and columns.
-        """
-        new_data = {}
-        new_row_names = self._row_names
-        new_column_names = self._column_names
-        is_row_scalar = False
-        is_col_scalar = False
+            If both ``rows`` and ``columns`` are sequences, a ``BiocFrame``
+            is returned with the specified rows and columns.
 
-        # slice the columns and data
-        if column_indices_or_names is not None:
+            If only ``rows`` is a sequence, the contents of the specified
+            column sliced to the specified rows and returned.
+
+            If only ``columns`` is a sequence, a dictionary is returned
+            containing the entries of all specified columns at the specified
+            row.
+
+            If neither are sequences, the entry of the specified column
+            at the specified row is returned.
+        """
+        new_column_names = self._column_names
+        is_col_scalar = False
+        if columns != slice(None):
             new_column_indices, is_col_scalar = ut.normalize_subscript(
-                column_indices_or_names, len(new_column_names), new_column_names
+                columns, len(new_column_names), new_column_names
             )
             new_column_names = ut.subset_sequence(new_column_names, new_column_indices)
 
+        new_data = {}
         for col in new_column_names:
             new_data[col] = self._data[col]
 
-        # slice the rows of the data
+        new_row_names = self._row_names
+        is_row_scalar = False
         new_number_of_rows = self.shape[0]
-        if row_indices_or_names is not None:
+        if rows != slice(None):
             new_row_names = self.row_names
             new_row_indices, is_row_scalar = ut.normalize_subscript(
-                row_indices_or_names, self.shape[0], new_row_names
+                rows, self.shape[0], new_row_names
             )
 
             new_number_of_rows = len(new_row_indices)
@@ -771,18 +779,20 @@ class BiocFrame:
             if new_row_names is not None:
                 new_row_names = ut.subset_sequence(new_row_names, new_row_indices)
 
-        if is_row_scalar is True:
+        if is_row_scalar:
+            if is_col_scalar:
+                return new_data[new_column_names[0]][0]
             rdata = {}
             for col in new_column_names:
                 rdata[col] = new_data[col][0]
             return rdata
-        elif is_col_scalar is True:
+        elif is_col_scalar:
             return new_data[new_column_names[0]]
 
         mcols = self._mcols
         if mcols is not None:
-            if column_indices_or_names is not None:
-                mcols = mcols.slice(new_column_indices, None)
+            if columns != slice(None):
+                mcols = mcols.slice(new_column_indices, slice(None))
 
         current_class_const = type(self)
         return current_class_const(
@@ -795,17 +805,18 @@ class BiocFrame:
             validate=False,
         )
 
-    def __getitem__(
-        self,
-        args: SlicerArgTypes,
-    ) -> Union["BiocFrame", dict, list]:
-        """Subset the data frame.
+    def slice(self, rows: Sequence, columns: Sequence) -> "BiocFrame":
+        """Alias for :py:attr:`~__getitem__`, for back-compatibility."""
+        if rows is None:
+            rows = slice(None)
+        if columns is None:
+            columns = slice(None)
+        return self.__getitem__((rows, columns))
 
-        This operation returns a new object with the same type as the caller.
-        If you need to access specific rows or columns, use the
-        :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or
-        :py:meth:`~biocframe.BiocFrame.BiocFrame.column`
-        methods.
+    def __getitem__(
+        self, args: Union[int, str, Sequence, tuple]
+    ) -> Union["BiocFrame", Any]:
+        """Wrapper around :py:attr:`~get_slice` to obtain a slice of a ``BiocFrame`` or any of its columns.
 
         Usage:
 
@@ -830,82 +841,48 @@ class BiocFrame:
             bframe[<List of column names>]
 
         Args:
-            args (SlicerArgTypes): A Tuple of slicer arguments to subset rows and
-                columns. An element in ``args`` may be,
+            args:
+                A sequence or a scalar integer or string, specifying the
+                columns to retain based on their names or indices.
 
-                - List of booleans, True to keep the row/column, False to remove.
-                    The length of the boolean vector must be the same as the number of rows/columns.
+                Alternatively a tuple of length 1. The first entry specifies
+                the rows to retain based on their names or indices.
 
-                - List of integer positions along rows/columns to keep.
-
-                - A :py:class:`slice` object specifying the list of indices to keep.
-
-                - A list of index names to keep. For rows, the object must contain unique
-                    :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names`, and for columns must
-                    contain unique :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
-
-                - An integer to subset either a single row or column index.
-                    Alternatively, you might want to use
-                    :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or
-                    :py:meth:`~biocframe.BiocFrame.BiocFrame.column` methods.
-
-                - A string to subset either a single row or column by label.
-                    Alternatively, you might want to use
-                    :py:meth:`~biocframe.BiocFrame.BiocFrame.row` or
-                    :py:meth:`~biocframe.BiocFrame.BiocFrame.column` methods.
-
-        Raises:
-            ValueError: If too many slices are provided.
-            TypeError: If the provided ``args`` are not of the expected type.
+                Alternatively a tuple of length 2. The first entry specifies
+                the rows to retain, while the second entry specifies the
+                columns to retain, based on their names or indices.
 
         Returns:
-            Union["BiocFrame", dict, list]:
-            - If a single row is sliced, returns a :py:class:`dict`.
-            - If a single column is sliced, returns returns the same type of the column.
-            - For all other scenarios, returns the same type as the caller with the subsetted rows and columns.
+            If ``args`` is a scalar, the specified column is returned. This is
+            achieved by calling :py:attr:`~get_column`.
+
+            If ``args`` is a sequence, a new ``BiocFrame`` is returned
+            containing only the specified columns. This is achieved by just
+            calling :py:attr:`~get_slice` with no row slicing.
+
+            If ``args`` is a tuple of length 1, a new ``BiocFrame`` is returned
+            containing the specified rows. This is achieved by just calling
+            :py:attr:`~get_slice` with no column slicing.
+
+            If ``args`` is a tuple of length 2, a new ``BiocFrame`` is returned
+            containing the specified rows and columns. This is achieved by just
+            calling :py:attr:`~get_slice` with the specified arguments.
         """
+        if isinstance(args, (str, int)):
+            return self.get_column(args)
 
-        # not an array, single str, slice by column
-        if isinstance(args, str):
-            return self.slice(None, args)
-
-        if isinstance(args, int):
-            return self.slice(args, None)
-
-        # not an array, a slice
-        if isinstance(args, slice):
-            return self.slice(args, None)
-
-        if isinstance(args, list):
-            # column names if everything is a string
-            if ut.is_list_of_type(args, str):
-                return self.slice(None, args)
-            elif ut.is_list_of_type(args, int):
-                return self.slice(args, None)
-            else:
-                raise TypeError(
-                    "Arguments not supported! Since slice is a list, must contain either list of column "
-                    "names or indices."
-                )
-
-        # tuple
         if isinstance(args, tuple):
             if len(args) == 0:
-                raise ValueError("Arguments must specify atleast a single slice!")
+                raise ValueError("At least one slicing argument must be provided.")
 
             if len(args) == 1:
-                return self.slice(args[0], None)
+                return self.get_slice(args[0], slice(None))
             elif len(args) == 2:
-                return self.slice(
-                    args[0],
-                    args[1],
-                )
+                return self.get_slice(args[0], args[1])
             else:
-                raise ValueError(
-                    "Number of slices more than 2. `BiocFrame` only supports 2-dimensional slicing."
-                )
+                raise ValueError("`BiocFrame` only supports 2-dimensional slicing.")
 
-        raise TypeError("Provided slice arguments are not supported!")
+        return self.get_slice(slice(None), args)
 
     def __setitem__(self, args, value):
         """If ``args`` is a string, it is assumed to be a column name and ``value`` is expected to be the column
@@ -929,20 +906,26 @@ class BiocFrame:
             self.set_column(args, value, in_place=True)
 
     def set_slice(
-        self, rows, columns, value: "BiocFrame", in_place: bool = True
+        self,
+        rows: Sequence,
+        columns: Sequence,
+        value: "BiocFrame",
+        in_place: bool = True,
     ) -> "BiocFrame":
         """Replace a slice of the ``BiocFrame`` given the row and columns of the slice.
 
         Args:
             rows:
-                Rows to be replaced. This may be anything supported by
+                Rows to be replaced. This may be any sequence of strings,
+                integers, or booleans (or mixture thereof), as supported by
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
 
             columns:
-                Columns to be replaced. This may be anything supported by
+                Columns to be replaced. This may be any sequence of strings,
+                integers, or booleans (or mixture thereof), as supported by
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
 
-            value (BiocFrame):
+            value:
                 A ``BiocFrame`` containing replacement values. Each row
                 corresponds to a row in ``rows``, while each column corresponds
                 to a column in ``columns``. Note that the replacement is based
