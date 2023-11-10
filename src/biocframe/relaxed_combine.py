@@ -3,12 +3,9 @@ import numpy
 
 
 def relaxed_combine_rows(*x: "BiocFrame") -> "BiocFrame":
-    """
-    A relaxed version of the :py:meth:`~biocutils.combine_rows.combine_rows`
-    method for ``BiocFrame`` objects. Whereas ``combine_rows`` expects that all
-    objects have the same columns, ``relaxed_combine_rows`` allows for
-    different columns. Absent columns in any object are filled in with
-    appropriate placeholder values before combining.
+    """A relaxed version of the :py:meth:`~biocutils.combine_rows.combine_rows` method for ``BiocFrame`` objects.
+    Whereas ``combine_rows`` expects that all objects have the same columns, ``relaxed_combine_rows`` allows for
+    different columns. Absent columns in any object are filled in with appropriate placeholder values before combining.
 
     Args:
         x:
