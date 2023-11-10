@@ -370,14 +370,10 @@ def test_bframe_unary_slice():
     assert len(unary_row) == 1
 
     unary_row = bframe[1, :]
-    assert unary_row is not None
-    assert isinstance(unary_row, dict)
-    assert len(unary_row.keys()) == 3
+    assert unary_row.shape == (1, 3)
 
     unary_col = bframe[[True, False, True], 2]
-    assert unary_col is not None
-    assert isinstance(unary_col, list)
-    assert len(unary_col) == 2
+    assert unary_col.shape == (2, 1)
 
 
 def test_bframe_remove_column():
