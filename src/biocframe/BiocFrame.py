@@ -899,76 +899,75 @@ class BiocFrame:
 
         raise TypeError("Provided slice arguments are not supported!")
 
-    def __setitem__(self, args, value: Union[List, "BiocFrame"]):
-        """Add or re-assign a value to a column (in-place operation).
+    def __setitem__(self, args, value):
+        """If ``args`` is a string, it is assumed to be a column name and ``value`` is expected to be the column
+        contents; these are passed onto :py:attr:`~set_column` with `in_place = True`.
 
-        Usage:
+        If ``args`` is a tuple, it is assumed to contain row and column indices.
+        ``value`` is expected to be a ``BiocFrame`` containing replacement values.
+        These are passed to :py:attr:`~set_slice` with `in_place = True`.
+        """
+        if isinstance(args, tuple):
+            warn(
+                "This method performs an in-place operation, use 'set_slice' instead",
+                UserWarning,
+            )
+            self.set_slice(args[0], args[1], value, in_place=True)
+        else:
+            warn(
+                "This method performs an in-place operation, use 'set_column' instead",
+                UserWarning,
+            )
+            self.set_column(args, value, in_place=True)
 
-        .. code-block:: python
-
-            # Made-up chromosome locations and ensembl ids.
-            obj = {
-                "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
-                "symbol": ["MAP1A", "BIN1", "ESR1"],
-                "ranges": BiocFrame({
-                    "chr": ["chr1", "chr2", "chr3"],
-                    "start": [1000, 1100, 5000],
-                    "end": [1100, 4000, 5500]
-                }),
-            }
-            bframe = BiocFrame(obj)
-
-            bframe["symbol"] = ["gene_a", "gene_b", "gene_c"]
+    def set_slice(
+        self, rows, columns, value: "BiocFrame", in_place: bool = True
+    ) -> "BiocFrame":
+        """Replace a slice of the ``BiocFrame`` given the row and columns of the slice.
 
         Args:
-            args (str): Name of the column.
-            value (List): New value to set.
+            rows:
+                Rows to be replaced. This may be anything supported by
+                :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
+
+            columns:
+                Columns to be replaced. This may be anything supported by
+                :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
+
+            value (BiocFrame):
+                A ``BiocFrame`` containing replacement values. Each row
+                corresponds to a row in ``rows``, while each column corresponds
+                to a column in ``columns``. Note that the replacement is based
+                on position, so row and column names in ``value`` are ignored.
 
         Raises:
             ValueError: If the length of ``value`` does not match the number of rows.
         """
-        warn(
-            "This method perform an in-place operation, use 'set_column' instead",
-            UserWarning,
+        output = self._define_output(in_place)
+        if not in_place:
+            output._data = copy(output._data)
+
+        row_idx, scalar = ut.normalize_subscript(
+            rows, output.shape[0], names=output._row_names
         )
+        if scalar:
+            raise TypeError("Row indices should be a sequence.")
 
-        if isinstance(args, tuple):
-            rows, cols = args
+        col_idx, scalar = ut.normalize_subscript(
+            columns, output.shape[1], names=output._column_names
+        )
+        if scalar:
+            raise TypeError("Column indices should be a sequence.")
 
-            row_idx, scalar = ut.normalize_subscript(
-                rows, self.shape[0], names=self._row_names
+        for i, x in enumerate(col_idx):
+            nm = output._column_names[x]
+            output._data[nm] = ut.assign(
+                output._data[nm],
+                row_idx,
+                replacement=value._data[value._column_names[i]],
             )
-            if scalar:
-                raise TypeError("row indices should be a sequence or slice")
 
-            col_idx, scalar = ut.normalize_subscript(
-                cols, self.shape[1], names=self._column_names
-            )
-            if scalar:
-                current = self._data[self._column_names[col_idx[0]]]
-                for j, k in enumerate(row_idx):
-                    current[k] = value[j]
-            else:
-                for i in col_idx:
-                    nm = self._column_names[i]
-                    current = self._data[nm]
-                    replacement = value._data[nm]
-                    for j, k in enumerate(row_idx):
-                        current[k] = replacement[j]
-        else:
-            if len(value) != self.shape[0]:
-                raise ValueError(
-                    "Length of `value`, does not match the number of the rows,"
-                    f"need to be {self.shape[0]} but provided {len(value)}."
-                )
-
-            if args not in self.column_names:
-                self._column_names.append(args)
-
-                if self._mcols is not None:
-                    self._mcols = self._mcols.combine(BiocFrame({}, number_of_rows=1))
-
-            self._data[args] = value
+        return output
 
     def __delitem__(self, name: str):
         """Remove a column (in-place operation).
@@ -1074,29 +1073,19 @@ class BiocFrame:
         if output._mcols is not None:
             newly_added = len(output._column_names) - previous
             if newly_added:
-                mcols = output._mcols._define_output(in_place)
-                if not in_place:
-                    mcols._data = copy(mcols._data)
-
-                for mcol in mcols.get_column_names():
-                    mcolumn = mcols.column(mcol)
+                extras = BiocFrame({}, number_of_rows=newly_added)
+                for mcol in output._mcols.get_column_names():
+                    mcolumn = output._mcols.column(mcol)
                     if isinstance(mcolumn, numpy.ndarray):
-                        if not numpy.ma.is_masked(mcolumn):
-                            mcolumn = numpy.ma.array(mcolumn, mask=False)
-                        mcolumn = numpy.ma.concatenate(
-                            [
-                                mcolumn,
-                                numpy.ma.array(
-                                    numpy.zeros(newly_added, dtype=mcolumn.dtype),
-                                    mask=True,
-                                ),
-                            ]
+                        ex = numpy.ma.array(
+                            numpy.zeros(newly_added, dtype=mcolumn.dtype),
+                            mask=True,
                         )
                     else:
-                        mcolumn = ut.combine_sequences(mcolumn, [None] * newly_added)
-                    mcols._data[mcol] = mcolumn
+                        ex = [None] * newly_added
+                    extras.set_column(mcol, ex, in_place=True)
 
-                output._mcols = mcols
+                output._mcols = ut.combine_rows(output._mcols, extras)
 
         return output
 

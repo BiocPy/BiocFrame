@@ -181,23 +181,34 @@ def test_bframe_setters_with_rows():
     }
 
     bframe = BiocFrame(obj)
-    bframe[1:3, "column1"] = [20, 30]
-    assert bframe.column("column1") == [1, 20, 30, 4, 5]
+    bframe2 = bframe.set_slice(slice(1, 3), ["column1"], BiocFrame({"whee": [20, 30]}))
+    assert bframe2.column("column1") == [1, 20, 30, 4, 5]
 
     bframe = BiocFrame(obj)
-    bframe[1:3, ["column1", "column2"]] = BiocFrame(
-        {"column1": [20, 30], "column2": ["E", "F"]}
+    bframe2 = bframe.set_slice(
+        slice(1, 3),
+        ["column1", "column2"],
+        BiocFrame({"column1": [20, 30], "column2": ["E", "F"]}),
     )
-    assert bframe.column("column1") == [1, 20, 30, 4, 5]
-    assert bframe.column("column2") == ["b", "E", "F", "a", "c"]
+    assert bframe2.column("column1") == [1, 20, 30, 4, 5]
+    assert bframe2.column("column2") == ["b", "E", "F", "a", "c"]
 
-    # Works even when columns are out of order.
     bframe = BiocFrame(obj)
-    bframe[1:3, ["column2", "column1"]] = BiocFrame(
-        {"column1": [20, 30], "column2": ["E", "F"]}
+    bframe2 = bframe.set_slice(
+        slice(1, 3), [1, 0], BiocFrame({"column1": [20, 30], "column2": ["E", "F"]})
     )
-    assert bframe.column("column1") == [1, 20, 30, 4, 5]
-    assert bframe.column("column2") == ["b", "E", "F", "a", "c"]
+    assert bframe2.column("column1") == [1, "E", "F", 4, 5]
+    assert bframe2.column("column2") == ["b", 20, 30, "a", "c"]
+
+    # Respects a custom ordering.
+    bframe = BiocFrame(obj)
+    bframe2 = bframe.set_slice(
+        slice(1, 3),
+        ["column2", "column1"],
+        BiocFrame({"column1": [20, 30], "column2": ["E", "F"]}),
+    )
+    assert bframe2.column("column1") == [1, "E", "F", 4, 5]
+    assert bframe2.column("column2") == ["b", 20, 30, "a", "c"]
 
 
 def test_bframe_setters_should_fail():
