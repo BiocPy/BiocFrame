@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union, Literal
 from warnings import warn
 from copy import copy
 import biocutils as ut
+import numpy
 
 from .types import SlicerArgTypes, SlicerTypes
 
