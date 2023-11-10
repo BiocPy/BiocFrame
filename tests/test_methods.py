@@ -210,6 +210,11 @@ def test_bframe_setters_with_rows():
     assert bframe2.column("column1") == [1, "E", "F", 4, 5]
     assert bframe2.column("column2") == ["b", 20, 30, "a", "c"]
 
+    # Works with assign_rows.
+    bframe = ut.assign_rows(BiocFrame(obj), slice(1, 3), BiocFrame({"column2": [20, 30], "column1": ["E", "F"]}))
+    assert bframe2.column("column1") == [1, "E", "F", 4, 5]
+    assert bframe2.column("column2") == ["b", 20, 30, "a", "c"]
+
 
 def test_bframe_setters_should_fail():
     obj = {
