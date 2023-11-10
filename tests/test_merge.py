@@ -98,6 +98,56 @@ def test_merge_BiocFrame_duplicate_keys():
     # Intersects/unions will eventually just deduplicate, though.
     combined = merge([obj1, obj2], by=None, join="outer")
     assert combined.get_column_names() == ["B", "C"]
-    assert combined.get_row_names() == ['0','2','3']
+    assert combined.get_row_names() == ['1','2','3']
     assert combined.column("B") == [3,5,6]
     assert combined.column("C") == [None,None,"A"]
+
+
+def test_merge_BiocFrame_mcols():
+    # A simple case.
+    obj1 = BiocFrame(
+        { "B": [3,4,5,6] }, 
+        row_names=[1,2,3,4]
+    )
+    obj2 = BiocFrame(
+        { "C": ["A", "B"] },
+        row_names=[1,3],
+    )
+
+    combined = merge([obj1, obj2], by=None, join="left")
+    assert combined.get_mcols() is None
+
+    obj1.set_mcols(BiocFrame({ "foo": [True] }), in_place=True)
+    combined = merge([obj1, obj2], by=None, join="left")
+    comcol = combined.get_mcols()
+    assert combined.get_column_names() == ["B", "C"]
+    assert comcol.column("foo") == [True, None]
+
+    obj2.set_mcols(BiocFrame({ "foo": [False] }), in_place=True)
+    combined = merge([obj1, obj2], by=None, join="left")
+    comcol = combined.get_mcols()
+    assert comcol.column("foo") == [True, False]
+
+    # Now a more complicated case.
+    obj1 = BiocFrame({
+        "B": [3,4,5,6],
+        "A": [1,0,2,3],
+    })
+    obj2 = BiocFrame({ 
+        "A": [0, 3],
+        "C": ["A", "B"],
+    })
+
+    combined = merge([obj1, obj2], by="A", join="left")
+    assert combined.get_mcols() is None
+
+    obj1.set_mcols(BiocFrame({ "foo": [True, False] }), in_place=True)
+    combined = merge([obj1, obj2], by="A", join="left")
+    comcol = combined.get_mcols()
+    assert combined.get_column_names() == ["B", "A", "C"]
+    assert comcol.column("foo") == [True, False, None]
+
+    obj2.set_mcols(BiocFrame({ "foo": ["WHEE", False] }), in_place=True)
+    combined = merge([obj1, obj2], by="A", join="left")
+    comcol = combined.get_mcols()
+    assert comcol.column("foo") == [True, False, False]

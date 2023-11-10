@@ -1672,7 +1672,7 @@ def merge(
         for i, val in enumerate(raw_mcols):
             if isinstance(val, int):
                 raw_mcols[i] = BiocFrame({}, number_of_rows=val)
-        new_mcols = flexible_combine_rows(*raw_mcols)
+        new_mcols = relaxed_combine_rows(*raw_mcols)
 
     output = type(x[0])(
         new_data,
