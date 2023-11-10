@@ -1596,7 +1596,7 @@ def merge(
         None``, otherwise they are stored in the column named ``by[0]``.
     """
     if not ut.is_list_of_type(x, BiocFrame):
-        raise TypeError("All objects to combine must be BiocFrame objects.")
+        raise TypeError("All objects to merge must be BiocFrame objects.")
 
     if by is None or isinstance(by, str) or isinstance(by, int):
         by = [_normalize_merge_key_to_index(x, i, by) for i in range(len(x))]
@@ -1699,3 +1699,14 @@ def merge(
         output.set_row_names(all_keys, in_place=True)
 
     return output
+
+
+############################
+
+
+def relaxed_combine_columns(*x: BiocFrame) -> BiocFrame:
+    """
+    Wrapper around :py:meth:`~biocframe.BiocFrame.merge` that
+    performs a left join on the row names.
+    """
+    return merge(x, join="left", by=None)
