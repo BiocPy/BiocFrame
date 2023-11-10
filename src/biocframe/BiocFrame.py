@@ -630,9 +630,7 @@ class BiocFrame:
         if isinstance(column, int):
             column = self._column_names[column]
         elif not isinstance(column, str):
-            raise TypeError(
-                "`column` must be either an integer index or column name."
-            )
+            raise TypeError("`column` must be either an integer index or column name.")
         return self._data[column]
 
     def column(self, column: Union[str, int]) -> Any:
@@ -687,10 +685,8 @@ class BiocFrame:
             row = self._row_names.index(row)
             if row < 0:
                 raise ValueError("Could not find row '" + row + "'.")
-        elif not isinstance(row, int): 
-            raise TypeError(
-                "`row` must be either an integer index or row name."
-            )
+        elif not isinstance(row, int):
+            raise TypeError("`row` must be either an integer index or row name.")
 
         collected = {}
         for col in self._column_names:
@@ -724,8 +720,12 @@ class BiocFrame:
 
         return self.get_row(row)
 
-    def get_slice(self, rows: Union[str, int, bool, Sequence], columns: Union[str, int, bool, Sequence]) -> Union["BiocFrame", dict, Any]:
-        """Slice ``BiocFrame`` along the rows and/or columns, based on their indices or names. 
+    def get_slice(
+        self,
+        rows: Union[str, int, bool, Sequence],
+        columns: Union[str, int, bool, Sequence],
+    ) -> Union["BiocFrame", dict, Any]:
+        """Slice ``BiocFrame`` along the rows and/or columns, based on their indices or names.
 
         Args:
             rows:
@@ -739,7 +739,7 @@ class BiocFrame:
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
 
         Returns:
-            If both ``rows`` and ``columns`` are sequences, a ``BiocFrame`` 
+            If both ``rows`` and ``columns`` are sequences, a ``BiocFrame``
             is returned with the specified rows and columns.
 
             If only ``rows`` is a sequence, the contents of the specified
@@ -814,11 +814,9 @@ class BiocFrame:
         return self.__getitem__((rows, columns))
 
     def __getitem__(
-        self,
-        args: Union[int, str, Sequence, tuple]
+        self, args: Union[int, str, Sequence, tuple]
     ) -> Union["BiocFrame", Any]:
-        """Wrapper around :py:attr:`~get_slice` to obtain a slice of
-        a ``BiocFrame`` or any of its columns.
+        """Wrapper around :py:attr:`~get_slice` to obtain a slice of a ``BiocFrame`` or any of its columns.
 
         Usage:
 
@@ -843,7 +841,7 @@ class BiocFrame:
             bframe[<List of column names>]
 
         Args:
-            args: 
+            args:
                 A sequence or a scalar integer or string, specifying the
                 columns to retain based on their names or indices.
 
@@ -868,7 +866,7 @@ class BiocFrame:
 
             If ``args`` is a tuple of length 2, a new ``BiocFrame`` is returned
             containing the specified rows and columns. This is achieved by just
-            calling :py:attr:`~get_slice` with the specified arguments. 
+            calling :py:attr:`~get_slice` with the specified arguments.
         """
         if isinstance(args, (str, int)):
             return self.get_column(args)
@@ -908,7 +906,11 @@ class BiocFrame:
             self.set_column(args, value, in_place=True)
 
     def set_slice(
-            self, rows: Sequence, columns: Sequence, value: "BiocFrame", in_place: bool = True
+        self,
+        rows: Sequence,
+        columns: Sequence,
+        value: "BiocFrame",
+        in_place: bool = True,
     ) -> "BiocFrame":
         """Replace a slice of the ``BiocFrame`` given the row and columns of the slice.
 
