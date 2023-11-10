@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from biocframe import BiocFrame, relaxed_combine_rows
-from biocutils import combine, StringList
+from biocutils import combine, combine_columns, StringList
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -154,3 +154,62 @@ def test_relaxed_combine_rows():
         None,
         None,
     ]
+
+
+def test_combine_columns_basic():
+    obj1 = BiocFrame(
+        {
+            "odd": [1, 3, 5, 7, 9],
+            "even": [0, 2, 4, 6, 8],
+        }
+    )
+
+    obj2 = BiocFrame(
+        {
+            "foo": [11, 33, 55, 77, 99],
+            "bar": [0, 22, 44, 66, 88],
+        }
+    )
+
+    merged = combine_columns(obj1, obj2)
+    assert isinstance(merged, BiocFrame)
+    assert merged.get_column_names() == ["odd", "even", "foo", "bar"]
+    assert merged.get_column("odd") == [1, 3, 5, 7, 9]
+    assert merged.get_column("bar") == [0, 22, 44, 66, 88]
+
+    with pytest.raises(ValueError) as ex:
+        combine_columns(obj1, obj1)
+    assert str(ex.value).find("must have different columns") >= 0
+
+    with pytest.raises(ValueError) as ex:
+        combine_columns(obj1, obj2[1:4, :])
+    assert str(ex.value).find("same number of rows") >= 0
+
+
+def test_combine_columns_with_mcols():
+    obj1 = BiocFrame(
+        {
+            "odd": [1, 3, 5, 7, 9],
+            "even": [0, 2, 4, 6, 8],
+        }
+    )
+
+    obj2 = BiocFrame(
+        {
+            "foo": [11, 33, 55, 77, 99],
+            "bar": [0, 22, 44, 66, 88],
+        }
+    )
+
+    merged = combine_columns(obj1, obj2)
+    assert merged.get_mcols() is None
+
+    obj1.set_mcols(BiocFrame({"A": [1, 2]}), in_place=True)
+    obj2.set_mcols(BiocFrame({"A": [3, 4]}), in_place=True)
+    merged = combine_columns(obj1, obj2)
+    assert merged.get_mcols().column("A") == [1, 2, 3, 4]
+
+    obj1.set_mcols(None, in_place=True)
+    with pytest.raises(ValueError) as ex:
+        combine_columns(obj1, obj2)
+    assert str(ex.value).find("Failed to combine 'mcols'") >= 0

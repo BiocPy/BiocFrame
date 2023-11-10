@@ -1,5 +1,16 @@
-from biocutils import combine_rows
+import biocutils as ut
 import numpy
+
+
+# Could turn this into a generic, if it was more useful elsewhere.
+def _construct_missing(col, n):
+    if isinstance(col, numpy.ndarray):
+        return numpy.ma.array(
+            numpy.zeros(n, dtype=col.dtype),
+            mask=True,
+        )
+    else:
+        return [None] * n
 
 
 def relaxed_combine_rows(*x: "BiocFrame") -> "BiocFrame":
@@ -29,17 +40,12 @@ def relaxed_combine_rows(*x: "BiocFrame") -> "BiocFrame":
     edited = []
     for df in x:
         extras = {}
-
         for col in new_colnames:
             if not df.has_column(col):
-                firstcol = first_occurrence[col]
-                if isinstance(firstcol, numpy.ndarray):
-                    ex = numpy.ma.array(
-                        numpy.zeros(df.shape[0], dtype=firstcol.dtype), mask=True
-                    )
-                else:
-                    ex = [None] * df.shape[0]
-                extras[col] = ex
+                extras[col] = _construct_missing(
+                    first_occurrence[col],
+                    df.shape[0],
+                )
 
         if len(extras):
             edited.append(df.set_columns(extras))
@@ -47,4 +53,4 @@ def relaxed_combine_rows(*x: "BiocFrame") -> "BiocFrame":
             edited.append(df)
 
     # Now slapping everything together.
-    return combine_rows(*edited)
+    return ut.combine_rows(*edited)
