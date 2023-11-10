@@ -1365,14 +1365,26 @@ def _combine_rows_bframes(*x: BiocFrame):
         if df._row_names is not None:
             has_rownames = True
         if df.shape[1] != first_nc:
-            raise ValueError("All objects to combine must have the same number of columns (expected " + str(first_nr) + ", got " + str(x.shape[1]) + ").")
+            raise ValueError(
+                "All objects to combine must have the same number of columns (expected "
+                + str(first_nr)
+                + ", got "
+                + str(x.shape[1])
+                + ")."
+            )
 
     new_data = {}
     for i, col in enumerate(x[0]._column_names):
         current = []
         for df in x:
             if not df.has_column(col):
-                raise ValueError("All objects to combine must have the same columns (missing '" + col + "' in object " + str(i) + ").")
+                raise ValueError(
+                    "All objects to combine must have the same columns (missing '"
+                    + col
+                    + "' in object "
+                    + str(i)
+                    + ")."
+                )
             current.append(df.column(col))
         new_data[col] = ut.combine(*current)
 
