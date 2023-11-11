@@ -351,4 +351,3 @@ Check out [the reference documentation](biocpy.github.io/BiocFrame/) for more de
 
 Also see check out Bioconductor's [**S4Vectors**](https://bioconductor.org/packages/S4Vectors) package,
 which implements the `DFrame` class on which `BiocFrame` was based.
-
