@@ -121,7 +121,7 @@ def test_merge_BiocFrame_duplicate_columns():
     assert combined.column("B (2)") == [3, 4, 5, 6]
 
 
-def test_merge_BiocFrame_mcols():
+def test_merge_BiocFrame_column_data():
     # A simple case.
     obj1 = BiocFrame({"B": [3, 4, 5, 6]}, row_names=[1, 2, 3, 4])
     obj2 = BiocFrame(
@@ -130,17 +130,17 @@ def test_merge_BiocFrame_mcols():
     )
 
     combined = merge([obj1, obj2], by=None, join="left")
-    assert combined.get_mcols() is None
+    assert combined.get_column_data() is None
 
-    obj1.set_mcols(BiocFrame({"foo": [True]}), in_place=True)
+    obj1.set_column_data(BiocFrame({"foo": [True]}), in_place=True)
     combined = merge([obj1, obj2], by=None, join="left")
-    comcol = combined.get_mcols()
+    comcol = combined.get_column_data()
     assert combined.get_column_names() == ["B", "C"]
     assert comcol.column("foo") == [True, None]
 
-    obj2.set_mcols(BiocFrame({"foo": [False]}), in_place=True)
+    obj2.set_column_data(BiocFrame({"foo": [False]}), in_place=True)
     combined = merge([obj1, obj2], by=None, join="left")
-    comcol = combined.get_mcols()
+    comcol = combined.get_column_data()
     assert comcol.column("foo") == [True, False]
 
     # Now a more complicated case.
@@ -158,15 +158,15 @@ def test_merge_BiocFrame_mcols():
     )
 
     combined = merge([obj1, obj2], by="A", join="left")
-    assert combined.get_mcols() is None
+    assert combined.get_column_data() is None
 
-    obj1.set_mcols(BiocFrame({"foo": [True, False]}), in_place=True)
+    obj1.set_column_data(BiocFrame({"foo": [True, False]}), in_place=True)
     combined = merge([obj1, obj2], by="A", join="left")
-    comcol = combined.get_mcols()
+    comcol = combined.get_column_data()
     assert combined.get_column_names() == ["B", "A", "C"]
     assert comcol.column("foo") == [True, False, None]
 
-    obj2.set_mcols(BiocFrame({"foo": ["WHEE", False]}), in_place=True)
+    obj2.set_column_data(BiocFrame({"foo": ["WHEE", False]}), in_place=True)
     combined = merge([obj1, obj2], by="A", join="left")
-    comcol = combined.get_mcols()
+    comcol = combined.get_column_data()
     assert comcol.column("foo") == [True, False, False]

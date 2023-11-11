@@ -147,8 +147,8 @@ def test_bframe_set_columns():
     assert bframe2.column("column1") == ["A", "B", "C"]
     assert bframe2.column("column2") == ["a", "b", "c"]
 
-    # Making sure that the mcols is properly handled.
-    bframe2a = bframe.set_mcols(
+    # Making sure that the column_data is properly handled.
+    bframe2a = bframe.set_column_data(
         BiocFrame(
             {
                 "prop1": [1, 2],
@@ -160,17 +160,17 @@ def test_bframe_set_columns():
     bframe2b = bframe2a.set_columns(
         {"column1": ["A", "B", "C"], "column3": ["a", "b", "c"], "column4": [9, 8, 7]}
     )
-    final_mcols = bframe2b.get_mcols()
-    assert final_mcols.column("prop1") == [1, 2, None, None]
-    assert final_mcols.column("prop2").dtype == np.int32
+    final_column_data = bframe2b.get_column_data()
+    assert final_column_data.column("prop1") == [1, 2, None, None]
+    assert final_column_data.column("prop2").dtype == np.int32
     assert (
-        list(final_mcols.column("prop2"))
-        == list(bframe2a.get_mcols().column("prop2")) + [np.ma.masked] * 2
+        list(final_column_data.column("prop2"))
+        == list(bframe2a.get_column_data().column("prop2")) + [np.ma.masked] * 2
     )
-    assert final_mcols.column("prop3").dtype == np.int8
+    assert final_column_data.column("prop3").dtype == np.int8
     assert (
-        list(final_mcols.column("prop3"))
-        == list(bframe2a.get_mcols().column("prop3")) + [np.ma.masked] * 2
+        list(final_column_data.column("prop3"))
+        == list(bframe2a.get_column_data().column("prop3")) + [np.ma.masked] * 2
     )
 
 
@@ -322,17 +322,17 @@ def test_bframe_slice_with_extras():
             "column1": [1, 2, 3],
             "column2": [4, 5, 6],
         },
-        mcols=BiocFrame({"foo": [-1, -2], "bar": ["A", "B"]}),
+        column_data=BiocFrame({"foo": [-1, -2], "bar": ["A", "B"]}),
         metadata={"YAY": 2},
     )
 
     subframe = bframe[0:2, :]
-    assert subframe.mcols.shape[0] == bframe.mcols.shape[1]
+    assert subframe.column_data.shape[0] == bframe.column_data.shape[1]
     assert subframe.metadata == bframe.metadata
 
     subframe = bframe[:, [1]]
-    assert subframe.mcols.shape[0] == 1
-    assert subframe.mcols.column("foo") == [-2]
+    assert subframe.column_data.shape[0] == 1
+    assert subframe.column_data.column("foo") == [-2]
     assert subframe.metadata == bframe.metadata
 
 
@@ -400,10 +400,10 @@ def test_bframe_remove_column():
     assert copy.has_column("column2")
     assert copy.shape == (3, 1)
 
-    # Handles the mcols correctly.
-    bframe2a = bframe.set_mcols(BiocFrame({"prop1": [1, 2]}))
+    # Handles the column_data correctly.
+    bframe2a = bframe.set_column_data(BiocFrame({"prop1": [1, 2]}))
     bframe2b = bframe2a.remove_column("column1")
-    assert bframe2b.get_mcols().column("prop1") == [2]
+    assert bframe2b.get_column_data().column("prop1") == [2]
 
 
 def test_bframe_ufuncs():

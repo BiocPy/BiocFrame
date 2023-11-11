@@ -59,15 +59,15 @@ def _validate_rows(
 def _validate_columns(
     column_names: List[str],
     data: Dict[str, Any],
-    mcols: Optional["BiocFrame"],
+    column_data: Optional["BiocFrame"],
 ) -> Tuple[List[str], Dict[str, Any]]:
     if sorted(column_names) != sorted(data.keys()):
         raise ValueError("Mismatch between `column_names` and the keys of `data`.")
 
-    if mcols is not None:
-        if mcols.shape[0] != len(column_names):
+    if column_data is not None:
+        if column_data.shape[0] != len(column_names):
             raise ValueError(
-                "Number of rows in `mcols` should be equal to the number of columns."
+                "Number of rows in `column_data` should be equal to the number of columns."
             )
 
 
@@ -199,7 +199,7 @@ class BiocFrame:
         number_of_rows: Optional[int] = None,
         row_names: Optional[List] = None,
         column_names: Optional[List[str]] = None,
-        mcols: Optional["BiocFrame"] = None,
+        column_data: Optional["BiocFrame"] = None,
         metadata: Optional[dict] = None,
         validate: bool = True,
     ) -> None:
@@ -219,7 +219,7 @@ class BiocFrame:
             column_names (list, optional):
                 Column names. If not provided, inferred from the ``data``.
 
-            mcols (BiocFrame, optional):
+            column_data (BiocFrame, optional):
                 Metadata about columns. Must have the same length as the number
                 of columns. Defaults to None.
 
@@ -246,11 +246,11 @@ class BiocFrame:
         self._column_names = column_names
 
         self._metadata = {} if metadata is None else metadata
-        self._mcols = mcols
+        self._column_data = column_data
 
         if validate:
             _validate_rows(self._number_of_rows, self._data, self._row_names)
-            _validate_columns(self._column_names, self._data, self._mcols)
+            _validate_columns(self._column_names, self._data, self._column_data)
 
     def __repr__(self) -> str:
         output = "BiocFrame(data=" + ut.print_truncated_dict(self._data)
@@ -260,9 +260,9 @@ class BiocFrame:
             output += ", row_names=" + ut.print_truncated_list(self._row_names)
         output += ", column_names=" + ut.print_truncated_list(self._column_names)
 
-        if self._mcols is not None and self._mcols.shape[1] > 0:
+        if self._column_data is not None and self._column_data.shape[1] > 0:
             # TODO: fix potential recursion here.
-            output += ", mcols=" + repr(self._mcols)
+            output += ", column_data=" + repr(self._column_data)
         if len(self._metadata):
             output += ", metadata=" + ut.print_truncated_dict(self._metadata)
 
@@ -304,13 +304,13 @@ class BiocFrame:
             added_table = True
 
         footer = []
-        if self.mcols is not None and self.mcols.shape[1]:
+        if self.column_data is not None and self.column_data.shape[1]:
             footer.append(
-                "mcols("
-                + str(self.mcols.shape[1])
+                "column_data("
+                + str(self.column_data.shape[1])
                 + "): "
                 + ut.print_truncated_list(
-                    self.mcols.column_names,
+                    self.column_data.column_names,
                     sep=" ",
                     include_brackets=False,
                     transform=lambda y: y,
@@ -500,51 +500,54 @@ class BiocFrame:
 
         self.set_column_names(names, in_place=True)
 
-    def get_mcols(self) -> Union[None, "BiocFrame"]:
-        """The ``mcols``, containing annotation on the columns."""
-        return self._mcols
+    def get_column_data(self) -> Union[None, "BiocFrame"]:
+        """
+        Returns:
+            The ``column_data``, containing annotation on the columns.
+        """
+        return self._column_data
 
-    def set_mcols(
-        self, mcols: Union[None, "BiocFrame"], in_place: bool = False
+    def set_column_data(
+        self, column_data: Union[None, "BiocFrame"], in_place: bool = False
     ) -> "BiocFrame":
-        """Set new `mcols`, containing annotations on the columns.
+        """Set new `column_data`, containing annotations on the columns.
 
         Args:
-            mcols (Biocframe, optional): New mcols. Can be `None` to remove this information.
+            column_data (Biocframe, optional): New column data. Can be `None` to remove this information.
             in_place (bool): Whether to modify the ``BiocFrame`` object in place.
 
         Returns:
             BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
-        if mcols is not None:
-            if mcols.shape[0] != self.shape[1]:
+        if column_data is not None:
+            if column_data.shape[0] != self.shape[1]:
                 raise ValueError(
-                    "Number of rows in `mcols` should be equal to the number of columns."
+                    "Number of rows in `column_data` should be equal to the number of columns."
                 )
 
         output = self._define_output(in_place)
-        output._mcols = mcols
+        output._column_data = column_data
         return output
 
     @property
-    def mcols(self) -> Union[None, "BiocFrame"]:
-        """The ``mcols``, containing annotation on the columns."""
-        return self.get_mcols()
+    def column_data(self) -> Union[None, "BiocFrame"]:
+        """The ``column_data``, containing annotation on the columns."""
+        return self.get_column_data()
 
-    @mcols.setter
-    def mcols(self, mcols: Union[None, "BiocFrame"]):
-        """Set new mcols (in-place operation).
+    @column_data.setter
+    def column_data(self, column_data: Union[None, "BiocFrame"]):
+        """Set new column_data (in-place operation).
 
         Args:
-            mcols (Union[None, BiocFrame]): New metadata about column to set.
+            column_data (Union[None, BiocFrame]): New metadata about column to set.
         """
         warn(
-            "Setting property 'mcols' is an in-place operation, use 'set_mcols' instead",
+            "Setting property 'column_data' is an in-place operation, use 'set_column_data' instead",
             UserWarning,
         )
 
-        self.set_mcols(mcols, in_place=True)
+        self.set_column_data(column_data, in_place=True)
 
     def get_metadata(self) -> dict:
         """Access metadata.
@@ -768,10 +771,10 @@ class BiocFrame:
             if new_row_names is not None:
                 new_row_names = ut.subset_sequence(new_row_names, new_row_indices)
 
-        mcols = self._mcols
-        if mcols is not None:
+        column_data = self._column_data
+        if column_data is not None:
             if columns != slice(None):
-                mcols = mcols.slice(new_column_indices, slice(None))
+                column_data = column_data.slice(new_column_indices, slice(None))
 
         current_class_const = type(self)
         return current_class_const(
@@ -780,7 +783,7 @@ class BiocFrame:
             row_names=new_row_names,
             column_names=new_column_names,
             metadata=self._metadata,
-            mcols=mcols,
+            column_data=column_data,
             validate=False,
         )
 
@@ -1038,11 +1041,11 @@ class BiocFrame:
 
             output._data[column] = value
 
-        if output._mcols is not None:
+        if output._column_data is not None:
             newly_added = len(output._column_names) - previous
             if newly_added:
                 extras = BiocFrame({}, number_of_rows=newly_added)
-                output._mcols = relaxed_combine_rows(output._mcols, extras)
+                output._column_data = relaxed_combine_rows(output._column_data, extras)
 
         return output
 
@@ -1102,8 +1105,8 @@ class BiocFrame:
                 keep.append(i)
 
         output._column_names = ut.subset_sequence(output._column_names, keep)
-        if output._mcols is not None:
-            output._mcols = output._mcols[keep, :]
+        if output._column_data is not None:
+            output._column_data = output._column_data[keep, :]
 
         return output
 
@@ -1267,7 +1270,7 @@ class BiocFrame:
         _num_rows_copy = deepcopy(self._number_of_rows)
         _rownames_copy = deepcopy(self.row_names)
         _metadata_copy = deepcopy(self.metadata)
-        _mcols_copy = deepcopy(self._mcols) if self._mcols is not None else None
+        _column_data_copy = deepcopy(self._column_data) if self._column_data is not None else None
 
         # copy dictionary first
         _data_copy = OrderedDict()
@@ -1286,7 +1289,7 @@ class BiocFrame:
             row_names=_rownames_copy,
             column_names=_colnames_copy,
             metadata=_metadata_copy,
-            mcols=_mcols_copy,
+            column_data=_column_data_copy,
         )
 
     def __copy__(self):
@@ -1304,7 +1307,7 @@ class BiocFrame:
             row_names=self._row_names,
             column_names=self._column_names,
             metadata=self._metadata,
-            mcols=self._mcols,
+            column_data=self._column_data,
         )
 
         return new_instance
@@ -1374,7 +1377,7 @@ def _combine_rows_bframes(*x: BiocFrame):
         row_names=new_rownames,
         column_names=first._column_names,
         metadata=first._metadata,
-        mcols=first._mcols,
+        column_data=first._column_data,
     )
 
 
@@ -1387,7 +1390,7 @@ def _combine_cols_bframes(*x: BiocFrame):
     first_nr = first.shape[0]
     all_column_names = ut.StringList()
     all_data = {}
-    all_mcols = []
+    all_column_data = []
     for df in x:
         if df.shape[0] != first_nr:
             raise ValueError(
@@ -1399,7 +1402,7 @@ def _combine_cols_bframes(*x: BiocFrame):
             )
 
         all_column_names += df._column_names
-        all_mcols.append(df._mcols)
+        all_column_data.append(df._column_data)
         for n in df._column_names:
             if n in all_data:
                 raise ValueError(
@@ -1409,16 +1412,16 @@ def _combine_cols_bframes(*x: BiocFrame):
                 )
             all_data[n] = df._data[n]
 
-    combined_mcols = None
-    if not all(y is None for y in all_mcols):
-        for i, val in enumerate(all_mcols):
+    combined_column_data = None
+    if not all(y is None for y in all_column_data):
+        for i, val in enumerate(all_column_data):
             if val is None:
-                all_mcols[i] = BiocFrame({}, number_of_rows=x[i].shape[0])
+                all_column_data[i] = BiocFrame({}, number_of_rows=x[i].shape[0])
         try:
-            combined_mcols = ut.combine_rows(*all_mcols)
+            combined_column_data = ut.combine_rows(*all_column_data)
         except Exception as ex:
             raise ValueError(
-                "Failed to combine 'mcols' when combining 'BiocFrame' objects by column. "
+                "Failed to combine 'column_data' when combining 'BiocFrame' objects by column. "
                 + str(ex)
             )
 
@@ -1429,7 +1432,7 @@ def _combine_cols_bframes(*x: BiocFrame):
         row_names=first._row_names,
         column_names=all_column_names,
         metadata=first._metadata,
-        mcols=combined_mcols,
+        column_data=combined_column_data,
     )
 
 
@@ -1638,7 +1641,7 @@ def merge(
 
     new_data = {}
     new_columns = []
-    raw_mcols = []
+    raw_column_data = []
     for i, df in enumerate(x):
         noop = False
         if join == "left":
@@ -1693,23 +1696,23 @@ def merge(
                 combined = ut.combine(retained, _construct_missing(val, 1))
                 new_data[y] = ut.subset(combined, reorg_permute)
 
-        if df._mcols is not None:
-            raw_mcols.append(ut.subset_rows(df._mcols, survivor_columns))
+        if df._column_data is not None:
+            raw_column_data.append(ut.subset_rows(df._column_data, survivor_columns))
         else:
-            raw_mcols.append(len(survivor_columns))
+            raw_column_data.append(len(survivor_columns))
 
-    new_mcols = None
-    if not all(isinstance(y, int) for y in raw_mcols):
-        for i, val in enumerate(raw_mcols):
+    new_column_data = None
+    if not all(isinstance(y, int) for y in raw_column_data):
+        for i, val in enumerate(raw_column_data):
             if isinstance(val, int):
-                raw_mcols[i] = BiocFrame({}, number_of_rows=val)
-        new_mcols = relaxed_combine_rows(*raw_mcols)
+                raw_column_data[i] = BiocFrame({}, number_of_rows=val)
+        new_column_data = relaxed_combine_rows(*raw_column_data)
 
     output = type(x[0])(
         new_data,
         column_names=new_columns,
         number_of_rows=ut.get_height(all_keys),
-        mcols=new_mcols,
+        column_data=new_column_data,
         metadata=x[0]._metadata,
     )
 

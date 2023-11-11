@@ -124,16 +124,16 @@ def test_extra_bits():
         {
             "column1": [1, 2, 3],
         },
-        mcols=BiocFrame({"foo": [1], "bar": ["A"]}),
+        column_data=BiocFrame({"foo": [1], "bar": ["A"]}),
         metadata={"YAY": 2},
     )
 
-    assert isinstance(bframe.mcols, BiocFrame)
+    assert isinstance(bframe.column_data, BiocFrame)
     assert bframe.metadata["YAY"] == 2
 
     # Setters work correctly.
-    bframe.mcols = BiocFrame({"STUFF": [2.5]})
-    assert bframe.mcols.column_names == ["STUFF"]
+    bframe.column_data = BiocFrame({"STUFF": [2.5]})
+    assert bframe.column_data.column_names == ["STUFF"]
 
     bframe.metadata = {"FOO": "A"}
     assert bframe.metadata["FOO"] == "A"
@@ -145,23 +145,23 @@ def test_with_add_deletions():
             "column1": [1, 2, 3],
             "column2": [4, 5, 6],
         },
-        mcols=BiocFrame({"foo": [-1, -2], "bar": ["A", "B"]}),
+        column_data=BiocFrame({"foo": [-1, -2], "bar": ["A", "B"]}),
         metadata={"YAY": 2},
     )
 
-    assert isinstance(obj1.mcols, BiocFrame)
+    assert isinstance(obj1.column_data, BiocFrame)
 
     obj1["new_column"] = [10, 11, "12"]
     assert obj1.shape == (3, 3)
-    assert len(obj1.mcols) == 3
+    assert len(obj1.column_data) == 3
 
     # welp assume i made a mistake earlier
     obj1["new_column"] = [10, 11, 12]
     assert obj1.shape == (3, 3)
-    assert len(obj1.mcols) == 3
+    assert len(obj1.column_data) == 3
 
     # lets delete
     del obj1["new_column"]
     assert obj1.shape == (3, 2)
-    print(obj1.mcols)
-    assert len(obj1.mcols) == 2
+    print(obj1.column_data)
+    assert len(obj1.column_data) == 2

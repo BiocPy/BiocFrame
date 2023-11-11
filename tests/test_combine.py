@@ -101,7 +101,7 @@ def test_combine_with_extras():
             "column1": [1, 2, 3],
             "column2": [4, 5, 6],
         },
-        mcols=BiocFrame({"foo": [-1, -2], "bar": ["A", "B"]}),
+        column_data=BiocFrame({"foo": [-1, -2], "bar": ["A", "B"]}),
         metadata={"YAY": 2},
     )
 
@@ -114,7 +114,7 @@ def test_combine_with_extras():
 
     merged = combine(obj1, obj2)
     assert merged.metadata == obj1.metadata
-    assert merged.mcols.shape == obj1.mcols.shape
+    assert merged.column_data.shape == obj1.column_data.shape
 
 
 def test_relaxed_combine_rows():
@@ -186,7 +186,7 @@ def test_combine_columns_basic():
     assert str(ex.value).find("same number of rows") >= 0
 
 
-def test_combine_columns_with_mcols():
+def test_combine_columns_with_column_data():
     obj1 = BiocFrame(
         {
             "odd": [1, 3, 5, 7, 9],
@@ -202,14 +202,14 @@ def test_combine_columns_with_mcols():
     )
 
     merged = combine_columns(obj1, obj2)
-    assert merged.get_mcols() is None
+    assert merged.get_column_data() is None
 
-    obj1.set_mcols(BiocFrame({"A": [1, 2]}), in_place=True)
-    obj2.set_mcols(BiocFrame({"A": [3, 4]}), in_place=True)
+    obj1.set_column_data(BiocFrame({"A": [1, 2]}), in_place=True)
+    obj2.set_column_data(BiocFrame({"A": [3, 4]}), in_place=True)
     merged = combine_columns(obj1, obj2)
-    assert merged.get_mcols().column("A") == [1, 2, 3, 4]
+    assert merged.get_column_data().column("A") == [1, 2, 3, 4]
 
-    obj1.set_mcols(None, in_place=True)
+    obj1.set_column_data(None, in_place=True)
     with pytest.raises(ValueError) as ex:
         combine_columns(obj1, obj2)
-    assert str(ex.value).find("Failed to combine 'mcols'") >= 0
+    assert str(ex.value).find("Failed to combine 'column_data'") >= 0
