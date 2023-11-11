@@ -1,6 +1,15 @@
 # Changelog
 
-## Version 0.3 (development)
+## Version 0.5
+
+- Bugfixes to avoid pass-by-reference effects when setting or removing columns.
+- Provide functional-style method to add/remove multiple columns at once.
+- Allow setting/removal of columns by position index instead of name.
+- Provide a `relaxed_combine_rows` and `merge` function for flexible combining.
+- Reduce the variety of arguments for `__getitem__`, to simplify user expectations.
+- Internal refactoring to use generics from the BiocUtils package.
+
+## Version 0.3
 This release migrates the package to a more palatable Google's Python style guide. A major modification to the package is with casing, all `camelCase` methods, functions and parameters are now `snake_case`.
 
 In addition, docstrings and documentation has been updated to use sphinx's features of linking objects to their types. Sphinx now also documents private and special dunder methods (e.g. `__getitem__`, `__copy__` etc). Intersphinx has been updated to link to references from dependent packages.
