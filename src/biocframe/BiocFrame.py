@@ -113,84 +113,17 @@ class BiocFrameIter:
 
 class BiocFrame:
     """`BiocFrame` is an alternative to :class:`~pandas.DataFrame`, with support for nested and flexible column types.
-    Similar to R's ``DataFrame`` class.
+    Inspired by the ``DFrame`` class from Bioconductor's **S4Vectors** package.
+    Any object may be used as a column, provided it has:
 
-    Columns are required to implement the length (``__len__``) and slice (``__getitem__``) dunder
-    methods. This allows :py:class:`~biocframe.BiocFrame.BiocFrame` to accept nested
-    `BiocFrame` or any supported class as columns.
+    - Some concept of "height", as defined by :py:func:`~biocutils.get_height.get_height` from **BiocUtils**.
+      This defaults to the length as defined by ``__len__``.
+    - The ability to be sliced by integer indices, as implemented by :py:func:`~biocutils.subset.subset` from **BiocUtils**.
+      This defaults to calling ``__getitem__``.
+    - The ability to be combined with other objects, as implemented in :py:func:`~biocutils.combine.combine` from **BiocUtils**.
+    - The ability to perform an assignment, as implemented in :py:func:`~biocutils.assign.assign` from **BiocUtils**.
 
-    Typical usage example:
-
-    To create a **BiocFrame** object, simply provide the data as a dictionary.
-
-    .. code-block:: python
-
-        # made up ensembl ids.
-        obj = {
-            "ensembl": ["ENS00001", "ENS00002", "ENS00003"],
-            "symbol": ["MAP1A", "BIN1", "ESR1"],
-        }
-        bframe = BiocFrame(obj)
-
-    Alternatively, you can specify :py:class:`~biocframe.BiocFrame.BiocFrame` class
-    as a column.
-
-    .. code-block:: python
-
-        # made up chromosome locations and ensembl ids.
-        obj = {
-            "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
-            "symbol": ["MAP1A", "BIN1", "ESR1"],
-            "ranges": BiocFrame({
-                "chr": ["chr1", "chr2", "chr3"],
-                "start": [1000, 1100, 5000],
-                "end": [1100, 4000, 5500]
-            }),
-        }
-        bframe = BiocFrame(obj)
-
-    Methods are available to **slice** (:py:meth:`~biocframe.BiocFrame.BiocFrame.__getitem__`) the object,
-
-    .. code-block:: python
-
-        sliced = bframe[1:2, [True, False, False]]
-
-    Additionally, the ``slice`` operation accepts different inputs, you can either
-    specify a boolean vector, a :py:class:`~slice` object, or a list of indices or row names to subset.
-
-    To access a particular **row or column** of the dataframe,
-
-    .. code-block:: python
-
-        row2 = bframe.row(2)
-        ensembl_col = bframe.column("ensembl")
-
-    Use the :py:func:`~biocgenerics.combine.combine` generic to concatenate multiple biocframe objects,
-
-    .. code-block:: python
-
-        bframe1 = BiocFrame(
-            {
-                "odd": [1, 3, 5, 7, 9],
-                "even": [0, 2, 4, 6, 8],
-            }
-        )
-
-        bframe2 = BiocFrame(
-            {
-                "odd": [11, 33, 55, 77, 99],
-                "even": [0, 22, 44, 66, 88],
-            }
-        )
-
-        from biocgenerics.combine import combine
-        combined = combine(bframe1, bframe2)
-
-    or the combine function
-
-    .. code-block:: python
-
-        combined = bframe1.combine(bframe2)
+    This allows ``BiocFrame`` to accept arbitrarily complex classes (such as nested ``BiocFrame`` instances) as columns.
     """
 
     def __init__(
@@ -203,30 +136,35 @@ class BiocFrame:
         metadata: Optional[dict] = None,
         validate: bool = True,
     ) -> None:
-        """Initialize a `BiocFrame` object.
+        """Initialize a ``BiocFrame`` object from columns.
 
         Args:
-            data (Dict[str, Any], optional):
-                Dictionary of column names as `keys` and
-                their values. All columns must have the same length. Defaults to {}.
+            data:
+                Dictionary of column names as `keys` and their values. All
+                columns must have the same length. Defaults to an empty
+                dictionary.
 
-            number_of_rows (int, optional):
-                Number of rows. If not specified, inferred from ``data``.
+            number_of_rows:
+                Number of rows. If not specified, inferred from ``data``. This
+                needs to be provided if ``data`` is empty and ``row_names`` are
+                not present.
 
-            row_names (list, optional):
-                Row names.
+            row_names:
+                Row names. This should not contain missing strings.
 
-            column_names (list, optional):
+            column_names:
                 Column names. If not provided, inferred from the ``data``.
+                This may be in a different order than the keys of ``data``.
+                This should not contain missing strings.
 
-            column_data (BiocFrame, optional):
-                Metadata about columns. Must have the same length as the number
-                of columns. Defaults to None.
+            column_data:
+                Metadata about columns. Must have the same number of rows as
+                the length of ``column_names``. Defaults to None.
 
-            metadata (dict):
-                Additional metadata. Defaults to {}.
+            metadata:
+                Additional metadata. Defaults to an empty dictionary.
 
-            validate (bool):
+            validate:
                 Internal use only.
         """
         self._data = {} if data is None else data
@@ -252,7 +190,49 @@ class BiocFrame:
             _validate_rows(self._number_of_rows, self._data, self._row_names)
             _validate_columns(self._column_names, self._data, self._column_data)
 
+    def _define_output(self, in_place: bool = False) -> "BiocFrame":
+        if in_place is True:
+            return self
+        else:
+            return self.__copy__()
+
+    #################################
+    ######>> Shape and stuff <<######
+    #################################
+
+    @property
+    def shape(self) -> Tuple[int, int]:
+        """
+        Returns:
+            Tuple containing the number of rows and columns in this ``BiocFrame``.
+        """
+        return (self._number_of_rows, len(self._column_names))
+
+    def __len__(self) -> int:
+        """
+        Returns:
+            Number of rows.
+        """
+        return self.shape[0]
+
+    def __iter__(self) -> BiocFrameIter:
+        """Iterator over rows."""
+        return BiocFrameIter(self)
+
+    @property
+    def dims(self) -> Tuple[int, int]:
+        """Alias for :py:attr:`~shape`."""
+        return self.shape
+
+    ##########################
+    ######>> Printing <<######
+    ##########################
+
     def __repr__(self) -> str:
+        """
+        Returns:
+            A string representation of this ``BiocFrame``.
+        """
         output = "BiocFrame(data=" + ut.print_truncated_dict(self._data)
         output += ", number_of_rows=" + str(self.shape[0])
 
@@ -270,6 +250,10 @@ class BiocFrame:
         return output
 
     def __str__(self) -> str:
+        """
+        Returns:
+            A pretty-printed string containing the contents of this ``BiocFrame``.
+        """
         output = f"BiocFrame with {self.dims[0]} row{'s' if self.shape[0] != 1 else ''}"
         output += f" and {self.dims[1]} column{'s' if self.dims[1] != 1 else ''}\n"
 
@@ -335,45 +319,31 @@ class BiocFrame:
 
         return output
 
-    def _define_output(self, in_place: bool = False) -> "BiocFrame":
-        if in_place is True:
-            return self
-        else:
-            return self.__copy__()
-
-    @property
-    def shape(self) -> Tuple[int, int]:
-        """Dimensionality of the BiocFrame.
-
-        Returns:
-            Tuple[int, int]: A tuple (m, n),
-            where `m` is the number of rows, and `n` is the number of columns.
-        """
-        return (self._number_of_rows, len(self._column_names))
+    ###########################
+    ######>> Row names <<######
+    ###########################
 
     def get_row_names(self) -> Optional[ut.StringList]:
-        """Row names of the BiocFrame.
-
+        """
         Returns:
-            (List, optional): Row names if available, otherwise None.
+            List of row names, or None if no row names are available.
         """
         return self._row_names
 
     def set_row_names(
         self, names: Optional[List], in_place: bool = False
     ) -> "BiocFrame":
-        """Set new row names. All values in ``names`` must be unique.
-
+        """
         Args:
-            names (List[str], optional): A list of unique values.
-            in_place (bool): Whether to modify the ``BiocFrame`` object in place.
+            names:
+                List of strings. This should have length equal to the
+                number of rows in the current ``BiocFrame``.
 
-        Raises:
-            ValueError: If the length of ``names`` does not match the number of rows.
-            ValueError: If ``names`` is not unique.
+            in_place:
+                Whether to modify the ``BiocFrame`` object in place.
 
         Returns:
-            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         if names is not None:
@@ -393,63 +363,79 @@ class BiocFrame:
 
     @property
     def row_names(self) -> Optional[ut.StringList]:
-        """Row names of the BiocFrame.
-
-        Returns:
-            (List, optional): Row names if available, otherwise None.
-        """
+        """Alias for :py:attr:`~get_row_names`."""
         return self.get_row_names()
 
     @row_names.setter
     def row_names(self, names: Optional[List]):
-        """Set new row names. All values in ``names`` must be unique. (in-place operation).
-
-        Args:
-            names (List[str], optional): A list of unique values.
-
-        Raises:
-            ValueError: If the length of ``names`` does not match the number of rows.
-            ValueError: If ``names`` is not unique.
         """
-
+        Alias for :py:attr:`~set_row_names` with ``in_place = True``. As this
+        mutates the original object, a warning is raised.
+        """
         warn(
             "Setting property 'row_names' is an in-place operation, use 'set_row_names' instead",
             UserWarning,
         )
-
         self.set_row_names(names, in_place=True)
 
     @property
-    def data(self) -> Dict[str, Any]:
-        """Access columns as :py:class:`dict` Read-only property.
+    def rownames(self) -> Optional[ut.StringList]:
+        """Alias for :py:attr:`~get_row_names`, provided for back-compatibility."""
+        return self.get_row_names()
 
+    @rownames.setter
+    def rownames(self, names: list):
+        """
+        Alias for :py:attr:`~set_row_names` with ``in_place = True``,
+        provided for back-compaibility only. As this mutates the original
+        object, a warning is raised.
+        """
+        return self.set_row_names(names, in_place=True)
+
+    @property
+    def index(self) -> Optional[ut.StringList]:
+        """Alias to :py:attr:`~get_row_names`, provided for compatibility with **pandas**."""
+        return self.get_row_names()
+
+    ######################
+    ######>> Data <<######
+    ######################
+
+    def get_data(self) -> Dict[str, Any]:
+        """
         Returns:
-            Dict[str, Any]: Dictionary of columns and their values.
+            Dictionary of columns and their values.
         """
         return self._data
 
-    def get_column_names(self) -> ut.StringList:
-        """Column names of the BiocFrame.
+    @property
+    def data(self) -> Dict[str, Any]:
+        """Alias for :py:attr:`~get_data`."""
+        return self.get_data()
 
+    ##############################
+    ######>> Column names <<######
+    ##############################
+
+    def get_column_names(self) -> ut.StringList:
+        """
         Returns:
-            List[str]: A list of column names.
+            A list of column names.
         """
         return self._column_names
 
     def set_column_names(self, names: List[str], in_place: bool = False) -> "BiocFrame":
-        """Set new column names. New names must be unique.
-
+        """
         Args:
-            names (List[str]): A list of unique values.
-            in_place (bool): Whether to modify the ``BiocFrame`` object in place.
+            names:
+                List of unique strings, of length equal to the number of
+                columns in this ``BiocFrame``.
 
-        Raises:
-            ValueError:
-                If the length of ``names`` does not match the number of columns.
-                If ``names`` is not unique.
+            in_place:
+                Whether to modify the ``BiocFrame`` object in place.
 
         Returns:
-            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         if len(names) != len(self._column_names):
@@ -473,51 +459,70 @@ class BiocFrame:
 
     @property
     def column_names(self) -> ut.StringList:
-        """Column names of the BiocFrame.
-
-        Returns:
-            List[str]: A list of column names.
-        """
+        """Alias for :py:attr:`~get_column_names`."""
         return self.get_column_names()
 
     @column_names.setter
     def column_names(self, names: List[str]):
-        """Set new column names. New names must be unique (in-place operation).
-
-        Args:
-            names (List[str]): A list of unique values.
-
-        Raises:
-            ValueError:
-                If the length of ``names`` does not match the number of columns.
-                If ``names`` is not unique.
         """
-
+        Alias for :py:attr:`~set_column_names` with ``in_place = True``. As
+        this mutates the original object, a warning is raised.
+        """
         warn(
             "Setting property 'column_names' is an in-place operation, use 'set_column_names' instead",
             UserWarning,
         )
-
         self.set_column_names(names, in_place=True)
+
+    # compatibility with Pandas
+    @property
+    def columns(self) -> ut.StringList:
+        """Alias for :py:attr:`~get_column_names`, provided for compatibility with **pandas**."""
+        return self.get_column_names()
+
+
+    @property
+    def colnames(self) -> ut.StringList:
+        """Alias for :py:attr:`~get_column_names`, provided for back-compatibility only."""
+        return self.get_column_names()
+
+    @colnames.setter
+    def colnames(self, names: ut.StringList):
+        """
+        Alias for :py:attr:`~set_column_names` with ``in_place = True``,
+        provided for back-compatibility only. As this mutates the original
+        object, a warning is raised.
+        """
+        self.set_column_names(names, in_place=True)
+
+    ##########################
+    ######>> Metadata <<######
+    ##########################
 
     def get_column_data(self) -> Union[None, "BiocFrame"]:
         """
         Returns:
-            The ``column_data``, containing annotation on the columns.
+            The annotations for each column. This may be None if no annotation
+            is present, or is a ``BiocFrame`` where each row corresponds to a
+            column and contains that column's metadata.
         """
         return self._column_data
 
     def set_column_data(
         self, column_data: Union[None, "BiocFrame"], in_place: bool = False
     ) -> "BiocFrame":
-        """Set new `column_data`, containing annotations on the columns.
-
+        """
         Args:
-            column_data (Biocframe, optional): New column data. Can be `None` to remove this information.
-            in_place (bool): Whether to modify the ``BiocFrame`` object in place.
+            column_data:
+                New column data. This should either be a ``BiocFrame`` with the
+                numbero of rows equal to the number of columns in the current object,
+                or None to remove existing column data.
+
+            in_place: 
+                Whether to modify the ``BiocFrame`` object in place.
 
         Returns:
-            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         if column_data is not None:
@@ -532,103 +537,88 @@ class BiocFrame:
 
     @property
     def column_data(self) -> Union[None, "BiocFrame"]:
-        """The ``column_data``, containing annotation on the columns."""
+        """Alias for :py:attr:`~get_column_data`."""
         return self.get_column_data()
 
     @column_data.setter
     def column_data(self, column_data: Union[None, "BiocFrame"]):
-        """Set new column_data (in-place operation).
-
-        Args:
-            column_data (Union[None, BiocFrame]): New metadata about column to set.
+        """
+        Alias for :py:attr:`~set_column_data` with ``in_place = True``. As
+        this mutates the original object, a warning is raised.
         """
         warn(
             "Setting property 'column_data' is an in-place operation, use 'set_column_data' instead",
             UserWarning,
         )
-
         self.set_column_data(column_data, in_place=True)
 
     def get_metadata(self) -> dict:
-        """Access metadata.
-
+        """
         Returns:
-            dict: Metadata object.
+            Dictionary of metadata for this object.
         """
         return self._metadata
 
     def set_metadata(self, metadata: dict, in_place: bool = False) -> "BiocFrame":
-        """Set new metadata.
-
+        """
         Args:
-            metadata (dict): New metadata object.
-            in_place (bool): Whether to modify the ``BiocFrame`` object in place.
+            metadata: 
+                New metadata for this object.
+
+            in_place: 
+                Whether to modify the ``BiocFrame`` object in place.
 
         Returns:
-            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         if not isinstance(metadata, dict):
             raise TypeError(
                 f"`metadata` must be a dictionary, provided {type(metadata)}."
             )
-
         output = self._define_output(in_place)
         output._metadata = metadata
         return output
 
     @property
     def metadata(self) -> dict:
-        """Access metadata.
-
-        Returns:
-            dict: Metadata object.
-        """
+        """Alias for :py:attr:`~get_metadata`."""
         return self.get_metadata()
 
     @metadata.setter
     def metadata(self, metadata: dict):
-        """Set new metadata (in-place operation).
-
-        Args:
-            metadata (dict): New metadata object.
-        """
+        """Alias for :py:attr:`~set_metadata` with ``in_place = True``.
+        As this mutates the original object, a warning is raised."""
         warn(
             "Setting property 'metadata' is an in-place operation, use 'set_metadata' instead",
             UserWarning,
         )
-
         self.set_metadata(metadata, in_place=True)
 
-    def has_column(self, name: str) -> bool:
-        """Check whether the column exists in the BiocFrame.
+    ################################
+    ######>> Single getters <<######
+    ################################
 
+    def has_column(self, name: str) -> bool:
+        """
         Args:
-            name (str): Name to check.
+            name: Name of the column.
 
         Returns:
-            bool: True if the column exists, otherwise False.
+            Whether a column with the specified ``name`` exists in this object.
         """
         return name in self.column_names
 
     def get_column(self, column: Union[str, int]) -> Any:
-        """Access a column by index or column label.
-
+        """
         Args:
-            column (Union[str, int]): Name of the column, which must a valid name in
-                :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
+            column:
+                Name of the column, which must exist in :py:attr:`~get_column_names`.
 
-                Alternatively, you may provide the integer index of the column to access.
-
-        Raises:
-            ValueError:
-                If ``column`` is not in column names.
-                If the integer index is greater than the number of columns.
-            TypeError:
-                If ``column`` is neither a string nor an integer.
+                Alternatively, the integer index of the column of interest.
 
         Returns:
-            Any: Column with its original type preserved.
+            The contents of the specified column.
         """
         if isinstance(column, int):
             column = self._column_names[column]
@@ -637,50 +627,26 @@ class BiocFrame:
         return self._data[column]
 
     def column(self, column: Union[str, int]) -> Any:
-        """Access a column by index or column label. Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_column`.
-
-        Args:
-            column (Union[str, int]): Name of the column, which must a valid name in
-                :py:attr:`~biocframe.BiocFrame.BiocFrame.column_names`.
-
-                Alternatively, you may provide the integer index of the column to access.
-
-        Raises:
-            ValueError:
-                If ``column`` is not in column names.
-                If the integer index is greater than the number of columns.
-            TypeError:
-                If ``column`` is neither a string nor an integer.
-
-        Returns:
-            Any: Column with its original type preserved.
-        """
-
+        """Alias for :py:meth:`~get_column`, provided for back-compatibility only."""
         warn(
             "Method 'column' is deprecated, use 'get_column' instead",
             DeprecationWarning,
         )
-
         return self.get_column(column)
 
     def get_row(self, row: Union[str, int]) -> dict:
-        """Access a row by index or row name.
-
+        """
         Args:
-            row (Union[str, int]): Integer index of the row to access.
+            row:
+                Integer index of the row to access. 
 
-                Alternatively, you may provide a string specifying the row to access,
-                only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are available.
-
-        Raises:
-            ValueError:
-                If ``row`` is not in row names.
-                If the integer index is greater than the number of rows.
-            TypeError:
-                If ``row`` is neither a string nor an integer.
+                If row names are available (see :py:attr:`~get_row_names`), a
+                string may be supplied instead. The first occurrence of the
+                string in the row names is used.
 
         Returns:
-            dict: A dictionary with keys as column names and their values.
+            A dictionary where the keys are column names and the values are
+            the contents of the columns at the specified ``row``.
         """
         if isinstance(row, str):
             if self._row_names is None:
@@ -697,31 +663,16 @@ class BiocFrame:
         return collected
 
     def row(self, row: Union[str, int]) -> dict:
-        """Access a row by index or row name. Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.get_row`.
-
-        Args:
-            row (Union[str, int]): Integer index of the row to access.
-
-                Alternatively, you may provide a string specifying the row to access,
-                only if :py:attr:`~biocframe.BiocFrame.BiocFrame.row_names` are available.
-
-        Raises:
-            ValueError:
-                If ``row`` is not in row names.
-                If the integer index is greater than the number of rows.
-            TypeError:
-                If ``row`` is neither a string nor an integer.
-
-        Returns:
-            dict: A dictionary with keys as column names and their values.
-        """
-
+        """Alias for :py:attr:`~get_row`, provided for back-compatibility only."""
         warn(
             "Method 'row' is deprecated, use 'get_row' instead",
             DeprecationWarning,
         )
-
         return self.get_row(row)
+
+    #########################
+    ######>> Slicers <<######
+    #########################
 
     def get_slice(
         self,
@@ -736,6 +687,10 @@ class BiocFrame:
                 or any sequence thereof, as supported by
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
                 Scalars are treated as length-1 sequences.
+
+                Strings may only be used if row names are available (see 
+                :py:attr:`~get_row_names`). The first occurrence of each string
+                in the row names is used for extraction.
 
             columns:
                 Columns to be extracted. This may be an integer, boolean,
@@ -798,29 +753,9 @@ class BiocFrame:
     def __getitem__(
         self, args: Union[int, str, Sequence, tuple]
     ) -> Union["BiocFrame", Any]:
-        """Wrapper around :py:attr:`~get_slice` to obtain a slice of a ``BiocFrame`` or any of its columns.
-
-        Usage:
-
-        .. code-block:: python
-
-            # made up chromosome locations and ensembl ids.
-            obj = {
-                "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
-                "symbol": ["MAP1A", "BIN1", "ESR1"],
-                "ranges": BiocFrame({
-                    "chr": ["chr1", "chr2", "chr3"],
-                    "start": [1000, 1100, 5000],
-                    "end": [1100, 4000, 5500]
-                }),
-            }
-            bframe = BiocFrame(obj)
-
-            # Different ways to slice.
-
-            bframe[0:2, 0:2]
-            bframe[[0, 2], [True, False, False]]
-            bframe[<List of column names>]
+        """
+        Wrapper around :py:attr:`~get_column` and :py:attr:`~get_slice` 
+        to obtain a slice of a ``BiocFrame`` or any of its columns.
 
         Args:
             args:
@@ -836,7 +771,7 @@ class BiocFrame:
 
         Returns:
             If ``args`` is a scalar, the specified column is returned. This is
-            achieved by calling :py:attr:`~get_column`.
+            achieved internally by calling :py:attr:`~get_column`.
 
             If ``args`` is a sequence, a new ``BiocFrame`` is returned
             containing only the specified columns. This is achieved by just
@@ -867,12 +802,18 @@ class BiocFrame:
         return self.get_slice(slice(None), args)
 
     def __setitem__(self, args: Union[int, str, Sequence, tuple], value: "BiocFrame"):
-        """If ``args`` is a string, it is assumed to be a column name and ``value`` is expected to be the column
-        contents; these are passed onto :py:attr:`~set_column` with `in_place = True`.
+        """
+        Wrapper around :py:attr:`~set_column` and :py:attr:`~set_slice` to
+        modify a slice of a ``BiocFrame`` or any of its columns. As this
+        modified the original object in place, a warning is raise.
+
+        If ``args`` is a string, it is assumed to be a column name and
+        ``value`` is expected to be the column contents; these are passed onto
+        :py:attr:`~set_column` with ``in_place = True``.
 
         If ``args`` is a tuple, it is assumed to contain row and column indices.
         ``value`` is expected to be a ``BiocFrame`` containing replacement values.
-        These are passed to :py:attr:`~set_slice` with `in_place = True`.
+        These are passed to :py:attr:`~set_slice` with ``in_place = True``.
         """
         if isinstance(args, tuple):
             warn(
@@ -903,6 +844,10 @@ class BiocFrame:
                 :py:meth:`~biocutils.normalize_subscript.normalize_subscript`.
                 Scalars are treated as length-1 sequences.
 
+                Strings may only be used if row names are available (see 
+                :py:attr:`~get_row_names`). The first occurrence of each string
+                in the row names is used for extraction.
+
             columns:
                 Columns to be replaced. This may be any sequence of strings,
                 integers, or booleans (or mixture thereof), as supported by
@@ -915,8 +860,12 @@ class BiocFrame:
                 to a column in ``columns``. Note that the replacement is based
                 on position, so row and column names in ``value`` are ignored.
 
-        Raises:
-            ValueError: If the length of ``value`` does not match the number of rows.
+            in_place: 
+                Whether to modify the ``BiocFrame`` object in place.
+
+        Returns: 
+            A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
         """
         output = self._define_output(in_place)
         if not in_place:
@@ -940,31 +889,14 @@ class BiocFrame:
 
         return output
 
+    ##############################
+    ######>> Item setters <<######
+    ##############################
+
     def __delitem__(self, name: str):
-        """Remove a column (in-place operation).
-
-        Usage:
-
-        .. code-block:: python
-
-            # made-up chromosome locations and ensembl ids.
-            obj = {
-                "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
-                "symbol": ["MAP1A", "BIN1", "ESR1"],
-                "ranges": BiocFrame({
-                    "chr": ["chr1", "chr2", "chr3"],
-                    "start": [1000, 1100, 5000],
-                    "end": [1100, 4000, 5500]
-                }),
-            }
-            bframe = BiocFrame(obj)
-            delete bframe["symbol"]
-
-        Args:
-            name (str): Name of the column.
-
-        Raises:
-            ValueError: If `name` is not a valid column.
+        """
+        Alias for :py:attr:`~remove_column` with ``in_place = True``. As this
+        mutates the original object, a warning is raised.
         """
         warn(
             "This method perform an in-place operation, use 'remove_column' instead",
@@ -975,23 +907,24 @@ class BiocFrame:
     def set_column(
         self, column: Union[int, str], value: Any, in_place: bool = False
     ) -> "BiocFrame":
-        """Modify an existing column or add a new column. This is a convenience wrapper around :py:attr:`~set_columns`.
+        """
+        Modify an existing column or add a new column. This is a convenience
+        wrapper around :py:attr:`~set_columns`.
 
         Args:
-            args (Union[int, str]):
+            column:
                 Name of an existing or new column. Alternatively, an index
                 specifying the position of an existing column.
 
-            value (Any): Value of the new column.
+            value: 
+                Value of the new column. This should have the same height
+                as the number of rows in the current object. 
 
-            in_place (bool): Whether to modify the object in place. Defaults to False.
-
-        Raises:
-            TypeError: If row indices are not a sequence or slice.
-            ValueError: If length of `value` does not match the number of rows.
+            in_place:
+                Whether to modify the object in place. 
 
         Returns:
-            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         return self.set_columns({column: value}, in_place=in_place)
@@ -999,23 +932,20 @@ class BiocFrame:
     def set_columns(
         self, columns: Dict[str, Any], in_place: bool = False
     ) -> "BiocFrame":
-        """Modify existing columns or add new columns. This has the same effect as repeated calls to
-        :py:attr:`~set_column` for multiple columns but is slightly more efficient when `in_place = False`.
+        """
+        Modify existing columns or add new columns.
 
         Args:
-            columns (Dict[Union[str, int], Any]):
+            columns:
                 Contents of the columns to set. Keys may be strings containing
                 new or existing column names, or integers containing the position
                 of the column. Values should be the contents of each column.
 
-            in_place (bool): Whether to modify the object in place. Defaults to False.
-
-        Raises:
-            TypeError: If row indices are not a sequence or slice.
-            ValueError: If length of `value` does not match the number of rows.
+            in_place:
+                Whether to modify the object in place. Defaults to False.
 
         Returns:
-            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         output = self._define_output(in_place)
@@ -1052,17 +982,19 @@ class BiocFrame:
     def remove_column(
         self, column: Union[int, str], in_place: bool = False
     ) -> "BiocFrame":
-        """Remove a column. This is a convenience wrapper around :py:attr:`~remove_columns`.
+        """
+        Remove a column. This is a convenience wrapper around
+        :py:attr:`~remove_columns`.
 
         Args:
-            column (str): Name or positional index of the column to remove.
-            in_place (bool): Whether to modify the object in place. Defaults to False.
+            column:
+                Name or positional index of the column to remove.
 
-        Raises:
-            ValueError: If column does not exist.
+            in_place: 
+                Whether to modify the object in place. Defaults to False.
 
         Returns:
-            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
         """
         return self.remove_columns([column], in_place=in_place)
@@ -1073,14 +1005,11 @@ class BiocFrame:
         """Remove any number of existing columns.
 
         Args:
-            columns (Sequence[Union[int, str]]):
+            columns:
                 Names or indices of the columns to remove.
 
-            in_place (bool):
+            in_place: 
                 Whether to modify the object in place. Defaults to False.
-
-        Raises:
-            ValueError: If column does not exist.
 
         Returns:
             BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
@@ -1110,159 +1039,14 @@ class BiocFrame:
 
         return output
 
-    def combine(self, *other):
-        """Combine multiple ``BiocFrame`` objects by row. This is just a wrapper around the
-        :py:meth:`~biocframe.relaxed_combine.relaxed_combine_rows`.
-
-        Args:
-            other:
-                The other ``BiocFrame`` objects to combine, possibly with
-                different columns.
-
-        Returns:
-            A combined ``BiocFrame`` object.
-        """
-        return relaxed_combine_rows([self] + other)
-
-    def __len__(self) -> int:
-        """Number of rows.
-
-        Returns:
-            int: Number of rows.
-        """
-        return self.shape[0]
-
-    def __iter__(self) -> BiocFrameIter:
-        """Iterator over rows."""
-        return BiocFrameIter(self)
-
-    def to_pandas(self):
-        """Convert :py:class:`~biocframe.BiocFrame.BiocFrame` into :py:class:`~pandas.DataFrame` object.
-
-        Returns:
-            DataFrame: A :py:class:`~pandas.DataFrame` object.
-        """
-        from pandas import DataFrame
-
-        _data_copy = OrderedDict()
-        for col in self.column_names:
-            _data_copy[col] = self.column(col)
-            if isinstance(self.column(col), ut.Factor):
-                _data_copy[col] = _data_copy[col].to_pandas()
-
-        return DataFrame(
-            data=_data_copy, index=self._row_names, columns=self._column_names
-        )
-
-    # TODO: very primitive implementation, needs very robust testing
-    # TODO: implement in-place, view
-    def __array_ufunc__(self, func, method, *inputs, **kwargs) -> "BiocFrame":
-        """Interface with NumPy array methods.
-
-        Note: This is a very primitive implementation and needs tests to support different types.
-
-        Usage:
-
-        .. code-block:: python
-
-            np.sqrt(biocframe)
-
-        Raises:
-            TypeError: If ``input`` is not a :py:class:`~biocframe.BiocFrame.BiocFrame`
-            object.
-
-        Returns:
-            An object with the same type as the caller.
-        """
-
-        from pandas import Series
-        from pandas.api.types import is_numeric_dtype
-
-        input = inputs[0]
-        if not isinstance(input, BiocFrame):
-            raise TypeError("Input is not a `BiocFrame` object.")
-
-        for col in self.column_names:
-            if is_numeric_dtype(Series(input.column(col))):
-                new_col = getattr(func, method)(input.column(col), **kwargs)
-                input[col] = new_col
-
-        return input
-
-    # compatibility with Pandas
-    @property
-    def columns(self) -> ut.StringList:
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
-
-        Returns:
-            list: List of column names.
-        """
-        return self.get_column_names()
-
-    @property
-    def index(self) -> Optional[ut.StringList]:
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
-
-        Returns:
-            (list, optional): List of row names if available, otherwise None.
-        """
-        return self.get_row_names()
-
-    # compatibility with R interfaces
-    @property
-    def rownames(self) -> Optional[ut.StringList]:
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names`.
-
-        Returns:
-            (list, optional): List of row names if available, otherwise None.
-        """
-        return self.get_row_names()
-
-    @rownames.setter
-    def rownames(self, names: list):
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.row_names` (in-place operation).
-
-        Args:
-            names (list): New row names.
-        """
-        return self.set_row_names(names, in_place=True)
-
-    @property
-    def colnames(self) -> ut.StringList:
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names`.
-
-        Returns:
-            list: list of column names.
-        """
-        return self.get_column_names()
-
-    @colnames.setter
-    def colnames(self, names: ut.StringList):
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.column_names` (in-place operation).
-
-        Args:
-            names (list): New column names.
-        """
-        self.set_column_names(names, in_place=True)
-
-    @property
-    def dims(self) -> Tuple[int, int]:
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.shape`.
-
-        Returns:
-            Tuple[int, int]: A tuple  (m, n),
-            where `m` is the number of rows, and `n` is the number of columns.
-        """
-        return self.shape
+    #########################
+    ######>> Copying <<######
+    #########################
 
     def __deepcopy__(self, memo=None, _nil=[]):
-        """Make a deep copy of the object.
-
-        Raises:
-            Exception: If a column cannot be copied.
-
+        """
         Returns:
-            The same type as caller.
+            A deep copy of the current ``BiocFrame``.
         """
         from copy import deepcopy
 
@@ -1295,12 +1079,9 @@ class BiocFrame:
         )
 
     def __copy__(self):
-        """Make a shallow copy of the object.
-
-        Any modifications to the copied object may also affect the original.
-
+        """
         Returns:
-            The same type as caller.
+            A shallow copy of the current ``BiocFrame``.
         """
         current_class_const = type(self)
         new_instance = current_class_const(
@@ -1315,12 +1096,60 @@ class BiocFrame:
         return new_instance
 
     def copy(self):
-        """Alias to :py:meth:`~biocframe.BiocFrame.BiocFrame.__copy__`.
+        """Alias for :py:meth:`~__copy__`."""
+        return self.__copy__()
+
+    ###############################
+    ######>> Miscellaneous <<######
+    ###############################
+
+    def combine(self, *other):
+        """Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only."""
+        return relaxed_combine_rows([self] + other)
+
+
+    def to_pandas(self) -> "pandas.DataFrame":
+        """Convert the ``BiocFrame`` into a :py:class:`~pandas.DataFrame` object.
 
         Returns:
-            The same type as caller.
+            A :py:class:`~pandas.DataFrame` object.
         """
-        return self.__copy__()
+        from pandas import DataFrame
+
+        _data_copy = OrderedDict()
+        for col in self.column_names:
+            _data_copy[col] = self.column(col)
+            if isinstance(self.column(col), ut.Factor):
+                _data_copy[col] = _data_copy[col].to_pandas()
+
+        return DataFrame(
+            data=_data_copy, index=self._row_names, columns=self._column_names
+        )
+
+    # TODO: very primitive implementation, needs very robust testing
+    # TODO: implement in-place, view
+    def __array_ufunc__(self, func, method, *inputs, **kwargs) -> "BiocFrame":
+        """Interface for NumPy array methods.
+
+        Note: This is a very primitive implementation and needs tests to support different types.
+
+        Returns:
+            An object with the same type as the caller.
+        """
+
+        from pandas import Series
+        from pandas.api.types import is_numeric_dtype
+
+        input = inputs[0]
+        if not isinstance(input, BiocFrame):
+            raise TypeError("Input is not a `BiocFrame` object.")
+
+        for col in self.column_names:
+            if is_numeric_dtype(Series(input.column(col))):
+                new_col = getattr(func, method)(input.column(col), **kwargs)
+                input[col] = new_col
+
+        return input
 
 
 ############################
@@ -1487,9 +1316,11 @@ def _construct_missing(col, n):
 
 
 def relaxed_combine_rows(*x: BiocFrame) -> BiocFrame:
-    """A relaxed version of the :py:meth:`~biocutils.combine_rows.combine_rows` method for ``BiocFrame`` objects.
-    Whereas ``combine_rows`` expects that all objects have the same columns, ``relaxed_combine_rows`` allows for
-    different columns. Absent columns in any object are filled in with appropriate placeholder values before combining.
+    """A relaxed version of the :py:func:`~biocutils.combine_rows.combine_rows`
+    method for :py:class:`~BiocFrame` objects.  Whereas ``combine_rows``
+    expects that all objects have the same columns, ``relaxed_combine_rows``
+    allows for different columns. Absent columns in any object are filled in
+    with appropriate placeholder values before combining.
 
     Args:
         x:
@@ -1579,15 +1410,17 @@ def merge(
     join: Literal["inner", "left", "right", "outer"] = "left",
     rename_duplicate_columns: bool = False,
 ) -> "BiocFrame":
-    """Merge multiple ``BiocFrame`` objects together by common columns or row names, yielding a combined object with a
-    union of columns across all objects.
+    """
+    Merge multiple :py:class:`~BiocFrame`` objects together by common columns
+    or row names, yielding a combined object with a union of columns across all
+    objects.
 
     Args:
-        x (Sequence[BiocFrame]):
+        x:
             Sequence of ``BiocFrame`` objects. Each object may have any
             number and identity of rows and columns.
 
-        by (Union[None, str, Sequence]):
+        by:
             If string, the name of column containing the keys. Each entry of
             ``x`` is assumed to have this column.
 
@@ -1599,11 +1432,11 @@ def merge(
             Alternatively a sequence of strings, integers or None, specifying
             the location of the keys in each entry of ``x``.
 
-        join (Literal["inner", "left", "right", "outer"]):
+        join:
             Strategy for the merge. For left and right joins, we consider the
             keys for the first and last object in ``x``, respectively.
 
-        rename_duplicate_columns (bool):
+        rename_duplicate_columns:
             Whether duplicated non-key columns across ``x`` should be
             automatically renamed in the merged object. If False, an error is
             raised instead.
@@ -1728,5 +1561,5 @@ def merge(
 
 
 def relaxed_combine_columns(*x: BiocFrame) -> BiocFrame:
-    """Wrapper around :py:meth:`~biocframe.BiocFrame.merge` that performs a left join on the row names."""
+    """Wrapper around :py:func:`~merge` that performs a left join on the row names."""
     return merge(x, join="left", by=None)

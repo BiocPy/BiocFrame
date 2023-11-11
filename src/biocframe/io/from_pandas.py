@@ -5,17 +5,15 @@ __copyright__ = "jkanche"
 __license__ = "MIT"
 
 
-def from_pandas(input) -> BiocFrame:
-    """Read a :py:class:`~biocframe.BiocFrame.BiocFrame` from a :py:class:`~pandas.DataFrame` object.
+def from_pandas(input: "pandas.DataFrame") -> BiocFrame:
+    """Create a :py:class:`~biocframe.BiocFrame.BiocFrame` from a :py:class:`~pandas.DataFrame` object.
 
     Args:
-        input (:py:class:`~pandas.DataFrame`): Input data.
-
-    Raises:
-        TypeError: If ``input`` is not a :py:class:`~pandas.DataFrame`.
+        input:
+            Input data.
 
     Returns:
-        BiocFrame: A :py:class:`~biocframe.BiocFrame.BiocFrame` object.
+        A :py:class:`~biocframe.BiocFrame.BiocFrame` object.
     """
 
     from pandas import DataFrame
