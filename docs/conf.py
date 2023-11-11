@@ -172,7 +172,7 @@ autodoc_default_options = {
     # 'member-order': 'bysource',
     'special-members': True,
     'undoc-members': True,
-    'exclude-members': '__weakref__, __dict__, __str__, __module__, __init__'
+    'exclude-members': '__weakref__, __dict__, __str__, __module__'
 }
 
 autosummary_generate = True
@@ -311,6 +311,7 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
     "setuptools": ("https://setuptools.pypa.io/en/stable/", None),
     "pyscaffold": ("https://pyscaffold.org/en/stable", None),
+    "biocutils": ("https://biocpy.github.io/BiocUtils", None),
 }
 
 print(f"loading configurations for {project} {version} ...", file=sys.stderr)

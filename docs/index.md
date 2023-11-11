@@ -1,16 +1,5 @@
 # BiocFrame
 
-This package provides a data-frame representation similar to a pandas `DataFrame`, with
-support for nested column types.
-
-## Install
-
-Package is published to [PyPI](https://pypi.org/project/biocframe/)
-
-```shell
-pip install biocframe
-```
-
 ## Contents
 
 ```{toctree}
