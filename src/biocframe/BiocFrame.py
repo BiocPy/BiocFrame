@@ -1270,7 +1270,9 @@ class BiocFrame:
         _num_rows_copy = deepcopy(self._number_of_rows)
         _rownames_copy = deepcopy(self.row_names)
         _metadata_copy = deepcopy(self.metadata)
-        _column_data_copy = deepcopy(self._column_data) if self._column_data is not None else None
+        _column_data_copy = (
+            deepcopy(self._column_data) if self._column_data is not None else None
+        )
 
         # copy dictionary first
         _data_copy = OrderedDict()
