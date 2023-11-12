@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>biocframe.BiocFrame - BiocFrame 0.5.0 documentation</title>
+        <title>biocframe.BiocFrame - BiocFrame 0.5.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
@@ -122,7 +122,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">BiocFrame 0.5.0 documentation</div></a>
+      <a href="../../index.html"><div class="brand">BiocFrame 0.5.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -145,7 +145,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.5.0 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.5.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -625,11 +625,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_row_names</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ut</span><span class="o">.</span><span class="n">StringList</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias to :py:attr:`~get_row_names`, provided for compatibility with **pandas**.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_row_names</span><span class="p">()</span>
-
     <span class="c1">######################</span>
     <span class="c1">######&gt;&gt; Data &lt;&lt;######</span>
     <span class="c1">######################</span>
@@ -716,12 +711,6 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_column_names</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># compatibility with Pandas</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">columns</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ut</span><span class="o">.</span><span class="n">StringList</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias for :py:attr:`~get_column_names`, provided for compatibility with **pandas**.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_column_names</span><span class="p">()</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">colnames</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ut</span><span class="o">.</span><span class="n">StringList</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias for :py:attr:`~get_column_names`, provided for back-compatibility only.&quot;&quot;&quot;</span>
@@ -741,14 +730,22 @@
 
 <div class="viewcode-block" id="BiocFrame.get_column_data">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.get_column_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_column_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_column_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_names</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            with_names:</span>
+<span class="sd">                Whether to set the column names of this ``BiocFrame`` as</span>
+<span class="sd">                the row names of the column data ``BiocFrame``.</span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            The annotations for each column. This may be None if no annotation</span>
 <span class="sd">            is present, or is a ``BiocFrame`` where each row corresponds to a</span>
 <span class="sd">            column and contains that column&#39;s metadata.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_data</span></div>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_column_data</span>
+        <span class="k">if</span> <span class="n">with_names</span> <span class="ow">and</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">set_row_names</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span></div>
 
 
 <div class="viewcode-block" id="BiocFrame.set_column_data">
@@ -1399,16 +1396,19 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span></div>
 
 
-    <span class="c1">###############################</span>
-    <span class="c1">######&gt;&gt; Miscellaneous &lt;&lt;######</span>
-    <span class="c1">###############################</span>
+    <span class="c1">################################</span>
+    <span class="c1">######&gt;&gt; pandas interop &lt;&lt;######</span>
+    <span class="c1">################################</span>
 
-<div class="viewcode-block" id="BiocFrame.combine">
-<a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.combine">[docs]</a>
-    <span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">relaxed_combine_rows</span><span class="p">([</span><span class="bp">self</span><span class="p">]</span> <span class="o">+</span> <span class="n">other</span><span class="p">)</span></div>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ut</span><span class="o">.</span><span class="n">StringList</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias to :py:attr:`~get_row_names`, provided for compatibility with **pandas**.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_row_names</span><span class="p">()</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">columns</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ut</span><span class="o">.</span><span class="n">StringList</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias for :py:attr:`~get_column_names`, provided for compatibility with **pandas**.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_column_names</span><span class="p">()</span>
 
 <div class="viewcode-block" id="BiocFrame.to_pandas">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.to_pandas">[docs]</a>
@@ -1429,6 +1429,45 @@
         <span class="k">return</span> <span class="n">DataFrame</span><span class="p">(</span>
             <span class="n">data</span><span class="o">=</span><span class="n">_data_copy</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BiocFrame.from_pandas">
+<a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.from_pandas">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_pandas</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="s2">&quot;pandas.DataFrame&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a ``BiocFrame`` from a :py:class:`~pandas.DataFrame` object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input:</span>
+<span class="sd">                Input data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``BiocFrame`` object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`data` is not a pandas `DataFrame` object.&quot;</span><span class="p">)</span>
+
+        <span class="n">rdata</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;list&quot;</span><span class="p">)</span>
+        <span class="n">rindex</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="nb">input</span><span class="o">.</span><span class="n">index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rindex</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">rdata</span><span class="p">,</span> <span class="n">row_names</span><span class="o">=</span><span class="n">rindex</span><span class="p">,</span> <span class="n">column_names</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span></div>
+
+
+    <span class="c1">###############################</span>
+    <span class="c1">######&gt;&gt; Miscellaneous &lt;&lt;######</span>
+    <span class="c1">###############################</span>
+
+<div class="viewcode-block" id="BiocFrame.combine">
+<a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.combine">[docs]</a>
+    <span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">relaxed_combine_rows</span><span class="p">([</span><span class="bp">self</span><span class="p">]</span> <span class="o">+</span> <span class="n">other</span><span class="p">)</span></div>
 
 
     <span class="c1"># TODO: very primitive implementation, needs very robust testing</span>
@@ -1910,7 +1949,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=1dd76d02"></script>
+</div><script src="../../_static/documentation_options.js?v=b9afe91b"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>

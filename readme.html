@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="biocframe" href="api/modules.html" /><link rel="prev" title="BiocFrame" href="index.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>Bioconductor-like data frames - BiocFrame 0.5.0 documentation</title>
+        <title>Bioconductor-like data frames - BiocFrame 0.5.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=36a5483c" />
@@ -123,7 +123,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.5.0 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.5.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -146,7 +146,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.5.0 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.5.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -517,6 +517,43 @@ If this is not the case, e.g., with different columns across objects, we can use
 </pre></div>
 </div>
 </section>
+<section id="playing-nice-with-pandas">
+<h2>Playing nice with pandas<a class="headerlink" href="#playing-nice-with-pandas" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> is intended for accurate representation of Bioconductor objects for interoperability with R.
+Most users will probably prefer to work with <strong>pandas</strong> <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> objects for their actual analyses.
+This conversion is easily achieved:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
+<span class="n">bframe</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">pd</span> <span class="o">=</span> <span class="n">bframe</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="p">)</span>
+<span class="c1">##   foo    bar</span>
+<span class="c1">## 0   A   True</span>
+<span class="c1">## 1   B  False</span>
+<span class="c1">## 2   C   True</span>
+<span class="c1">## 3   D  False</span>
+<span class="c1">## 4   E   True</span>
+</pre></div>
+</div>
+<p>Conversion back to a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> is similarly easy:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">pd</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<span class="c1">## BiocFrame with 5 rows and 2 columns</span>
+<span class="c1">##      foo    bar</span>
+<span class="c1">##   &lt;list&gt; &lt;list&gt;</span>
+<span class="c1">## 0      A   True</span>
+<span class="c1">## 1      B  False</span>
+<span class="c1">## 2      C   True</span>
+<span class="c1">## 3      D  False</span>
+<span class="c1">## 4      E   True</span>
+</pre></div>
+</div>
+</section>
 <section id="further-reading">
 <h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
 <p>Check out <a class="reference internal" href="#biocpy.github.io/BiocFrame/"><span class="xref myst">the reference documentation</span></a> for more details.</p>
@@ -590,6 +627,7 @@ which implements the <code class="docutils literal notranslate"><span class="pre
 </ul>
 </li>
 <li><a class="reference internal" href="#combining-objects">Combining objects</a></li>
+<li><a class="reference internal" href="#playing-nice-with-pandas">Playing nice with pandas</a></li>
 <li><a class="reference internal" href="#further-reading">Further reading</a></li>
 </ul>
 </li>
@@ -602,7 +640,7 @@ which implements the <code class="docutils literal notranslate"><span class="pre
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=1dd76d02"></script>
+</div><script src="_static/documentation_options.js?v=b9afe91b"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=32e29ea5"></script>
