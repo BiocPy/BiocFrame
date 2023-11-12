@@ -347,7 +347,7 @@ combined = merge([modified1, modified3], by=None, join="outer")
 
 ## Playing nice with pandas
 
-`BiocFrame` is intended for accurate representation of Bioconductor objects for interoperability with R. 
+`BiocFrame` is intended for accurate representation of Bioconductor objects for interoperability with R.
 Most users will probably prefer to work with **pandas** `DataFrame` objects for their actual analyses.
 This conversion is easily achieved:
 
