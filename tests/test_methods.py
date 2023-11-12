@@ -58,6 +58,7 @@ def test_bframe_basic_ops():
     assert bframe.column_names is not None
     assert len(bframe.column_names) == 3
 
+    assert bframe.get_column_data() is None
     assert bframe.metadata == {}
 
     assert len(bframe.dims) == 2
@@ -161,6 +162,12 @@ def test_bframe_set_columns():
         {"column1": ["A", "B", "C"], "column3": ["a", "b", "c"], "column4": [9, 8, 7]}
     )
     final_column_data = bframe2b.get_column_data()
+    assert final_column_data.get_row_names() == [
+        "column1",
+        "column2",
+        "column3",
+        "column4",
+    ]
     assert final_column_data.column("prop1") == [1, 2, None, None]
     assert final_column_data.column("prop2").dtype == np.int32
     assert (

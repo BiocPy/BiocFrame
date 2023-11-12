@@ -496,14 +496,22 @@ class BiocFrame:
     ######>> Metadata <<######
     ##########################
 
-    def get_column_data(self) -> Union[None, "BiocFrame"]:
+    def get_column_data(self, with_names: bool = True) -> Union[None, "BiocFrame"]:
         """
+        Args:
+            with_names:
+                Whether to set the column names of this ``BiocFrame`` as
+                the row names of the column data ``BiocFrame``.
+
         Returns:
             The annotations for each column. This may be None if no annotation
             is present, or is a ``BiocFrame`` where each row corresponds to a
             column and contains that column's metadata.
         """
-        return self._column_data
+        output = self._column_data
+        if with_names and output is not None:
+            output = output.set_row_names(self._column_names)
+        return output
 
     def set_column_data(
         self, column_data: Union[None, "BiocFrame"], in_place: bool = False
