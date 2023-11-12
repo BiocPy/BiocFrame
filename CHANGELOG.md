@@ -1,6 +1,12 @@
 # Changelog
 
-## Version 0.5
+## Version 0.5.1
+
+- Moved the pandas converter into a `BiocFrame` class method for more accessibility.
+- Attach row names to the output of `get_column_data()` by default.
+  This can be turned off with the `with_names = False` option.
+
+## Version 0.5.0
 
 - Bugfixes to avoid pass-by-reference effects when setting or removing columns.
 - Provide functional-style method to add/remove multiple columns at once.
