@@ -391,11 +391,6 @@ class BiocFrame:
         """
         return self.set_row_names(names, in_place=True)
 
-    @property
-    def index(self) -> Optional[ut.StringList]:
-        """Alias to :py:attr:`~get_row_names`, provided for compatibility with **pandas**."""
-        return self.get_row_names()
-
     ######################
     ######>> Data <<######
     ######################
@@ -472,12 +467,6 @@ class BiocFrame:
             UserWarning,
         )
         self.set_column_names(names, in_place=True)
-
-    # compatibility with Pandas
-    @property
-    def columns(self) -> ut.StringList:
-        """Alias for :py:attr:`~get_column_names`, provided for compatibility with **pandas**."""
-        return self.get_column_names()
 
     @property
     def colnames(self) -> ut.StringList:
@@ -1098,13 +1087,19 @@ class BiocFrame:
         """Alias for :py:meth:`~__copy__`."""
         return self.__copy__()
 
-    ###############################
-    ######>> Miscellaneous <<######
-    ###############################
+    ################################
+    ######>> pandas interop <<######
+    ################################
 
-    def combine(self, *other):
-        """Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only."""
-        return relaxed_combine_rows([self] + other)
+    @property
+    def index(self) -> Optional[ut.StringList]:
+        """Alias to :py:attr:`~get_row_names`, provided for compatibility with **pandas**."""
+        return self.get_row_names()
+
+    @property
+    def columns(self) -> ut.StringList:
+        """Alias for :py:attr:`~get_column_names`, provided for compatibility with **pandas**."""
+        return self.get_column_names()
 
     def to_pandas(self) -> "pandas.DataFrame":
         """Convert the ``BiocFrame`` into a :py:class:`~pandas.DataFrame` object.
@@ -1123,6 +1118,39 @@ class BiocFrame:
         return DataFrame(
             data=_data_copy, index=self._row_names, columns=self._column_names
         )
+
+    @classmethod
+    def from_pandas(cls, input: "pandas.DataFrame") -> "BiocFrame":
+        """Create a ``BiocFrame`` from a :py:class:`~pandas.DataFrame` object.
+
+        Args:
+            input:
+                Input data.
+
+        Returns:
+            A ``BiocFrame`` object.
+        """
+
+        from pandas import DataFrame
+
+        if not isinstance(input, DataFrame):
+            raise TypeError("`data` is not a pandas `DataFrame` object.")
+
+        rdata = input.to_dict("list")
+        rindex = None
+
+        if input.index is not None:
+            rindex = input.index.to_list()
+
+        return cls(data=rdata, row_names=rindex, column_names=input.columns.to_list())
+
+    ###############################
+    ######>> Miscellaneous <<######
+    ###############################
+
+    def combine(self, *other):
+        """Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only."""
+        return relaxed_combine_rows([self] + other)
 
     # TODO: very primitive implementation, needs very robust testing
     # TODO: implement in-place, view
