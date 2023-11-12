@@ -345,6 +345,46 @@ combined = merge([modified1, modified3], by=None, join="outer")
 ## G   None   None      E   True
 ```
 
+## Playing nice with pandas
+
+`BiocFrame` is intended for accurate representation of Bioconductor objects for interoperability with R. 
+Most users will probably prefer to work with **pandas** `DataFrame` objects for their actual analyses.
+This conversion is easily achieved:
+
+```python
+from biocframe import BiocFrame
+bframe = BiocFrame(
+    {
+        "foo": ["A", "B", "C", "D", "E"],
+        "bar": [True, False, True, False, True]
+    }
+)
+
+pd = bframe.to_pandas()
+print(pd)
+##   foo    bar
+## 0   A   True
+## 1   B  False
+## 2   C   True
+## 3   D  False
+## 4   E   True
+```
+
+Conversion back to a ``BiocFrame`` is similarly easy:
+
+```python
+out = BiocFrame.from_pandas(pd)
+print(out)
+## BiocFrame with 5 rows and 2 columns
+##      foo    bar
+##   <list> <list>
+## 0      A   True
+## 1      B  False
+## 2      C   True
+## 3      D  False
+## 4      E   True
+```
+
 ## Further reading
 
 Check out [the reference documentation](biocpy.github.io/BiocFrame/) for more details.
