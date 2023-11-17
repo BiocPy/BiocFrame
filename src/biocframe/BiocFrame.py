@@ -1,11 +1,12 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union, Literal
-from warnings import warn
 from copy import copy
+from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple, Union
+from warnings import warn
+
 import biocutils as ut
 import numpy
 
-__author__ = "jkanche"
+__author__ = "Jayaram Kancherla, Aaron Lun"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
@@ -168,8 +169,8 @@ class BiocFrame:
                 Internal use only.
         """
         self._data = {} if data is None else data
-        if row_names is not None and not isinstance(row_names, ut.StringList):
-            row_names = ut.StringList(row_names)
+        if row_names is not None and not isinstance(row_names, ut.Names):
+            row_names = ut.Names(row_names)
         self._row_names = row_names
         self._number_of_rows = _guess_number_of_rows(
             number_of_rows,
@@ -178,9 +179,9 @@ class BiocFrame:
         )
 
         if column_names is None:
-            column_names = ut.StringList(self._data.keys())
-        elif not isinstance(column_names, ut.StringList):
-            column_names = ut.StringList(column_names)
+            column_names = ut.Names(self._data.keys())
+        elif not isinstance(column_names, ut.Names):
+            column_names = ut.Names(column_names)
         self._column_names = column_names
 
         self._metadata = {} if metadata is None else metadata
@@ -267,7 +268,7 @@ class BiocFrame:
                 indices = [0, 1, 2, nr - 3, nr - 2, nr - 1]
                 insert_ellipsis = True
 
-            raw_floating = ut.create_floating_names(self._row_names, indices)
+            raw_floating = ut.create_floating_names(self._row_names.as_list(), indices)
             if insert_ellipsis:
                 raw_floating = raw_floating[:3] + [""] + raw_floating[3:]
             floating = ["", ""] + raw_floating
@@ -323,7 +324,7 @@ class BiocFrame:
     ######>> Row names <<######
     ###########################
 
-    def get_row_names(self) -> Optional[ut.StringList]:
+    def get_row_names(self) -> Optional[ut.Names]:
         """
         Returns:
             List of row names, or None if no row names are available.
@@ -354,15 +355,15 @@ class BiocFrame:
                 )
             if any(x is None for x in names):
                 raise ValueError("`row_names` cannot contain None values.")
-            if not isinstance(names, ut.StringList):
-                names = ut.StringList(names)
+            if not isinstance(names, ut.Names):
+                names = ut.Names(names)
 
         output = self._define_output(in_place)
         output._row_names = names
         return output
 
     @property
-    def row_names(self) -> Optional[ut.StringList]:
+    def row_names(self) -> Optional[ut.Names]:
         """Alias for :py:attr:`~get_row_names`."""
         return self.get_row_names()
 
@@ -379,7 +380,7 @@ class BiocFrame:
         self.set_row_names(names, in_place=True)
 
     @property
-    def rownames(self) -> Optional[ut.StringList]:
+    def rownames(self) -> Optional[ut.Names]:
         """Alias for :py:attr:`~get_row_names`, provided for back-compatibility."""
         return self.get_row_names()
 
@@ -411,7 +412,7 @@ class BiocFrame:
     ######>> Column names <<######
     ##############################
 
-    def get_column_names(self) -> ut.StringList:
+    def get_column_names(self) -> ut.Names:
         """
         Returns:
             A list of column names.
@@ -435,7 +436,7 @@ class BiocFrame:
         if len(names) != len(self._column_names):
             raise ValueError("Provided `names` does not match number of columns.")
 
-        new_names = ut.StringList()
+        new_names = ut.Names()
         new_data = {}
         for i, x in enumerate(names):
             if x is None:
@@ -452,7 +453,7 @@ class BiocFrame:
         return output
 
     @property
-    def column_names(self) -> ut.StringList:
+    def column_names(self) -> ut.Names:
         """Alias for :py:attr:`~get_column_names`."""
         return self.get_column_names()
 
@@ -469,12 +470,12 @@ class BiocFrame:
         self.set_column_names(names, in_place=True)
 
     @property
-    def colnames(self) -> ut.StringList:
+    def colnames(self) -> ut.Names:
         """Alias for :py:attr:`~get_column_names`, provided for back-compatibility only."""
         return self.get_column_names()
 
     @colnames.setter
-    def colnames(self, names: ut.StringList):
+    def colnames(self, names: ut.Names):
         """Alias for :py:attr:`~set_column_names` with ``in_place = True``, provided for back-compatibility only.
 
         As this mutates the original object, a warning is raised.
@@ -699,7 +700,7 @@ class BiocFrame:
         """
         new_column_names = self._column_names
         if columns != slice(None):
-            new_column_indices, is_col_scalar = ut.normalize_subscript(
+            new_column_indices, _ = ut.normalize_subscript(
                 columns, len(new_column_names), new_column_names
             )
             new_column_names = ut.subset_sequence(new_column_names, new_column_indices)
@@ -712,7 +713,7 @@ class BiocFrame:
         new_number_of_rows = self.shape[0]
         if rows != slice(None):
             new_row_names = self.row_names
-            new_row_indices, is_row_scalar = ut.normalize_subscript(
+            new_row_indices, _ = ut.normalize_subscript(
                 rows, self.shape[0], new_row_names
             )
 
@@ -864,11 +865,11 @@ class BiocFrame:
         if not in_place:
             output._data = copy(output._data)
 
-        row_idx, scalar = ut.normalize_subscript(
+        row_idx, _ = ut.normalize_subscript(
             rows, output.shape[0], names=output._row_names
         )
 
-        col_idx, scalar = ut.normalize_subscript(
+        col_idx, _ = ut.normalize_subscript(
             columns, output.shape[1], names=output._column_names
         )
 
@@ -1092,12 +1093,12 @@ class BiocFrame:
     ################################
 
     @property
-    def index(self) -> Optional[ut.StringList]:
+    def index(self) -> Optional[ut.Names]:
         """Alias to :py:attr:`~get_row_names`, provided for compatibility with **pandas**."""
         return self.get_row_names()
 
     @property
-    def columns(self) -> ut.StringList:
+    def columns(self) -> ut.Names:
         """Alias for :py:attr:`~get_column_names`, provided for compatibility with **pandas**."""
         return self.get_column_names()
 
@@ -1245,7 +1246,7 @@ def _combine_cols_bframes(*x: BiocFrame):
 
     first = x[0]
     first_nr = first.shape[0]
-    all_column_names = ut.StringList()
+    all_column_names = ut.Names()
     all_data = {}
     all_column_data = []
     for df in x:
@@ -1412,9 +1413,9 @@ def _normalize_merge_key_to_index(x, i, by):
         else:
             return by
     elif isinstance(by, str):
-        ib = x[i]._column_names.index(by)
+        ib = x[i]._column_names.map(by)
         if ib < 0:
-            raise ValueError("No key column '" + b + "' in object " + str(i) + ".")
+            raise ValueError("No key column '" + by + "' in object " + str(i) + ".")
         return ib
     else:
         raise TypeError(
