@@ -1,11 +1,12 @@
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union, Literal
-from warnings import warn
 from copy import copy
+from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple, Union
+from warnings import warn
+
 import biocutils as ut
 import numpy
 
-__author__ = "jkanche"
+__author__ = "Jayaram Kancherla, Aaron Lun"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
@@ -699,7 +700,7 @@ class BiocFrame:
         """
         new_column_names = self._column_names
         if columns != slice(None):
-            new_column_indices, is_col_scalar = ut.normalize_subscript(
+            new_column_indices, _ = ut.normalize_subscript(
                 columns, len(new_column_names), new_column_names
             )
             new_column_names = ut.subset_sequence(new_column_names, new_column_indices)
@@ -712,7 +713,7 @@ class BiocFrame:
         new_number_of_rows = self.shape[0]
         if rows != slice(None):
             new_row_names = self.row_names
-            new_row_indices, is_row_scalar = ut.normalize_subscript(
+            new_row_indices, _ = ut.normalize_subscript(
                 rows, self.shape[0], new_row_names
             )
 
@@ -864,11 +865,11 @@ class BiocFrame:
         if not in_place:
             output._data = copy(output._data)
 
-        row_idx, scalar = ut.normalize_subscript(
+        row_idx, _ = ut.normalize_subscript(
             rows, output.shape[0], names=output._row_names
         )
 
-        col_idx, scalar = ut.normalize_subscript(
+        col_idx, _ = ut.normalize_subscript(
             columns, output.shape[1], names=output._column_names
         )
 
