@@ -67,7 +67,7 @@ def test_with_rownames():
     assert isinstance(merged, BiocFrame)
     assert merged.row_names is not None
     assert len(merged.row_names) == 10
-    assert merged.row_names.as_list()  == [""] * 5 + obj2.row_names.as_list() 
+    assert merged.row_names.as_list() == [""] * 5 + obj2.row_names.as_list()
     assert merged.shape[0] == 10
     assert merged.shape[1] == 2
 
@@ -134,7 +134,7 @@ def test_relaxed_combine_rows():
     )
 
     merged = relaxed_combine_rows(obj1, obj2, obj3)
-    assert merged.get_column_names().as_list()  == ["column1", "column2", "column3"]
+    assert merged.get_column_names().as_list() == ["column1", "column2", "column3"]
     assert merged.column("column1") == [1, 2, 3, -1, -2, -3, None, None, None]
     assert (
         merged.column("column2").mask

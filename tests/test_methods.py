@@ -162,7 +162,7 @@ def test_bframe_set_columns():
         {"column1": ["A", "B", "C"], "column3": ["a", "b", "c"], "column4": [9, 8, 7]}
     )
     final_column_data = bframe2b.get_column_data()
-    assert final_column_data.get_row_names().as_list()  == [
+    assert final_column_data.get_row_names().as_list() == [
         "column1",
         "column2",
         "column3",
@@ -398,7 +398,7 @@ def test_bframe_remove_column():
     assert bframe2.shape == (3, 0)
 
     bframe2 = bframe.remove_columns([1])
-    assert bframe2.get_column_names().as_list()  == ["column1"]
+    assert bframe2.get_column_names().as_list() == ["column1"]
     assert bframe2.shape == (3, 1)
 
     # Works in place.
@@ -590,7 +590,7 @@ def test_names_generics():
     )
 
     assert ut.extract_row_names(obj) == None
-    assert ut.extract_column_names(obj).as_list()  == ["column1", "nested", "column2"]
+    assert ut.extract_column_names(obj).as_list() == ["column1", "nested", "column2"]
     assert isinstance(ut.extract_column_names(obj), Names)
 
 
@@ -604,13 +604,13 @@ def test_set_names():
 
     latest = obj.set_column_names(["FOO", "BAR"])
     assert isinstance(latest.get_column_names(), Names)
-    assert latest.get_column_names().as_list()  == ["FOO", "BAR"]
+    assert latest.get_column_names().as_list() == ["FOO", "BAR"]
     assert latest.column("FOO") == obj.column("column1")
     assert latest.column("BAR") == obj.column("column2")
 
     latest = obj.set_row_names(["A", "B", "C"])
     assert isinstance(latest.get_row_names(), Names)
-    assert latest.get_row_names().as_list()  == ["A", "B", "C"]
+    assert latest.get_row_names().as_list() == ["A", "B", "C"]
 
     with pytest.raises(ValueError) as ex:
         obj.set_row_names([None, 1, 2])
