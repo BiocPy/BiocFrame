@@ -3,7 +3,7 @@ import pytest
 
 import biocframe
 from biocframe import BiocFrame
-from biocutils import StringList
+from biocutils import Names
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -33,7 +33,7 @@ def test_initialize_obj():
 
     bframe = BiocFrame(obj)
     assert bframe is not None
-    assert isinstance(bframe.get_column_names(), StringList)
+    assert isinstance(bframe.get_column_names(), Names)
 
 
 def test_initialize_pandas():
@@ -133,7 +133,7 @@ def test_extra_bits():
 
     # Setters work correctly.
     bframe.column_data = BiocFrame({"STUFF": [2.5]})
-    assert bframe.column_data.column_names == ["STUFF"]
+    assert list(bframe.column_data.column_names) == ["STUFF"]
 
     bframe.metadata = {"FOO": "A"}
     assert bframe.metadata["FOO"] == "A"
@@ -163,5 +163,4 @@ def test_with_add_deletions():
     # lets delete
     del obj1["new_column"]
     assert obj1.shape == (3, 2)
-    print(obj1.column_data)
     assert len(obj1.column_data) == 2

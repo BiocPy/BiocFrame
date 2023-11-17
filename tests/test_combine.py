@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from biocframe import BiocFrame, relaxed_combine_rows
-from biocutils import combine, combine_columns, StringList
+from biocutils import combine, combine_columns, Names
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -56,7 +56,7 @@ def test_with_rownames():
     merged = combine(obj1, obj2)
 
     assert isinstance(merged, BiocFrame)
-    assert isinstance(merged.get_row_names(), StringList)
+    assert isinstance(merged.get_row_names(), Names)
     assert len(merged.row_names) == 10
     assert merged.shape[0] == 10
     assert merged.shape[1] == 2
@@ -67,7 +67,7 @@ def test_with_rownames():
     assert isinstance(merged, BiocFrame)
     assert merged.row_names is not None
     assert len(merged.row_names) == 10
-    assert merged.row_names == [""] * 5 + obj2.row_names
+    assert merged.row_names.as_list()  == [""] * 5 + obj2.row_names.as_list() 
     assert merged.shape[0] == 10
     assert merged.shape[1] == 2
 
@@ -134,7 +134,7 @@ def test_relaxed_combine_rows():
     )
 
     merged = relaxed_combine_rows(obj1, obj2, obj3)
-    assert merged.get_column_names() == ["column1", "column2", "column3"]
+    assert merged.get_column_names().as_list()  == ["column1", "column2", "column3"]
     assert merged.column("column1") == [1, 2, 3, -1, -2, -3, None, None, None]
     assert (
         merged.column("column2").mask
@@ -173,7 +173,7 @@ def test_combine_columns_basic():
 
     merged = combine_columns(obj1, obj2)
     assert isinstance(merged, BiocFrame)
-    assert merged.get_column_names() == ["odd", "even", "foo", "bar"]
+    assert merged.get_column_names().as_list() == ["odd", "even", "foo", "bar"]
     assert merged.get_column("odd") == [1, 3, 5, 7, 9]
     assert merged.get_column("bar") == [0, 22, 44, 66, 88]
 
