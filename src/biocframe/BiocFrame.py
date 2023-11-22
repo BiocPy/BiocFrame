@@ -60,9 +60,10 @@ def _validate_rows(
 def _validate_columns(
     column_names: List[str],
     data: Dict[str, Any],
+    number_of_rows: int,
     column_data: Optional["BiocFrame"],
 ) -> Tuple[List[str], Dict[str, Any]]:
-    if sorted(column_names) != sorted(data.keys()):
+    if number_of_rows > 0 and sorted(column_names) != sorted(data.keys()):
         raise ValueError("Mismatch between `column_names` and the keys of `data`.")
 
     if column_data is not None:
@@ -189,7 +190,9 @@ class BiocFrame:
 
         if validate:
             _validate_rows(self._number_of_rows, self._data, self._row_names)
-            _validate_columns(self._column_names, self._data, self._column_data)
+            _validate_columns(
+                self._column_names, self._data, self._number_of_rows, self._column_data
+            )
 
     def _define_output(self, in_place: bool = False) -> "BiocFrame":
         if in_place is True:
@@ -268,7 +271,7 @@ class BiocFrame:
                 indices = [0, 1, 2, nr - 3, nr - 2, nr - 1]
                 insert_ellipsis = True
 
-            raw_floating = ut.create_floating_names(self._row_names.as_list(), indices)
+            raw_floating = ut.create_floating_names(self._row_names, indices)
             if insert_ellipsis:
                 raw_floating = raw_floating[:3] + [""] + raw_floating[3:]
             floating = ["", ""] + raw_floating
@@ -706,8 +709,9 @@ class BiocFrame:
             new_column_names = ut.subset_sequence(new_column_names, new_column_indices)
 
         new_data = {}
-        for col in new_column_names:
-            new_data[col] = self._data[col]
+        if self._number_of_rows > 0:
+            for col in new_column_names:
+                new_data[col] = self._data[col]
 
         new_row_names = self._row_names
         new_number_of_rows = self.shape[0]

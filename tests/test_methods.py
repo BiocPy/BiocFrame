@@ -512,6 +512,16 @@ def test_slice_empty_obj():
     assert sliced_bframe.shape == (20, 0)
 
 
+def test_slice_no_rows():
+    bframe = BiocFrame({}, column_names=["col1", "col2"], number_of_rows=0)
+    assert bframe is not None
+
+    sliced_bframe = bframe[slice(None)]
+    assert sliced_bframe is not None
+
+    assert sliced_bframe.shape == (0, 2)
+
+
 def test_nested_biocFrame_preserve_types():
     obj = {
         "column1": [1, 2, 3],
