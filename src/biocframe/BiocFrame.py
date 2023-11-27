@@ -268,7 +268,7 @@ class BiocFrame:
                 indices = [0, 1, 2, nr - 3, nr - 2, nr - 1]
                 insert_ellipsis = True
 
-            raw_floating = ut.create_floating_names(self._row_names.as_list(), indices)
+            raw_floating = ut.create_floating_names(self._row_names, indices)
             if insert_ellipsis:
                 raw_floating = raw_floating[:3] + [""] + raw_floating[3:]
             floating = ["", ""] + raw_floating
