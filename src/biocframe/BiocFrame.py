@@ -1584,6 +1584,7 @@ def merge(
 
 ############################
 
+
 @ut.relaxed_combine_columns.register(BiocFrame)
 def relaxed_combine_columns(*x: BiocFrame) -> BiocFrame:
     """Wrapper around :py:func:`~merge` that performs a left join on the row names."""
