@@ -1342,6 +1342,7 @@ def _construct_missing(col, n):
         return [None] * n
 
 
+@ut.relaxed_combine_rows.register(BiocFrame)
 def relaxed_combine_rows(*x: BiocFrame) -> BiocFrame:
     """A relaxed version of the :py:func:`~biocutils.combine_rows.combine_rows` method for :py:class:`~BiocFrame`
     objects.  Whereas ``combine_rows`` expects that all objects have the same columns, ``relaxed_combine_rows`` allows
@@ -1583,7 +1584,7 @@ def merge(
 
 ############################
 
-
+@ut.relaxed_combine_columns.register(BiocFrame)
 def relaxed_combine_columns(*x: BiocFrame) -> BiocFrame:
     """Wrapper around :py:func:`~merge` that performs a left join on the row names."""
     return merge(x, join="left", by=None)
