@@ -1088,6 +1088,52 @@ class BiocFrame:
         """Alias for :py:meth:`~__copy__`."""
         return self.__copy__()
 
+    ##########################
+    ######>> split by <<######
+    ##########################
+
+    def split(
+        self, name: str, only_indices: bool = False
+    ) -> Dict[str, Union["BiocFrame", List[int]]]:
+        """Split the object by a column.
+
+        Args:
+            group:
+                Name of the column to split by.
+
+            only_indices:
+                Whether to only return indices.
+                Defaults to False
+
+        Returns:
+            A dictionary of biocframe objects, with names representing the
+            group and the value the sliced frames.
+
+            if ``only_indices`` is True, the values contain the row indices
+            that map to the same group.
+        """
+        if name not in self._column_names:
+            raise ValueError(f"'{name}' is not a valid column name.")
+
+        _column = self.get_column(name)
+
+        _grps = {}
+        for i in range(len(self)):
+            _key = _column[i]
+            if _key not in _grps:
+                _grps[_key] = []
+
+            _grps[_key].append(i)
+
+        if only_indices is True:
+            return _grps
+
+        _sliced_grps = {}
+        for k, v in _grps.items():
+            _sliced_grps[k] = self[v,]
+
+        return _sliced_grps
+
     ################################
     ######>> pandas interop <<######
     ################################
