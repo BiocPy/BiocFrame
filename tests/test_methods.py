@@ -623,3 +623,33 @@ def test_set_names():
     with pytest.raises(ValueError) as ex:
         obj.set_column_names(["A", "A"])
     assert str(ex.value).find("duplicate column name") >= 0
+
+
+def test_bframe_split():
+    obj = {
+        "column1": [1, 2, 3],
+        "nested": [
+            {
+                "ncol1": [4, 5, 6],
+                "ncol2": ["a", "b", "c"],
+                "deep": {"dcol1": ["j", "k", "l"], "dcol2": ["a", "s", "l"]},
+            },
+            {
+                "ncol2": ["a"],
+                "deep": {"dcol1": ["j"], "dcol2": ["a"]},
+            },
+            {
+                "ncol1": [5, 6],
+                "ncol2": ["b", "c"],
+            },
+        ],
+        "column2": ["b", "n", "b"],
+    }
+
+    bframe = BiocFrame(obj)
+    split_frame = bframe.split("column2")
+
+    assert split_frame is not None
+    assert isinstance(split_frame, dict)
+    assert len(split_frame) == 2
+    assert len(split_frame["b"]) == 2
