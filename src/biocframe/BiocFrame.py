@@ -1093,12 +1093,12 @@ class BiocFrame:
     ##########################
 
     def split(
-        self, name: str, only_indices: bool = False
+        self, column_name: str, only_indices: bool = False
     ) -> Dict[str, Union["BiocFrame", List[int]]]:
         """Split the object by a column.
 
         Args:
-            group:
+            column_name:
                 Name of the column to split by.
 
             only_indices:
@@ -1112,10 +1112,10 @@ class BiocFrame:
             if ``only_indices`` is True, the values contain the row indices
             that map to the same group.
         """
-        if name not in self._column_names:
-            raise ValueError(f"'{name}' is not a valid column name.")
+        if column_name not in self._column_names:
+            raise ValueError(f"'{column_name}' is not a valid column name.")
 
-        _column = self.get_column(name)
+        _column = self.get_column(column_name)
 
         _grps = {}
         for i in range(len(self)):
