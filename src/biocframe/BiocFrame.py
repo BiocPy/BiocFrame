@@ -699,7 +699,7 @@ class BiocFrame:
             A ``BiocFrame`` with the specified rows and columns.
         """
         new_column_names = self._column_names
-        if columns != slice(None):
+        if not (isinstance(columns, slice) and columns == slice(None)):
             new_column_indices, _ = ut.normalize_subscript(
                 columns, len(new_column_names), new_column_names
             )
@@ -711,7 +711,7 @@ class BiocFrame:
 
         new_row_names = self._row_names
         new_number_of_rows = self.shape[0]
-        if rows != slice(None):
+        if not (isinstance(rows, slice) and rows == slice(None)):
             new_row_names = self.row_names
             new_row_indices, _ = ut.normalize_subscript(
                 rows, self.shape[0], new_row_names
