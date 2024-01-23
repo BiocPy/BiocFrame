@@ -172,10 +172,12 @@ class BiocFrame:
         if row_names is not None and not isinstance(row_names, ut.Names):
             row_names = ut.Names(row_names)
         self._row_names = row_names
-        self._number_of_rows = _guess_number_of_rows(
-            number_of_rows,
-            self._data,
-            self._row_names,
+        self._number_of_rows = int(
+            _guess_number_of_rows(
+                number_of_rows,
+                self._data,
+                self._row_names,
+            )
         )
 
         if column_names is None:
