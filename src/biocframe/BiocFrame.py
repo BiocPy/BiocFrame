@@ -628,7 +628,7 @@ class BiocFrame:
 
             return self._data[self._column_names[column]]
         elif isinstance(column, str):
-            if column not in self.assays:
+            if column not in self._column_names:
                 raise AttributeError(f"Column: {column} does not exist.")
 
             return self._data[column]
