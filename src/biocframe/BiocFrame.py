@@ -620,10 +620,22 @@ class BiocFrame:
             The contents of the specified column.
         """
         if isinstance(column, int):
-            column = self._column_names[column]
-        elif not isinstance(column, str):
-            raise TypeError("`column` must be either an integer index or column name.")
-        return self._data[column]
+            if column < 0:
+                raise IndexError("Index cannot be negative.")
+
+            if column > len(self._column_names):
+                raise IndexError("Index greater than the number of columns.")
+
+            return self._data[self._column_names[column]]
+        elif isinstance(column, str):
+            if column not in self.assays:
+                raise AttributeError(f"Column: {column} does not exist.")
+
+            return self._data[column]
+
+        raise TypeError(
+            f"'column' must be a string or integer, provided '{type(column)}'."
+        )
 
     def column(self, column: Union[str, int]) -> Any:
         """Alias for :py:meth:`~get_column`, provided for back-compatibility only."""
