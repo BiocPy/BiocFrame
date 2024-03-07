@@ -2,7 +2,7 @@ name: Manually publish documentation
 
 on:
   workflow_dispatch:
-    inputs: 
+    inputs:
       sphinxDocVersion:
         description: "Version to set for documentation"
         required: true
