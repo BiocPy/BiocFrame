@@ -6,3 +6,5 @@ furo
 myst-parser[linkify]
 sphinx>=3.2.1
 sphinx-autodoc-typehints
+myst-nb
+# nbsphinx
