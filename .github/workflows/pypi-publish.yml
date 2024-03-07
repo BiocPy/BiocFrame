@@ -33,8 +33,18 @@ jobs:
       - name: Test with tox
         run: tox
 
-      - name: Build documentation
-        uses: BiocPy/BiocFrame/.github/workflows/build-docs.yml@build-docs
+      - name: Build docs
+        run: tox -e docs
+
+      - name: Add nojekyll file
+        run: touch ./docs/_build/html/.nojekyll
+
+      - name: GH Pages Deployment
+        uses: JamesIves/github-pages-deploy-action@4.1.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: ./docs/_build/html
+          clean: true # Automatically remove deleted files from the deploy branch
 
       - name: Build Project and Publish
         run: python -m tox -e clean,build

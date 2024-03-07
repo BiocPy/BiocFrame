@@ -2,10 +2,9 @@ name: Manually publish documentation
 
 on:
   workflow_dispatch:
-  workflow_call:
 
 jobs:
-  build:
+  build_docs:
     runs-on: ubuntu-latest
 
     steps:
