@@ -119,8 +119,8 @@ copyright = "2023, jkanche"
 # If you don’t need the separation provided between version and release,
 # just set them both to the same value.
 
-if "SPHINX_DOC_VERSION" in os.environ:
-    version = os.getenv("SPHINX_DOC_VERSION", None)
+if "SPHINX_DOC_VERSION_MANUAL" in os.environ:
+    version = os.getenv("SPHINX_DOC_VERSION_MANUAL", None)
 else:
     try:
         from biocframe import __version__ as version
