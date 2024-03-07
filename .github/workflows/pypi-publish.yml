@@ -34,7 +34,7 @@ jobs:
         run: tox
 
       - name: Build documentation
-        uses: BiocPy/BiocFrame/.github/workflows/build-docs.yml
+        uses: BiocPy/BiocFrame/.github/workflows/build-docs.yml@build-docs
 
       - name: Build Project and Publish
         run: python -m tox -e clean,build
