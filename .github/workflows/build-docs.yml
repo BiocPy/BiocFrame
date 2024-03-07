@@ -1,6 +1,6 @@
 name: Manually publish documentation
 
-on: 
+on:
   workflow_dispatch:
   workflow_call:
 
