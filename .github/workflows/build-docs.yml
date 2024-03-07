@@ -2,11 +2,12 @@ name: Manually publish documentation
 
 on:
   workflow_dispatch:
-    inputs: 
+    inputs:
       sphinxDocVersionManual:
         description: "Version to set for documentation"
         required: true
         type: string
+
 jobs:
   build_docs:
     runs-on: ubuntu-latest
