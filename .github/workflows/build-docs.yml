@@ -2,6 +2,11 @@ name: Manually publish documentation
 
 on:
   workflow_dispatch:
+    inputs:
+      sphinxDocVersionManual:
+        description: "Version to set for documentation"
+        required: true
+        type: string
 
 jobs:
   build_docs:
@@ -21,6 +26,8 @@ jobs:
           pip install tox
 
       - name: Build docs
+        env:
+          SPHINX_DOC_VERSION_MANUAL: ${{ inputs.sphinxDocVersionManual }}
         run: tox -e docs
 
       - name: Add nojekyll file

@@ -118,10 +118,14 @@ copyright = "2023, jkanche"
 # release: The full version, including alpha/beta/rc tags.
 # If you don’t need the separation provided between version and release,
 # just set them both to the same value.
-try:
-    from biocframe import __version__ as version
-except ImportError:
-    version = ""
+
+if "SPHINX_DOC_VERSION_MANUAL" in os.environ:
+    version = os.getenv("SPHINX_DOC_VERSION_MANUAL", None)
+else:
+    try:
+        from biocframe import __version__ as version
+    except ImportError:
+        version = ""
 
 if not version or version.lower() == "unknown":
     version = os.getenv("READTHEDOCS_VERSION", "unknown")  # automatically set by RTD
@@ -171,9 +175,9 @@ todo_emit_warnings = True
 autodoc_default_options = {
     # 'members': 'var1, var2',
     # 'member-order': 'bysource',
-    'special-members': True,
-    'undoc-members': True,
-    'exclude-members': '__weakref__, __dict__, __str__, __module__'
+    "special-members": True,
+    "undoc-members": True,
+    "exclude-members": "__weakref__, __dict__, __str__, __module__",
 }
 
 autosummary_generate = True
@@ -189,10 +193,7 @@ html_theme = "furo"
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {
-    "sidebar_width": "300px",
-    "page_width": "1200px"
-}
+html_theme_options = {"sidebar_width": "300px", "page_width": "1200px"}
 
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = []
