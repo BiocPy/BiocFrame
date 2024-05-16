@@ -1162,7 +1162,7 @@ class BiocFrame:
         """Alias for :py:attr:`~get_column_names`, provided for compatibility with **pandas**."""
         return self.get_column_names()
 
-    def to_pandas(self) -> "pandas.DataFrame":
+    def to_pandas(self):
         """Convert the ``BiocFrame`` into a :py:class:`~pandas.DataFrame` object.
 
         Returns:
@@ -1170,15 +1170,20 @@ class BiocFrame:
         """
         from pandas import DataFrame
 
-        _data_copy = OrderedDict()
-        for col in self.column_names:
-            _data_copy[col] = self.column(col)
-            if isinstance(self.column(col), ut.Factor):
-                _data_copy[col] = _data_copy[col].to_pandas()
+        if len(self.column_names) > 0:
+            _data_copy = OrderedDict()
+            for col in self.column_names:
+                _data_copy[col] = self.column(col)
+                if isinstance(self.column(col), ut.Factor):
+                    _data_copy[col] = _data_copy[col].to_pandas()
 
-        return DataFrame(
-            data=_data_copy, index=self._row_names, columns=self._column_names
-        )
+            return DataFrame(
+                data=_data_copy, index=self._row_names, columns=self._column_names
+            )
+        else:
+            DataFrame(
+                data={}, index=range(self._number_of_rows)
+            )
 
     @classmethod
     def from_pandas(cls, input: "pandas.DataFrame") -> "BiocFrame":
