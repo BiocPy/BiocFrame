@@ -1181,7 +1181,7 @@ class BiocFrame:
                 data=_data_copy, index=self._row_names, columns=self._column_names
             )
         else:
-            DataFrame(
+            return DataFrame(
                 data={}, index=range(self._number_of_rows)
             )
 

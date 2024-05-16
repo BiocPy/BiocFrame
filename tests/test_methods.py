@@ -565,6 +565,10 @@ def test_export_pandas():
     assert len(set(pdf.columns).difference(obj.colnames)) == 0
     assert pdf["factor"] is not None
 
+    emptyobj = BiocFrame(number_of_rows = 100)
+    pdf = emptyobj.to_pandas()
+    assert len(pdf) == len(emptyobj)
+
 
 def test_names_generics():
     obj = BiocFrame(
