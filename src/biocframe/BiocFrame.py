@@ -1181,9 +1181,7 @@ class BiocFrame:
                 data=_data_copy, index=self._row_names, columns=self._column_names
             )
         else:
-            return DataFrame(
-                data={}, index=range(self._number_of_rows)
-            )
+            return DataFrame(data={}, index=range(self._number_of_rows))
 
     @classmethod
     def from_pandas(cls, input: "pandas.DataFrame") -> "BiocFrame":
