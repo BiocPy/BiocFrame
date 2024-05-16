@@ -5,10 +5,10 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="biocframe.io package" href="biocframe.io.html" /><link rel="prev" title="biocframe" href="modules.html" />
 
-    <!-- Generated with Sphinx 7.2.6 and Furo 2024.01.29 -->
-        <title>biocframe package - BiocFrame 0.0.post1.dev1+g829fff6 documentation</title>
+    <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+        <title>biocframe package - BiocFrame 0.5.10 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
     
@@ -69,7 +69,7 @@
   <symbol id="svg-sun" viewBox="0 0 24 24">
     <title>Light mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
       <circle cx="12" cy="12" r="5"></circle>
       <line x1="12" y1="1" x2="12" y2="3"></line>
       <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -84,7 +84,7 @@
   <symbol id="svg-moon" viewBox="0 0 24 24">
     <title>Dark mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
     </svg>
@@ -92,7 +92,7 @@
   <symbol id="svg-sun-half" viewBox="0 0 24 24">
     <title>Auto light/dark mode</title>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <circle cx="12" cy="12" r="9" />
       <path d="M13 12h5" />
@@ -100,6 +100,60 @@
       <path d="M13 18h1" />
       <path d="M13 9h4" />
       <path d="M13 6h1" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" /
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
     </svg>
   </symbol>
 </svg>
@@ -113,6 +167,8 @@
   <div class="visually-hidden">Hide table of contents sidebar</div>
 </label>
 
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
 
 
 <div class="page">
@@ -124,13 +180,14 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">BiocFrame 0.0.post1.dev1+g829fff6 documentation</div></a>
+      <a href="../index.html"><div class="brand">BiocFrame 0.5.10 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
         <button class="theme-toggle">
           <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
           <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
@@ -147,7 +204,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.0.post1.dev1+g829fff6 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.5.10 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -187,11 +244,17 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/api/biocframe.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
 <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
               <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
@@ -201,11 +264,11 @@
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <article role="main">
+        <article role="main" id="furo-main-content">
           <section id="biocframe-package">
-<h1>biocframe package<a class="headerlink" href="#biocframe-package" title="Link to this heading">#</a></h1>
+<h1>biocframe package<a class="headerlink" href="#biocframe-package" title="Link to this heading">¶</a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">#</a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="biocframe.io.html">biocframe.io package</a><ul>
@@ -221,15 +284,15 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-biocframe.BiocFrame">
-<span id="biocframe-biocframe-module"></span><h2>biocframe.BiocFrame module<a class="headerlink" href="#module-biocframe.BiocFrame" title="Link to this heading">#</a></h2>
+<span id="biocframe-biocframe-module"></span><h2>biocframe.BiocFrame module<a class="headerlink" href="#module-biocframe.BiocFrame" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">BiocFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">BiocFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p><cite>BiocFrame</cite> is an alternative to <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>, with support for nested and flexible column types.
+<p><cite>BiocFrame</cite> is an alternative to <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>, with support for nested and flexible column types.
 Inspired by the <code class="docutils literal notranslate"><span class="pre">DFrame</span></code> class from Bioconductor’s <strong>S4Vectors</strong> package. Any object may be used as a column,
 provided it has:</p>
 <ul class="simple">
@@ -243,7 +306,7 @@ This defaults to calling <code class="docutils literal notranslate"><span class=
 <p>This allows <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> to accept arbitrarily complex classes (such as nested <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> instances) as columns.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__array_ufunc__">
-<span class="sig-name descname"><span class="pre">__array_ufunc__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__array_ufunc__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__array_ufunc__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__array_ufunc__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__array_ufunc__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__array_ufunc__" title="Link to this definition">¶</a></dt>
 <dd><p>Interface for NumPy array methods.</p>
 <p>Note: This is a very primitive implementation and needs tests to support different types.</p>
 <dl class="field-list simple">
@@ -258,7 +321,7 @@ This defaults to calling <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__copy__">
-<span class="sig-name descname"><span class="pre">__copy__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__copy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__copy__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__copy__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__copy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__copy__" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A shallow copy of the current <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code>.</p>
@@ -268,7 +331,7 @@ This defaults to calling <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__deepcopy__">
-<span class="sig-name descname"><span class="pre">__deepcopy__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_nil</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__deepcopy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__deepcopy__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__deepcopy__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_nil</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__deepcopy__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__deepcopy__" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A deep copy of the current <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code>.</p>
@@ -278,14 +341,14 @@ This defaults to calling <code class="docutils literal notranslate"><span class=
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__delitem__">
-<span class="sig-name descname"><span class="pre">__delitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__delitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__delitem__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__delitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__delitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__delitem__" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.remove_column" title="biocframe.BiocFrame.BiocFrame.remove_column"><code class="xref py py-attr docutils literal notranslate"><span class="pre">remove_column</span></code></a> with <code class="docutils literal notranslate"><span class="pre">in_place</span> <span class="pre">=</span> <span class="pre">True</span></code>.</p>
 <p>As this mutates the original object, a warning is raised.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__getitem__">
-<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__getitem__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__getitem__" title="Link to this definition">¶</a></dt>
 <dd><p>Wrapper around <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_column" title="biocframe.BiocFrame.BiocFrame.get_column"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_column</span></code></a> and <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_slice" title="biocframe.BiocFrame.BiocFrame.get_slice"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_slice</span></code></a> to obtain a slice of a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> or any
 of its columns.</p>
 <dl class="field-list simple">
@@ -321,7 +384,7 @@ calling <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_s
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> object from columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -347,7 +410,7 @@ the length of <code class="docutils literal notranslate"><span class="pre">colum
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__iter__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__iter__" title="Link to this definition">¶</a></dt>
 <dd><p>Iterator over rows.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -358,7 +421,7 @@ the length of <code class="docutils literal notranslate"><span class="pre">colum
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__len__">
-<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__len__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__len__" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span></p>
@@ -371,7 +434,7 @@ the length of <code class="docutils literal notranslate"><span class="pre">colum
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__repr__">
-<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__repr__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__repr__" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
@@ -384,7 +447,7 @@ the length of <code class="docutils literal notranslate"><span class="pre">colum
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.__setitem__">
-<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__setitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__setitem__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__setitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.__setitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.__setitem__" title="Link to this definition">¶</a></dt>
 <dd><p>Wrapper around <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.set_column" title="biocframe.BiocFrame.BiocFrame.set_column"><code class="xref py py-attr docutils literal notranslate"><span class="pre">set_column</span></code></a> and <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.set_slice" title="biocframe.BiocFrame.BiocFrame.set_slice"><code class="xref py py-attr docutils literal notranslate"><span class="pre">set_slice</span></code></a> to modify a slice of a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> or any
 of its columns. As this modified the original object in place, a warning is raise.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">args</span></code> is a string, it is assumed to be a column name and
@@ -397,13 +460,13 @@ These are passed to <a class="reference internal" href="#biocframe.BiocFrame.Bio
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.colnames">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">colnames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.colnames" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">colnames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.colnames" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_column_names" title="biocframe.BiocFrame.BiocFrame.get_column_names"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_column_names</span></code></a>, provided for back-compatibility only.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.column">
-<span class="sig-name descname"><span class="pre">column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.column" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.column" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_column" title="biocframe.BiocFrame.BiocFrame.get_column"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_column()</span></code></a>, provided for back-compatibility only.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -414,50 +477,50 @@ These are passed to <a class="reference internal" href="#biocframe.BiocFrame.Bio
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.column_data">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">column_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><span class="pre">BiocFrame</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.column_data" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">column_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><span class="pre">BiocFrame</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.column_data" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_column_data" title="biocframe.BiocFrame.BiocFrame.get_column_data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_column_data</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.column_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">column_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.column_names" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">column_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.column_names" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_column_names" title="biocframe.BiocFrame.BiocFrame.get_column_names"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_column_names</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.columns">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">columns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.columns" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">columns</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.columns" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_column_names" title="biocframe.BiocFrame.BiocFrame.get_column_names"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_column_names</span></code></a>, provided for compatibility with <strong>pandas</strong>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.combine">
-<span class="sig-name descname"><span class="pre">combine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.combine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.combine" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">combine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.combine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.combine" title="Link to this definition">¶</a></dt>
 <dd><p>Wrapper around <a class="reference internal" href="#biocframe.BiocFrame.relaxed_combine_rows" title="biocframe.BiocFrame.relaxed_combine_rows"><code class="xref py py-func docutils literal notranslate"><span class="pre">relaxed_combine_rows()</span></code></a>, provided for back-compatibility only.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.copy" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.copy" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.__copy__" title="biocframe.BiocFrame.BiocFrame.__copy__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">__copy__()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.data">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Dict" title="(in Python v3.9)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Any" title="(in Python v3.9)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.data" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Dict" title="(in Python v3.9)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Any" title="(in Python v3.9)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.data" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_data" title="biocframe.BiocFrame.BiocFrame.get_data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_data</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.dims">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dims</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Tuple" title="(in Python v3.9)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.dims" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dims</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Tuple" title="(in Python v3.9)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.dims" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.shape" title="biocframe.BiocFrame.BiocFrame.shape"><code class="xref py py-attr docutils literal notranslate"><span class="pre">shape</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.from_pandas">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.from_pandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.from_pandas" title="Link to this definition">#</a></dt>
-<dd><p>Create a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> from a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_pandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.from_pandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.from_pandas" title="Link to this definition">¶</a></dt>
+<dd><p>Create a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> from a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>input</strong> (<span class="sphinx_autodoc_typehints-type">pandas.DataFrame</span>) – Input data.</p>
@@ -473,7 +536,7 @@ These are passed to <a class="reference internal" href="#biocframe.BiocFrame.Bio
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.get_column">
-<span class="sig-name descname"><span class="pre">get_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_column" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_column" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>column</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Union" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – <p>Name of the column, which must exist in <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_column_names" title="biocframe.BiocFrame.BiocFrame.get_column_names"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_column_names</span></code></a>.</p>
@@ -491,7 +554,7 @@ These are passed to <a class="reference internal" href="#biocframe.BiocFrame.Bio
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.get_column_data">
-<span class="sig-name descname"><span class="pre">get_column_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_column_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_column_data" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_column_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">with_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_column_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_column_data" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>with_names</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#bool" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether to set the column names of this <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> as
@@ -510,7 +573,7 @@ column and contains that column’s metadata.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.get_column_names">
-<span class="sig-name descname"><span class="pre">get_column_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_column_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_column_names" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_column_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_column_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_column_names" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Names</span></code></a></span></p>
@@ -523,7 +586,7 @@ column and contains that column’s metadata.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.get_data">
-<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_data" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_data" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Dict" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Any" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
@@ -536,7 +599,7 @@ column and contains that column’s metadata.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.get_metadata">
-<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_metadata" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_metadata" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
@@ -549,7 +612,7 @@ column and contains that column’s metadata.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.get_row">
-<span class="sig-name descname"><span class="pre">get_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_row" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_row" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>row</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Union" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – <p>Integer index of the row to access.</p>
@@ -570,7 +633,7 @@ the contents of the columns at the specified <code class="docutils literal notra
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.get_row_names">
-<span class="sig-name descname"><span class="pre">get_row_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_row_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_row_names" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_row_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_row_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_row_names" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Optional" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Names</span></code></a>]</span></p>
@@ -583,7 +646,7 @@ the contents of the columns at the specified <code class="docutils literal notra
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.get_slice">
-<span class="sig-name descname"><span class="pre">get_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_slice" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.get_slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.get_slice" title="Link to this definition">¶</a></dt>
 <dd><p>Slice <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> along the rows and/or columns, based on their indices or names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -613,7 +676,7 @@ Scalars are treated as length-1 sequences.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.has_column">
-<span class="sig-name descname"><span class="pre">has_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.has_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.has_column" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">has_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.has_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.has_column" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Name of the column.</p>
@@ -629,19 +692,19 @@ Scalars are treated as length-1 sequences.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.index">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.index" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.index" title="Link to this definition">¶</a></dt>
 <dd><p>Alias to <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_row_names" title="biocframe.BiocFrame.BiocFrame.get_row_names"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_row_names</span></code></a>, provided for compatibility with <strong>pandas</strong>.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.metadata">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><span class="pre">dict</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.metadata" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/stdtypes.html#dict" title="(in Python v3.9)"><span class="pre">dict</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.metadata" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_metadata" title="biocframe.BiocFrame.BiocFrame.get_metadata"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_metadata</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.remove_column">
-<span class="sig-name descname"><span class="pre">remove_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.remove_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.remove_column" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">remove_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.remove_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.remove_column" title="Link to this definition">¶</a></dt>
 <dd><p>Remove a column. This is a convenience wrapper around <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.remove_columns" title="biocframe.BiocFrame.BiocFrame.remove_columns"><code class="xref py py-attr docutils literal notranslate"><span class="pre">remove_columns</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -662,7 +725,7 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.remove_columns">
-<span class="sig-name descname"><span class="pre">remove_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.remove_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.remove_columns" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">remove_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.remove_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.remove_columns" title="Link to this definition">¶</a></dt>
 <dd><p>Remove any number of existing columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -683,7 +746,7 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.row">
-<span class="sig-name descname"><span class="pre">row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.row" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.row" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_row" title="biocframe.BiocFrame.BiocFrame.get_row"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_row</span></code></a>, provided for back-compatibility only.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -694,19 +757,19 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.row_names">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">row_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.row_names" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">row_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.row_names" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_row_names" title="biocframe.BiocFrame.BiocFrame.get_row_names"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_row_names</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.rownames">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rownames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.rownames" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rownames</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.Names.Names" title="(in biocutils v0.1.5)"><span class="pre">Names</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/constants.html#None" title="(in Python v3.9)"><span class="pre">None</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.rownames" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_row_names" title="biocframe.BiocFrame.BiocFrame.get_row_names"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_row_names</span></code></a>, provided for back-compatibility.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.set_column">
-<span class="sig-name descname"><span class="pre">set_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_column" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_column" title="Link to this definition">¶</a></dt>
 <dd><p>Modify an existing column or add a new column. This is a convenience wrapper around <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.set_columns" title="biocframe.BiocFrame.BiocFrame.set_columns"><code class="xref py py-attr docutils literal notranslate"><span class="pre">set_columns</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -730,7 +793,7 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.set_column_data">
-<span class="sig-name descname"><span class="pre">set_column_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_column_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_column_data" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_column_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_column_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_column_data" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -752,7 +815,7 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.set_column_names">
-<span class="sig-name descname"><span class="pre">set_column_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_column_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_column_names" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_column_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_column_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_column_names" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -773,7 +836,7 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.set_columns">
-<span class="sig-name descname"><span class="pre">set_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_columns" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_columns" title="Link to this definition">¶</a></dt>
 <dd><p>Modify existing columns or add new columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -796,7 +859,7 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.set_metadata">
-<span class="sig-name descname"><span class="pre">set_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_metadata" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_metadata" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -816,7 +879,7 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.set_row_names">
-<span class="sig-name descname"><span class="pre">set_row_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_row_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_row_names" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_row_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_row_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_row_names" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -837,7 +900,7 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.set_slice">
-<span class="sig-name descname"><span class="pre">set_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_slice" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.set_slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.set_slice" title="Link to this definition">¶</a></dt>
 <dd><p>Replace a slice of the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> given the row and columns of the slice.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -873,14 +936,14 @@ or as a reference to the (in-place-modified) original.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.shape">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shape</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Tuple" title="(in Python v3.9)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.shape" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shape</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/typing.html#typing.Tuple" title="(in Python v3.9)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.9/library/functions.html#int" title="(in Python v3.9)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.shape" title="Link to this definition">¶</a></dt>
 <dd><p>Returns:
 Tuple containing the number of rows and columns in this <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.slice">
-<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.slice" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.slice" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.__getitem__" title="biocframe.BiocFrame.BiocFrame.__getitem__"><code class="xref py py-attr docutils literal notranslate"><span class="pre">__getitem__</span></code></a>, for back-compatibility.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -891,7 +954,7 @@ Tuple containing the number of rows and columns in this <code class="docutils li
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.split">
-<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.split" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.split" title="Link to this definition">¶</a></dt>
 <dd><p>Split the object by a column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -916,14 +979,11 @@ that map to the same group.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.to_pandas">
-<span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.to_pandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.to_pandas" title="Link to this definition">#</a></dt>
-<dd><p>Convert the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> into a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
+<span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.to_pandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.to_pandas" title="Link to this definition">¶</a></dt>
+<dd><p>Convert the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> into a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type">pandas.DataFrame</span></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a> object.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -932,7 +992,7 @@ that map to the same group.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrameIter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">BiocFrameIter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrameIter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrameIter" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">BiocFrameIter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrameIter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrameIter" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.9/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>An iterator to a <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiocFrame</span></code></a> object.</p>
 <dl class="field-list simple">
@@ -942,7 +1002,7 @@ that map to the same group.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrameIter.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrameIter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrameIter.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrameIter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrameIter.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the iterator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -953,19 +1013,19 @@ that map to the same group.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrameIter.__iter__">
-<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrameIter.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrameIter.__iter__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrameIter.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrameIter.__iter__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrameIter.__next__">
-<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrameIter.__next__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrameIter.__next__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrameIter.__next__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrameIter.__next__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.merge">
-<span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_duplicate_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.merge" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_duplicate_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.merge" title="Link to this definition">¶</a></dt>
 <dd><p>Merge multiple <code class="xref py py-class docutils literal notranslate"><span class="pre">BiocFrame`</span></code> objects together by common columns or row names, yielding a combined
 object with a union of columns across all objects.</p>
 <dl class="field-list simple">
@@ -1004,7 +1064,7 @@ raised instead.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.relaxed_combine_columns">
-<span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">relaxed_combine_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#relaxed_combine_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.relaxed_combine_columns" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">relaxed_combine_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#relaxed_combine_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.relaxed_combine_columns" title="Link to this definition">¶</a></dt>
 <dd><p>Wrapper around <a class="reference internal" href="#biocframe.BiocFrame.merge" title="biocframe.BiocFrame.merge"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge()</span></code></a> that performs a left join on the row names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1015,7 +1075,7 @@ raised instead.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.relaxed_combine_rows">
-<span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">relaxed_combine_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#relaxed_combine_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.relaxed_combine_rows" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">biocframe.BiocFrame.</span></span><span class="sig-name descname"><span class="pre">relaxed_combine_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#relaxed_combine_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.relaxed_combine_rows" title="Link to this definition">¶</a></dt>
 <dd><p>A relaxed version of the <a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.combine_rows.combine_rows" title="(in biocutils v0.1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">combine_rows()</span></code></a> method for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame" title="biocframe.BiocFrame.BiocFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiocFrame</span></code></a>
 objects.  Whereas <code class="docutils literal notranslate"><span class="pre">combine_rows</span></code> expects that all objects have the same columns, <code class="docutils literal notranslate"><span class="pre">relaxed_combine_rows</span></code> allows
 for different columns. Absent columns in any object are filled in with appropriate placeholder values before
@@ -1038,7 +1098,7 @@ with placeholders consisting of Nones or masked NumPy values.</p>
 
 </section>
 <section id="module-biocframe">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-biocframe" title="Link to this heading">#</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-biocframe" title="Link to this heading">¶</a></h2>
 </section>
 </section>
 
@@ -1174,9 +1234,9 @@ with placeholders consisting of Nones or masked NumPy values.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=009741eb"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
+</div><script src="../_static/documentation_options.js?v=f1e22e58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
     </body>
 </html>
