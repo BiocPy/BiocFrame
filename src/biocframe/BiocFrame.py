@@ -1207,7 +1207,7 @@ class BiocFrame:
             rindex = input.index.to_list()
 
         return cls(data=rdata, row_names=rindex, column_names=input.columns.to_list())
-    
+
     @classmethod
     def from_polars(cls, input: "polars.DataFrame") -> "BiocFrame":
         """Create a ``BiocFrame`` from a :py:class:`~polars.DataFrame` object.

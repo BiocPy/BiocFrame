@@ -22,4 +22,3 @@ def test_polars_init():
     assert bframe is not None
     assert isinstance(bframe.get_column_names(), Names)
     assert list(bframe.get_column_names()) == ["a", "b", "c"]
-
