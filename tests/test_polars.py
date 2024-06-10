@@ -59,4 +59,11 @@ def test_to_polars_nested():
     assert plframe is not None
     assert isinstance(plframe, pl.DataFrame)
     assert len(plframe.columns) == 6
-    assert plframe.columns == ["a", "b", "c", "nested.ncol1", "nested.ncol2", "nested.deep"]
+    assert plframe.columns == [
+        "a",
+        "b",
+        "c",
+        "nested.ncol1",
+        "nested.ncol2",
+        "nested.deep",
+    ]
