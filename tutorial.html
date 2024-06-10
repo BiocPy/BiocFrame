@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="biocframe" href="api/modules.html" /><link rel="prev" title="BiocFrame" href="index.html" />
 
     <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
-        <title>BiocFrame - Bioconductor-like data frames - BiocFrame 0.5.10 documentation</title>
+        <title>BiocFrame - Bioconductor-like data frames - BiocFrame 0.5.11 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -180,7 +180,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.5.10 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.5.11 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -192,7 +192,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -204,7 +204,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.5.10 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.5.11 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -213,7 +213,16 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Overview</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> - Bioconductor-like data frames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#advantages-of-biocframe">Advantages of <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="#construction">Construction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#with-other-dataframe-libraries">With other <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pandas">Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#extracting-data">Extracting data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#setting-data">Setting data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#iterate-over-rows">Iterate over rows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#combining-objects">Combining objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#empty-frames">Empty Frames</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/modules.html">Module Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="api/biocframe.html">biocframe package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of biocframe package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/biocframe.io.html">biocframe.io package</a></li>
@@ -245,7 +254,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="_sources/tutorial.ipynb.txt" title="View this page">
+  <a class="muted-link" href="_sources/tutorial.md.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -259,7 +268,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -270,12 +279,13 @@
 <p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> class is a Bioconductor-friendly data frame class. Its primary advantage lies in not making assumptions about the types of the columns - as long as an object has a length (<code class="docutils literal notranslate"><span class="pre">__len__</span></code>) and supports slicing methods (<code class="docutils literal notranslate"><span class="pre">__getitem__</span></code>), it can be used inside a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code>.</p>
 <p>This flexibility allows us to accept arbitrarily complex objects as columns, which is often the case in Bioconductor objects. Also check out Bioconductor’s <a class="reference external" href="https://bioconductor.org/packages/S4Vectors"><strong>S4Vectors</strong></a> package, which implements the <code class="docutils literal notranslate"><span class="pre">DFrame</span></code> class on which <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> was based.</p>
 <p>These classes follow a functional paradigm for accessing or setting properties, with further details discussed in <a class="reference external" href="https://biocpy.github.io/tutorial/chapters/philosophy.html">functional paradigm</a> section.</p>
-<section id="advantages-of-biocframe">
-<h2>Advantages of <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code><a class="headerlink" href="#advantages-of-biocframe" title="Link to this heading">¶</a></h2>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="advantages-of-biocframe">
+<h1>Advantages of <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code><a class="headerlink" href="#advantages-of-biocframe" title="Link to this heading">¶</a></h1>
 <p>One of the core principles guiding the implementation of the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> class is “<strong><em>what you put is what you get</em></strong>”. Unlike Pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> makes no assumptions about the types of the columns provided as input. Some key differences to highlight the advantages of using <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> are especially in terms of modifications to column types and handling nested dataframes.</p>
 <section id="inadvertent-modification-of-types">
-<h3>Inadvertent modification of types<a class="headerlink" href="#inadvertent-modification-of-types" title="Link to this heading">¶</a></h3>
-<p>As an example, Pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> modifies the types of the input data. These assumptions may cause issues when interoperating between R and Python.</p>
+<h2>Inadvertent modification of types<a class="headerlink" href="#inadvertent-modification-of-types" title="Link to this heading">¶</a></h2>
+<p>As an example, Pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> modifies the types of the input data. These assumptions may cause issues when interoperating between R and python.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -359,7 +369,7 @@ BiocFrame with 10 rows and 3 columns
 <p>This behavior remains consistent when extracting, slicing, combining, or performing any supported operation on <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> objects.</p>
 </section>
 <section id="handling-complex-nested-frames">
-<h3>Handling complex nested frames<a class="headerlink" href="#handling-complex-nested-frames" title="Link to this heading">¶</a></h3>
+<h2>Handling complex nested frames<a class="headerlink" href="#handling-complex-nested-frames" title="Link to this heading">¶</a></h2>
 <p>Pandas <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> does not support nested structures; therefore, running the snippet below will result in an error:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
     <span class="s2">&quot;ensembl&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ENS00001&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00002&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00002&quot;</span><span class="p">],</span>
@@ -404,8 +414,8 @@ BiocFrame with 10 rows and 3 columns
 <p>This behavior remains consistent when extracting, slicing, combining, or performing any other supported operations on <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> objects.</p>
 </section>
 </section>
-<section id="construction">
-<h2>Construction<a class="headerlink" href="#construction" title="Link to this heading">¶</a></h2>
+<section class="tex2jax_ignore mathjax_ignore" id="construction">
+<h1>Construction<a class="headerlink" href="#construction" title="Link to this heading">¶</a></h1>
 <p>Creating a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> object is straightforward; just provide the <code class="docutils literal notranslate"><span class="pre">data</span></code> as a dictionary.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -467,8 +477,12 @@ row3 ENS00002   ESR1 chr3:5000:5500
 <li><p><code class="docutils literal notranslate"><span class="pre">metadata</span></code>: Additional metadata about the object, usually a dictionary.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">column_names</span></code>: If different from the keys in the <code class="docutils literal notranslate"><span class="pre">data</span></code>. If not provided, this is automatically extracted from the keys in the <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p></li>
 </ul>
-<section id="interop-with-pandas">
-<h3>Interop with pandas<a class="headerlink" href="#interop-with-pandas" title="Link to this heading">¶</a></h3>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="with-other-dataframe-libraries">
+<h1>With other <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> libraries<a class="headerlink" href="#with-other-dataframe-libraries" title="Link to this heading">¶</a></h1>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="pandas">
+<h1>Pandas<a class="headerlink" href="#pandas" title="Link to this heading">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> is intended for accurate representation of Bioconductor objects for interoperability with R, many users may prefer working with <strong>pandas</strong> <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> objects for their actual analyses. This conversion is easily achieved:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -519,11 +533,46 @@ row3 ENS00002   ESR1 chr3:5000:5500
 </div>
 </div>
 </div>
+<section id="polars">
+<h2>Polars<a class="headerlink" href="#polars" title="Link to this heading">¶</a></h2>
+<p>Similarly, you can easily go back and forth between <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> and a polars <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
+<span class="n">bframe3</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">pl</span> <span class="o">=</span> <span class="n">bframe3</span><span class="o">.</span><span class="n">to_polars</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pl</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shape: (5, 2)
+┌─────┬───────┐
+│ foo ┆ bar   │
+│ --- ┆ ---   │
+│ str ┆ bool  │
+╞═════╪═══════╡
+│ A   ┆ true  │
+│ B   ┆ false │
+│ C   ┆ true  │
+│ D   ┆ false │
+│ E   ┆ true  │
+└─────┴───────┘
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
-<section id="extracting-data">
-<h2>Extracting data<a class="headerlink" href="#extracting-data" title="Link to this heading">¶</a></h2>
-<p>BiocPy classes follow a functional paradigm for accessing or setting properties, with further details discussed in <a class="reference internal" href="#../philosophy.qmd#functional-discipline"><span class="xref myst">functional paradigm</span></a> section.</p>
+<section class="tex2jax_ignore mathjax_ignore" id="extracting-data">
+<h1>Extracting data<a class="headerlink" href="#extracting-data" title="Link to this heading">¶</a></h1>
+<p>BiocPy classes follow a functional paradigm for accessing or setting properties, with further details discussed in <a class="reference external" href="https://biocpy.github.io/tutorial/chapters/philosophy.html#functional-discipline">functional paradigm</a> section.</p>
 <p>Properties can be directly accessed from the object:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -603,10 +652,10 @@ Short-hand to get a single column:
 </div>
 </div>
 </section>
-<section id="setting-data">
-<h2>Setting data<a class="headerlink" href="#setting-data" title="Link to this heading">¶</a></h2>
+<section class="tex2jax_ignore mathjax_ignore" id="setting-data">
+<h1>Setting data<a class="headerlink" href="#setting-data" title="Link to this heading">¶</a></h1>
 <section id="preferred-approach">
-<h3>Preferred approach<a class="headerlink" href="#preferred-approach" title="Link to this heading">¶</a></h3>
+<h2>Preferred approach<a class="headerlink" href="#preferred-approach" title="Link to this heading">¶</a></h2>
 <p>For setting properties, we encourage a <strong>functional style</strong> of programming to avoid mutating the object directly. This helps prevent inadvertent modifications of <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> instances within larger data structures.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -716,7 +765,7 @@ metadata(1): author
 </div>
 </section>
 <section id="the-not-preferred-way">
-<h3>The not-preferred-way<a class="headerlink" href="#the-not-preferred-way" title="Link to this heading">¶</a></h3>
+<h2>The not-preferred-way<a class="headerlink" href="#the-not-preferred-way" title="Link to this heading">¶</a></h2>
 <p>Properties can also be set by direct assignment for in-place modification. We prefer not to do it this way as it can silently mutate <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> instances inside other data structures.
 Nonetheless:</p>
 <div class="cell docutils container">
@@ -764,8 +813,8 @@ otherwise, it is safer to just create a (shallow) copy via the default <code cla
 </div>
 </section>
 </section>
-<section id="iterate-over-rows">
-<h2>Iterate over rows<a class="headerlink" href="#iterate-over-rows" title="Link to this heading">¶</a></h2>
+<section class="tex2jax_ignore mathjax_ignore" id="iterate-over-rows">
+<h1>Iterate over rows<a class="headerlink" href="#iterate-over-rows" title="Link to this heading">¶</a></h1>
 <p>You can iterate over the rows of a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> object. <code class="docutils literal notranslate"><span class="pre">name</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> if the object does not contain any <code class="docutils literal notranslate"><span class="pre">row_names</span></code>. To iterate over the first two rows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -782,8 +831,8 @@ None {&#39;ensembl&#39;: &#39;ENS00002&#39;, &#39;symbol&#39;: &#39;BIN1&#39;}
 </div>
 </div>
 </section>
-<section id="combining-objects">
-<h2>Combining objects<a class="headerlink" href="#combining-objects" title="Link to this heading">¶</a></h2>
+<section class="tex2jax_ignore mathjax_ignore" id="combining-objects">
+<h1>Combining objects<a class="headerlink" href="#combining-objects" title="Link to this heading">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> implements methods for the various <code class="docutils literal notranslate"><span class="pre">combine</span></code> generics from <a class="reference external" href="https://github.com/BiocPy/biocutils"><strong>BiocUtils</strong></a>. For example, to combine by row:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -849,7 +898,7 @@ None {&#39;ensembl&#39;: &#39;ENS00002&#39;, &#39;symbol&#39;: &#39;BIN1&#39;}
 </div>
 </div>
 <section id="relaxed-combine-operation">
-<h3>Relaxed combine operation<a class="headerlink" href="#relaxed-combine-operation" title="Link to this heading">¶</a></h3>
+<h2>Relaxed combine operation<a class="headerlink" href="#relaxed-combine-operation" title="Link to this heading">¶</a></h2>
 <p>By default, the combine methods assume that the number and identity of columns (for <code class="docutils literal notranslate"><span class="pre">combine_rows()</span></code>) or rows (for <code class="docutils literal notranslate"><span class="pre">combine_columns()</span></code>) are the same across objects. In situations where this is not the case, such as having different columns across objects, we can use <code class="docutils literal notranslate"><span class="pre">relaxed_combine_rows()</span></code> instead:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -882,7 +931,7 @@ None {&#39;ensembl&#39;: &#39;ENS00002&#39;, &#39;symbol&#39;: &#39;BIN1&#39;}
 </div>
 </section>
 <section id="sql-like-join-operation">
-<h3>Sql-like join operation<a class="headerlink" href="#sql-like-join-operation" title="Link to this heading">¶</a></h3>
+<h2>Sql-like join operation<a class="headerlink" href="#sql-like-join-operation" title="Link to this heading">¶</a></h2>
 <p>Similarly, if the rows are different, we can use <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code>’s <code class="docutils literal notranslate"><span class="pre">merge</span></code> function. This function uses the <em>row_names</em> as the index to perform this operation; you can specify an alternative set of keys through the <code class="docutils literal notranslate"><span class="pre">by</span></code> parameter.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -913,8 +962,8 @@ G   None   None      E   True
 </div>
 </section>
 </section>
-<section id="empty-frames">
-<h2>Empty Frames<a class="headerlink" href="#empty-frames" title="Link to this heading">¶</a></h2>
+<section class="tex2jax_ignore mathjax_ignore" id="empty-frames">
+<h1>Empty Frames<a class="headerlink" href="#empty-frames" title="Link to this heading">¶</a></h1>
 <p>We can create empty <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> objects that only specify the number of rows. This is beneficial in scenarios where <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> objects are incorporated into larger data structures but do not contain any data themselves.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -948,7 +997,6 @@ Subsetting an empty BiocFrame:
 </div>
 </div>
 </div>
-</section>
 <section id="further-reading">
 <h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">¶</a></h2>
 <ul class="simple">
@@ -1001,54 +1049,13 @@ Subsetting an empty BiocFrame:
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> - Bioconductor-like data frames</a><ul>
-<li><a class="reference internal" href="#advantages-of-biocframe">Advantages of <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code></a><ul>
-<li><a class="reference internal" href="#inadvertent-modification-of-types">Inadvertent modification of types</a></li>
-<li><a class="reference internal" href="#handling-complex-nested-frames">Handling complex nested frames</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#construction">Construction</a><ul>
-<li><a class="reference internal" href="#interop-with-pandas">Interop with pandas</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#extracting-data">Extracting data</a></li>
-<li><a class="reference internal" href="#setting-data">Setting data</a><ul>
-<li><a class="reference internal" href="#preferred-approach">Preferred approach</a></li>
-<li><a class="reference internal" href="#the-not-preferred-way">The not-preferred-way</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#iterate-over-rows">Iterate over rows</a></li>
-<li><a class="reference internal" href="#combining-objects">Combining objects</a><ul>
-<li><a class="reference internal" href="#relaxed-combine-operation">Relaxed combine operation</a></li>
-<li><a class="reference internal" href="#sql-like-join-operation">Sql-like join operation</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#empty-frames">Empty Frames</a></li>
-<li><a class="reference internal" href="#further-reading">Further reading</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=f1e22e58"></script>
+</div><script src="_static/documentation_options.js?v=559aaa41"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=4e2eecee"></script>

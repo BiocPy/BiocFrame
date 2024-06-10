@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
-        <title>biocframe.BiocFrame - BiocFrame 0.5.10 documentation</title>
+        <title>biocframe.BiocFrame - BiocFrame 0.5.11 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -179,7 +179,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">BiocFrame 0.5.10 documentation</div></a>
+      <a href="../../index.html"><div class="brand">BiocFrame 0.5.11 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -203,7 +203,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.5.10 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.5.11 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -212,7 +212,16 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html"><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> - Bioconductor-like data frames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html#advantages-of-biocframe">Advantages of <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html#construction">Construction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html#with-other-dataframe-libraries">With other <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html#pandas">Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html#extracting-data">Extracting data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html#setting-data">Setting data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html#iterate-over-rows">Iterate over rows</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html#combining-objects">Combining objects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html#empty-frames">Empty Frames</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/modules.html">Module Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Module Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../api/biocframe.html">biocframe package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of biocframe package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/biocframe.io.html">biocframe.io package</a></li>
@@ -1539,20 +1548,14 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the ``BiocFrame`` into a :py:class:`~pandas.DataFrame` object.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            A :py:class:`~pandas.DataFrame` object.</span>
+<span class="sd">            A :py:class:`~pandas.DataFrame` object. Column names of the resulting</span>
+<span class="sd">            dataframe may be different is the `BiocFrame` is nested.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">_data_copy</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">:</span>
-                <span class="n">_data_copy</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="n">ut</span><span class="o">.</span><span class="n">Factor</span><span class="p">):</span>
-                    <span class="n">_data_copy</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">_data_copy</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-
-            <span class="k">return</span> <span class="n">DataFrame</span><span class="p">(</span>
-                <span class="n">data</span><span class="o">=</span><span class="n">_data_copy</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span>
-            <span class="p">)</span>
+            <span class="n">_data_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">as_type</span><span class="o">=</span><span class="s2">&quot;dict&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">_data_copy</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{},</span> <span class="n">index</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_number_of_rows</span><span class="p">))</span></div>
 
@@ -1585,9 +1588,100 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">rdata</span><span class="p">,</span> <span class="n">row_names</span><span class="o">=</span><span class="n">rindex</span><span class="p">,</span> <span class="n">column_names</span><span class="o">=</span><span class="nb">input</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span></div>
 
 
+    <span class="c1">################################</span>
+    <span class="c1">######&gt;&gt; polars interop &lt;&lt;######</span>
+    <span class="c1">################################</span>
+
+<div class="viewcode-block" id="BiocFrame.from_polars">
+<a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.from_polars">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_polars</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="s2">&quot;polars.DataFrame&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a ``BiocFrame`` from a :py:class:`~polars.DataFrame` object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input:</span>
+<span class="sd">                Input data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A ``BiocFrame`` object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">polars</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;`data` is not a polars `DataFrame` object.&quot;</span><span class="p">)</span>
+
+        <span class="n">rdata</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">as_series</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">rdata</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BiocFrame.to_polars">
+<a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.to_polars">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_polars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert the ``BiocFrame`` into a :py:class:`~polars.DataFrame` object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A :py:class:`~polars.DataFrame` object. Column names of the resulting</span>
+<span class="sd">            dataframe may be different is the `BiocFrame` is nested.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">polars</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">_data_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">as_type</span><span class="o">=</span><span class="s2">&quot;dict&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">_data_copy</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{})</span></div>
+
+
     <span class="c1">###############################</span>
     <span class="c1">######&gt;&gt; Miscellaneous &lt;&lt;######</span>
     <span class="c1">###############################</span>
+
+<div class="viewcode-block" id="BiocFrame.flatten">
+<a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.flatten">[docs]</a>
+    <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">as_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="s2">&quot;biocframe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="n">delim</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BiocFrame&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Flatten a nested BiocFrame object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            as_type:</span>
+<span class="sd">                Return type of the result. Either a :py:class:`~dict` or a</span>
+<span class="sd">                :py:class:`~biocframe.BiocFrame.BiocFrame` object.</span>
+
+<span class="sd">            delim:</span>
+<span class="sd">                Delimiter to join nested column names. Defaults to `&quot;.&quot;`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An object with the type specified by ``as_type`` argument.</span>
+<span class="sd">            If ``as_type`` is `dict`, an additional column &quot;rownames&quot; is added if the object</span>
+<span class="sd">            contains rownames.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">as_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="s2">&quot;biocframe&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;as_type&#39; must be either &#39;dict&#39; or &#39;biocframe&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="n">_data_copy</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_column_names</span><span class="p">()):</span>
+            <span class="n">_cold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">column</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_cold</span><span class="p">,</span> <span class="n">BiocFrame</span><span class="p">):</span>
+                <span class="n">_res</span> <span class="o">=</span> <span class="n">_cold</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">as_type</span><span class="o">=</span><span class="n">as_type</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_res</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">_data_copy</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}{</span><span class="n">delim</span><span class="si">}{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_res</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_cold</span><span class="p">,</span> <span class="n">ut</span><span class="o">.</span><span class="n">Factor</span><span class="p">):</span>
+                <span class="n">_data_copy</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cold</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_data_copy</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">_cold</span>
+
+        <span class="k">if</span> <span class="n">as_type</span> <span class="o">==</span> <span class="s2">&quot;biocframe&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BiocFrame</span><span class="p">(</span><span class="n">_data_copy</span><span class="p">,</span> <span class="n">row_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_data_copy</span><span class="p">[</span><span class="s2">&quot;rownames&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_row_names</span>
+
+        <span class="k">return</span> <span class="n">_data_copy</span></div>
+
 
 <div class="viewcode-block" id="BiocFrame.combine">
 <a class="viewcode-back" href="../../api/biocframe.html#biocframe.BiocFrame.BiocFrame.combine">[docs]</a>
@@ -1608,6 +1702,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            An object with the same type as the caller.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Not all NumPy array methods are fully tested.&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
 
         <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">Series</span>
         <span class="kn">from</span> <span class="nn">pandas.api.types</span> <span class="kn">import</span> <span class="n">is_numeric_dtype</span>
@@ -2077,7 +2173,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=f1e22e58"></script>
+</div><script src="../../_static/documentation_options.js?v=559aaa41"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=4e2eecee"></script>
