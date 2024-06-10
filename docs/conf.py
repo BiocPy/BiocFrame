@@ -314,6 +314,7 @@ intersphinx_mapping = {
     "setuptools": ("https://setuptools.pypa.io/en/stable/", None),
     "pyscaffold": ("https://pyscaffold.org/en/stable", None),
     "biocutils": ("https://biocpy.github.io/BiocUtils", None),
+    "polars": ("https://docs.pola.rs/api/python/stable/", None),
 }
 
 print(f"loading configurations for {project} {version} ...", file=sys.stderr)
