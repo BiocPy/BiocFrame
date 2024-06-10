@@ -1,3 +1,9 @@
+---
+file_format: mystnb
+kernelspec:
+  name: python
+---
+
 # `BiocFrame` - Bioconductor-like data frames
 
 `BiocFrame` class is a Bioconductor-friendly data frame class. Its primary advantage lies in not making assumptions about the types of the columns - as long as an object has a length (`__len__`) and supports slicing methods (`__getitem__`), it can be used inside a `BiocFrame`.
@@ -12,10 +18,10 @@ One of the core principles guiding the implementation of the `BiocFrame` class i
 
 ## Inadvertent modification of types
 
-As an example, Pandas `DataFrame` modifies the types of the input data. These assumptions may cause issues when interoperating between R and {jupyter-execute}.
+As an example, Pandas `DataFrame` modifies the types of the input data. These assumptions may cause issues when interoperating between R and python.
 
 
-```{jupyter-execute}
+```{code-cell}
 import pandas as pd
 import numpy as np
 from array import array
@@ -23,7 +29,7 @@ from array import array
 df = pd.DataFrame({
     "numpy_vec": np.zeros(10),
     "list_vec": [1]* 10,
-    "native_array_vec": array('d', [3.14] * 10) # less used but native {jupyter-execute} arrays
+    "native_array_vec": array('d', [3.14] * 10) # less used but native python arrays
 })
 
 print("type of numpy_vector column:", type(df["numpy_vec"]), df["numpy_vec"].dtype)
@@ -36,7 +42,7 @@ print(df)
 With `BiocFrame`, no assumptions are made, and the input data is not cast into (un)expected types:
 
 
-```{jupyter-execute}
+```{code-cell}
 from biocframe import BiocFrame
 import numpy as np
 from array import array
@@ -59,7 +65,7 @@ This behavior remains consistent when extracting, slicing, combining, or perform
 
 Pandas `DataFrame` does not support nested structures; therefore, running the snippet below will result in an error:
 
-```{jupyter-execute}
+```python
 df = pd.DataFrame({
     "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
     "symbol": ["MAP1A", "BIN1", "ESR1"],
@@ -75,7 +81,7 @@ print(df)
 However, it is handled seamlessly with `BiocFrame`:
 
 
-```{jupyter-execute}
+```{code-cell}
 bframe_nested = BiocFrame({
     "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
     "symbol": ["MAP1A", "BIN1", "ESR1"],
@@ -96,7 +102,7 @@ This behavior remains consistent when extracting, slicing, combining, or perform
 Creating a `BiocFrame` object is straightforward; just provide the `data` as a dictionary.
 
 
-```{jupyter-execute}
+```{code-cell}
 from biocframe import BiocFrame
 
 obj = {
@@ -112,7 +118,7 @@ You can specify complex objects as columns, as long as they have some "length" e
 For example, we can embed a `BiocFrame` within another `BiocFrame`.
 
 
-```{jupyter-execute}
+```{code-cell}
 obj = {
     "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
     "symbol": ["MAP1A", "BIN1", "ESR1"],
@@ -133,12 +139,13 @@ The `row_names` parameter is analogous to index in the pandas world and should n
 - `metadata`: Additional metadata about the object, usually a dictionary.
 - `column_names`: If different from the keys in the `data`. If not provided, this is automatically extracted from the keys in the `data`.
 
-## Interop with pandas
+# With other `DataFrame` libraries
 
+# Pandas
 `BiocFrame` is intended for accurate representation of Bioconductor objects for interoperability with R, many users may prefer working with **pandas** `DataFrame` objects for their actual analyses. This conversion is easily achieved:
 
 
-```{jupyter-execute}
+```{code-cell}
 from biocframe import BiocFrame
 bframe3 = BiocFrame(
     {
@@ -155,19 +162,36 @@ print(df)
 Converting back to a `BiocFrame` is similarly straightforward:
 
 
-```{jupyter-execute}
+```{code-cell}
 out = BiocFrame.from_pandas(df)
 print(out)
 ```
 
+## Polars
+
+Similarly, you can easily go back and forth between `BiocFrame` and a polars `DataFrame`:
+
+```{code-cell}
+from biocframe import BiocFrame
+bframe3 = BiocFrame(
+    {
+        "foo": ["A", "B", "C", "D", "E"],
+        "bar": [True, False, True, False, True]
+    }
+)
+
+pl = bframe3.to_polars()
+print(pl)
+```
+
 # Extracting data
 
-BiocPy classes follow a functional paradigm for accessing or setting properties, with further details discussed in [functional paradigm](../philosophy.qmd#functional-discipline) section.
+BiocPy classes follow a functional paradigm for accessing or setting properties, with further details discussed in [functional paradigm](https://biocpy.github.io/tutorial/chapters/philosophy.html#functional-discipline) section.
 
 Properties can be directly accessed from the object:
 
 
-```{jupyter-execute}
+```{code-cell}
 print("shape:", bframe.shape)
 print("column names (functional style):", bframe.get_column_names())
 print("column names (as property):", bframe.column_names) # same as above
@@ -176,7 +200,7 @@ print("column names (as property):", bframe.column_names) # same as above
 We can fetch individual columns:
 
 
-```{jupyter-execute}
+```{code-cell}
 print("functional style:", bframe.get_column("ensembl"))
 print("w/ accessor", bframe["ensembl"])
 ```
@@ -184,7 +208,7 @@ print("w/ accessor", bframe["ensembl"])
 And we can get individual rows as a dictionary:
 
 
-```{jupyter-execute}
+```{code-cell}
 bframe.get_row(2)
 ```
 
@@ -194,7 +218,7 @@ This operator accepts different subsetting arguments, such as a boolean vector, 
 :::
 
 
-```{jupyter-execute}
+```{code-cell}
 sliced_with_bools = bframe[1:2, [True, False, False]]
 print("Subset using booleans: \n", sliced_with_bools)
 
@@ -213,7 +237,7 @@ For setting properties, we encourage a **functional style** of programming to av
 
 
 
-```{jupyter-execute}
+```{code-cell}
 modified = bframe.set_column_names(["column1", "column2"])
 print(modified)
 ```
@@ -221,7 +245,7 @@ print(modified)
 Now let's check the column names of the original object,
 
 
-```{jupyter-execute}
+```{code-cell}
 # Original is unchanged:
 print(bframe.get_column_names())
 ```
@@ -229,7 +253,7 @@ print(bframe.get_column_names())
 To add new columns, or replace existing ones:
 
 
-```{jupyter-execute}
+```{code-cell}
 modified = bframe.set_column("symbol", ["A", "B", "C"])
 print(modified)
 
@@ -240,7 +264,7 @@ print(modified)
 Change the row or column names:
 
 
-```{jupyter-execute}
+```{code-cell}
 modified = bframe.\
     set_column_names(["FOO", "BAR"]).\
     set_row_names(['alpha', 'bravo', 'charlie'])
@@ -252,7 +276,7 @@ print(modified)
 We also support Bioconductor's metadata concepts, either along the columns or for the entire object:
 
 
-```{jupyter-execute}
+```{code-cell}
 modified = bframe.\
     set_metadata({ "author": "Jayaram Kancherla" }).\
     set_column_data(BiocFrame({"column_source": ["Ensembl", "HGNC" ]}))
@@ -265,7 +289,7 @@ Properties can also be set by direct assignment for in-place modification. We pr
 Nonetheless:
 
 
-```{jupyter-execute}
+```{code-cell}
 testframe = BiocFrame({ "A": [1,2,3], "B": [4,5,6] })
 testframe.column_names = ["column1", "column2" ]
 print(testframe)
@@ -278,7 +302,7 @@ otherwise, it is safer to just create a (shallow) copy via the default `in_place
 Similarly, we could set or replace columns directly:
 
 
-```{jupyter-execute}
+```{code-cell}
 testframe["column2"] = ["A", "B", "C"]
 testframe[1:3, ["column1","column2"]] = BiocFrame({"x":[4, 5], "y":["E", "F"]})
 ```
@@ -288,7 +312,7 @@ testframe[1:3, ["column1","column2"]] = BiocFrame({"x":[4, 5], "y":["E", "F"]})
 You can iterate over the rows of a `BiocFrame` object. `name` is `None` if the object does not contain any `row_names`. To iterate over the first two rows:
 
 
-```{jupyter-execute}
+```{code-cell}
 for name, row in bframe[:2,]:
     print(name, row)
 ```
@@ -299,7 +323,7 @@ for name, row in bframe[:2,]:
 
 
 
-```{jupyter-execute}
+```{code-cell}
 import biocutils
 
 bframe1 = BiocFrame({
@@ -319,7 +343,7 @@ print(combined)
 Similarly, to combine by column:
 
 
-```{jupyter-execute}
+```{code-cell}
 bframe3 = BiocFrame({
     "foo": ["A", "B", "C", "D", "E"],
     "bar": [True, False, True, False, True]
@@ -334,7 +358,7 @@ print(combined)
 By default, the combine methods assume that the number and identity of columns (for `combine_rows()`) or rows (for `combine_columns()`) are the same across objects. In situations where this is not the case, such as having different columns across objects, we can use `relaxed_combine_rows()` instead:
 
 
-```{jupyter-execute}
+```{code-cell}
 from biocframe import relaxed_combine_rows
 
 modified2 = bframe2.set_column("foo", ["A", "B", "C", "D", "E"])
@@ -348,7 +372,7 @@ print(combined)
 Similarly, if the rows are different, we can use `BiocFrame`'s `merge` function. This function uses the *row_names* as the index to perform this operation; you can specify an alternative set of keys through the `by` parameter.
 
 
-```{jupyter-execute}
+```{code-cell}
 from biocframe import merge
 
 modified1 = bframe1.set_row_names(["A", "B", "C", "D", "E"])
@@ -363,7 +387,7 @@ print(combined)
 We can create empty `BiocFrame` objects that only specify the number of rows. This is beneficial in scenarios where `BiocFrame` objects are incorporated into larger data structures but do not contain any data themselves.
 
 
-```{jupyter-execute}
+```{code-cell}
 empty = BiocFrame(number_of_rows=100)
 print(empty)
 ```
@@ -371,7 +395,7 @@ print(empty)
 Most operations detailed in this document can be performed on an empty `BiocFrame` object.
 
 
-```{jupyter-execute}
+```{code-cell}
 print("Column names:", empty.column_names)
 
 subset_empty = empty[1:10,:]
