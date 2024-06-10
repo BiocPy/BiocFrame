@@ -1,6 +1,6 @@
 # `BiocFrame` - Bioconductor-like data frames
 
-`BiocFrame` class is a Bioconductor-friendly data frame class. Its primary advantage lies in not making assumptions about the types of the columns - as long as an object has a length (`__len__`) and supports slicing methods (`__getitem__`), it can be used inside a `BiocFrame`. 
+`BiocFrame` class is a Bioconductor-friendly data frame class. Its primary advantage lies in not making assumptions about the types of the columns - as long as an object has a length (`__len__`) and supports slicing methods (`__getitem__`), it can be used inside a `BiocFrame`.
 
 This flexibility allows us to accept arbitrarily complex objects as columns, which is often the case in Bioconductor objects. Also check out Bioconductor's [**S4Vectors**](https://bioconductor.org/packages/S4Vectors) package, which implements the `DFrame` class on which `BiocFrame` was based.
 
@@ -130,7 +130,7 @@ print(bframe2)
 The `row_names` parameter is analogous to index in the pandas world and should not contain missing strings. Additionally, you may provide:
 
 - `column_data`: A `BiocFrame`object containing metadata about the columns. This must have the same number of rows as the numbers of columns.
-- `metadata`: Additional metadata about the object, usually a dictionary. 
+- `metadata`: Additional metadata about the object, usually a dictionary.
 - `column_names`: If different from the keys in the `data`. If not provided, this is automatically extracted from the keys in the `data`.
 
 ## Interop with pandas
