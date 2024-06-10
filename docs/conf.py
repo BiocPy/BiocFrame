@@ -72,7 +72,6 @@ extensions = [
     "sphinx.ext.ifconfig",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
-    "sphinx_autodoc_typehints",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -119,13 +118,10 @@ copyright = "2023, jkanche"
 # If you don’t need the separation provided between version and release,
 # just set them both to the same value.
 
-if "SPHINX_DOC_VERSION_MANUAL" in os.environ:
-    version = os.getenv("SPHINX_DOC_VERSION_MANUAL", None)
-else:
-    try:
-        from biocframe import __version__ as version
-    except ImportError:
-        version = ""
+try:
+    from biocframe import __version__ as version
+except ImportError:
+    version = ""
 
 if not version or version.lower() == "unknown":
     version = os.getenv("READTHEDOCS_VERSION", "unknown")  # automatically set by RTD
@@ -314,6 +310,7 @@ intersphinx_mapping = {
     "setuptools": ("https://setuptools.pypa.io/en/stable/", None),
     "pyscaffold": ("https://pyscaffold.org/en/stable", None),
     "biocutils": ("https://biocpy.github.io/BiocUtils", None),
+    "polars": ("https://docs.pola.rs/api/python/stable/", None),
 }
 
 print(f"loading configurations for {project} {version} ...", file=sys.stderr)

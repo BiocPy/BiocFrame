@@ -5,7 +5,7 @@
 ```{toctree}
 :maxdepth: 2
 
-Overview <tutorial.ipynb>
+Overview <tutorial>
 Module Reference <api/modules>
 Contributions & Help <contributing>
 License <license>
