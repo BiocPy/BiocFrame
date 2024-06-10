@@ -1166,20 +1166,14 @@ class BiocFrame:
         """Convert the ``BiocFrame`` into a :py:class:`~pandas.DataFrame` object.
 
         Returns:
-            A :py:class:`~pandas.DataFrame` object.
+            A :py:class:`~pandas.DataFrame` object. Column names of the resulting
+            dataframe may be different is the `BiocFrame` is nested.
         """
         from pandas import DataFrame
 
         if len(self.column_names) > 0:
-            _data_copy = OrderedDict()
-            for col in self.column_names:
-                _data_copy[col] = self.column(col)
-                if isinstance(self.column(col), ut.Factor):
-                    _data_copy[col] = _data_copy[col].to_pandas()
-
-            return DataFrame(
-                data=_data_copy, index=self._row_names, columns=self._column_names
-            )
+            _data_copy = self.flatten(as_type="dict")
+            return DataFrame(data=_data_copy, index=self._row_names)
         else:
             return DataFrame(data={}, index=range(self._number_of_rows))
 
@@ -1208,6 +1202,10 @@ class BiocFrame:
 
         return cls(data=rdata, row_names=rindex, column_names=input.columns.to_list())
 
+    ################################
+    ######>> polars interop <<######
+    ################################
+
     @classmethod
     def from_polars(cls, input: "polars.DataFrame") -> "BiocFrame":
         """Create a ``BiocFrame`` from a :py:class:`~polars.DataFrame` object.
@@ -1229,9 +1227,66 @@ class BiocFrame:
 
         return cls(data=rdata)
 
+    def to_polars(self):
+        """Convert the ``BiocFrame`` into a :py:class:`~polars.DataFrame` object.
+
+        Returns:
+            A :py:class:`~polars.DataFrame` object. Column names of the resulting
+            dataframe may be different is the `BiocFrame` is nested.
+        """
+        from polars import DataFrame
+
+        if len(self.column_names) > 0:
+            _data_copy = self.flatten(as_type="dict")
+            return DataFrame(data=_data_copy)
+        else:
+            return DataFrame(data={})
+
     ###############################
     ######>> Miscellaneous <<######
     ###############################
+
+    def flatten(
+        self, as_type: Literal["dict", "biocframe"] = "dict", delim: str = "."
+    ) -> "BiocFrame":
+        """Flatten a nested BiocFrame object.
+
+        Args:
+            as_type:
+                Return type of the result. Either a :py:class:`~dict` or a
+                :py:class:`~biocframe.BiocFrame.BiocFrame` object.
+
+            delim:
+                Delimiter to join nested column names. Defaults to `"."`.
+
+        Returns:
+            An object with the type specified by ``as_type`` argument.
+            If ``as_type`` is `dict`, an additional column "rownames" is added if the object
+            contains rownames.
+        """
+
+        if as_type not in ["dict", "biocframe"]:
+            raise ValueError("'as_type' must be either 'dict' or 'biocframe'.")
+
+        _data_copy = OrderedDict()
+        for col in list(self.get_column_names()):
+            _cold = self.column(col)
+            if isinstance(_cold, BiocFrame):
+                _res = _cold.flatten(as_type=as_type)
+                for k in _res.keys():
+                    _data_copy[f"{col}{delim}{k}"] = _res[k]
+            elif isinstance(_cold, ut.Factor):
+                _data_copy[col] = _cold.to_pandas()
+            else:
+                _data_copy[col] = _cold
+
+        if as_type == "biocframe":
+            return BiocFrame(_data_copy, row_names=self._row_names)
+
+        if self._row_names is not None:
+            _data_copy["rownames"] = self._row_names
+
+        return _data_copy
 
     def combine(self, *other):
         """Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only."""
@@ -1247,6 +1302,8 @@ class BiocFrame:
         Returns:
             An object with the same type as the caller.
         """
+
+        warn("Not all NumPy array methods are fully tested.", UserWarning)
 
         from pandas import Series
         from pandas.api.types import is_numeric_dtype
