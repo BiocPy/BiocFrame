@@ -27,6 +27,9 @@ To get started, install the package from [PyPI](https://pypi.org/project/biocfra
 
 ```shell
 pip install biocframe
+
+# To install optional dependencies
+pip install biocframe[optional]
 ```
 
 ## Construction
