@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 0.5.11
+
+- Methods to flatten a nested `BiocFrame` object.
+- Interop with Polars; added methods to coerce `BiocFrame` object to a polars `DataFrame` and vice-versa
+- Corce methods especially the integrations with pandas and polars, first flatten the `BiocFrame` before attempting the coersion.
+
 ## Version 0.5.1
 
 - Moved the pandas converter into a `BiocFrame` class method for more accessibility.
