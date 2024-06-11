@@ -212,10 +212,8 @@ And we can get individual rows as a dictionary:
 bframe.get_row(2)
 ```
 
-::: {.callout}
 To retrieve a subset of the data in the `BiocFrame`, we use the subset (`[]`) operator.
 This operator accepts different subsetting arguments, such as a boolean vector, a `slice` object, a sequence of indices, or row/column names.
-:::
 
 
 ```{code-cell}
