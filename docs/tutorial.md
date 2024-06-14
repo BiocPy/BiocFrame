@@ -10,7 +10,9 @@ kernelspec:
 
 This flexibility allows us to accept arbitrarily complex objects as columns, which is often the case in Bioconductor objects. Also check out Bioconductor's [**S4Vectors**](https://bioconductor.org/packages/S4Vectors) package, which implements the `DFrame` class on which `BiocFrame` was based.
 
+:::{.callout-note}
 These classes follow a functional paradigm for accessing or setting properties, with further details discussed in [functional paradigm](https://biocpy.github.io/tutorial/chapters/philosophy.html) section.
+:::
 
 # Advantages of `BiocFrame`
 
@@ -59,7 +61,9 @@ print("type of native_array_vector column:", type(bframe_types["native_array_vec
 print(bframe_types)
 ```
 
+:::{.callout-note}
 This behavior remains consistent when extracting, slicing, combining, or performing any supported operation on `BiocFrame` objects.
+:::
 
 ## Handling complex nested frames
 
@@ -95,7 +99,9 @@ bframe_nested = BiocFrame({
 print(bframe_nested)
 ```
 
+:::{.callout-note}
 This behavior remains consistent when extracting, slicing, combining, or performing any other supported operations on `BiocFrame` objects.
+:::
 
 # Construction
 
@@ -113,9 +119,10 @@ bframe = BiocFrame(obj)
 print(bframe)
 ```
 
+::: {.callout-tip}
 You can specify complex objects as columns, as long as they have some "length" equal to the number of rows.
-
 For example, we can embed a `BiocFrame` within another `BiocFrame`.
+:::
 
 
 ```{code-cell}
@@ -212,8 +219,10 @@ And we can get individual rows as a dictionary:
 bframe.get_row(2)
 ```
 
+::: {.callout}
 To retrieve a subset of the data in the `BiocFrame`, we use the subset (`[]`) operator.
 This operator accepts different subsetting arguments, such as a boolean vector, a `slice` object, a sequence of indices, or row/column names.
+:::
 
 
 ```{code-cell}
@@ -269,7 +278,9 @@ modified = bframe.\
 print(modified)
 ```
 
-***The functional style allows you to chain multiple operations.***
+::: {.callout-tip}
+The functional style allows you to chain multiple operations.
+:::
 
 We also support Bioconductor's metadata concepts, either along the columns or for the entire object:
 
@@ -293,9 +304,11 @@ testframe.column_names = ["column1", "column2" ]
 print(testframe)
 ```
 
+::: {.callout-caution}
 Warnings are raised when properties are directly mutated. These assignments are the same as calling the corresponding `set_*()` methods with `in_place = True`.
 It is best to do this only if the `BiocFrame` object is not being used anywhere else;
 otherwise, it is safer to just create a (shallow) copy via the default `in_place = False`.
+:::
 
 Similarly, we could set or replace columns directly:
 
