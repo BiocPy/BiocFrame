@@ -7,4 +7,3 @@ myst-nb
 myst-parser[linkify]
 sphinx>=3.2.1
 sphinx-autodoc-typehints
-# nbsphinx

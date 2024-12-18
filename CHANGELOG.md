@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.6.0
+
+- chore: Remove Python 3.8 (EOL)
+- precommit: Replace docformatter with ruff's formatter
+
 ## Version 0.5.11
 
 - Methods to flatten a nested `BiocFrame` object.
