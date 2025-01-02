@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from copy import copy
-from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple, Union, Mapping
 from warnings import warn
 
 import biocutils as ut
@@ -122,7 +122,7 @@ class BiocFrame:
 
     def __init__(
         self,
-        data: Optional[Dict[str, Any]] = None,
+        data: Mapping = None,
         number_of_rows: Optional[int] = None,
         row_names: Optional[List] = None,
         column_names: Optional[List[str]] = None,
@@ -137,6 +137,10 @@ class BiocFrame:
                 Dictionary of column names as `keys` and their values. All
                 columns must have the same length. Defaults to an empty
                 dictionary.
+
+                Alternatively may provide a `Mapping` object, for example
+                a :py:class:`~biocutils.NamedList` that can be coerced into
+                a dictionary.
 
             number_of_rows:
                 Number of rows. If not specified, inferred from ``data``. This
@@ -161,7 +165,13 @@ class BiocFrame:
             validate:
                 Internal use only.
         """
-        self._data = {} if data is None else data
+        if data is None:
+            data = {}
+
+        if isinstance(data, ut.NamedList):
+            data = data.as_dict()
+        
+        self._data = data
         if row_names is not None and not isinstance(row_names, ut.Names):
             row_names = ut.Names(row_names)
         self._row_names = row_names
