@@ -1302,7 +1302,7 @@ class BiocFrame:
         rename_duplicate_columns: bool = False,
     ):
         """Wrapper around :py:func:`merge`."""
-        return merge([self] + other, by=by, join=join, rename_duplicate_columns=rename_duplicate_columns)
+        return merge([self] + list(other), by=by, join=join, rename_duplicate_columns=rename_duplicate_columns)
 
 
 ############################

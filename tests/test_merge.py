@@ -170,3 +170,34 @@ def test_merge_BiocFrame_column_data():
     combined = merge([obj1, obj2], by="A", join="left")
     comcol = combined.get_column_data()
     assert comcol.column("foo") == [True, False, False]
+
+def test_merge_class_method():
+    # A simple case.
+    obj1 = BiocFrame({"B": [3, 4, 5, 6]}, row_names=[1, 2, 3, 4])
+    obj2 = BiocFrame(
+        {"C": ["A", "B"]},
+        row_names=[1, 3],
+    )
+
+    combined = merge([obj1, obj2], by=None, join="left")
+    assert combined.get_column_data() is None
+
+    obj1.set_column_data(BiocFrame({"foo": [True]}), in_place=True)
+    combined = merge([obj1, obj2], by=None, join="left")
+    comcol = combined.get_column_data()
+    assert combined.get_column_names().as_list() == ["B", "C"]
+    assert comcol.column("foo") == [True, None]
+
+    combined2 = obj1.merge(obj2, by=None, join="left")
+    comcol2 = combined2.get_column_data()
+    assert combined2.get_column_names().as_list() == ["B", "C"]
+    assert comcol2.column("foo") == [True, None]
+
+    obj2.set_column_data(BiocFrame({"foo": [False]}), in_place=True)
+    combined = merge([obj1, obj2], by=None, join="left")
+    comcol = combined.get_column_data()
+    assert comcol.column("foo") == [True, False]
+
+    combined2 = obj1.merge(obj2, by=None, join="left")
+    comcol2 = combined2.get_column_data()
+    assert comcol.column("foo") == [True, False]
