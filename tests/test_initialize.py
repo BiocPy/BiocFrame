@@ -3,7 +3,7 @@ import pytest
 
 import biocframe
 from biocframe import BiocFrame
-from biocutils import Names
+from biocutils import Names, NamedList
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
@@ -164,3 +164,12 @@ def test_with_add_deletions():
     del obj1["new_column"]
     assert obj1.shape == (3, 2)
     assert len(obj1.column_data) == 2
+
+def test_NamedList():
+    x = NamedList([1,2,3,4], names=["A", "B", "C", "D"])
+
+    frame = BiocFrame(x)
+    assert frame is not None
+    assert isinstance(frame, BiocFrame)
+    assert frame.shape == (1, 4)
+    assert list(frame.get_column_names()) == ["A", "B", "C", "D"]

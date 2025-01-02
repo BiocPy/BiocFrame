@@ -1,6 +1,6 @@
-from collections import OrderedDict
+from collections import OrderedDict, abc
 from copy import copy
-from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple, Union, Mapping
+from typing import Any, Dict, List, Literal, Mapping, Optional, Sequence, Tuple, Union
 from warnings import warn
 
 import biocutils as ut
@@ -170,7 +170,12 @@ class BiocFrame:
 
         if isinstance(data, ut.NamedList):
             data = data.as_dict()
-        
+            # making sure all column values are lists
+            for k, v in data.items():
+                if not isinstance(v, list):
+                    # if its a scalar, make a list else corce to list
+                    data[k] = list(v) if isinstance(v, abc.Sequence) else [v]
+
         self._data = data
         if row_names is not None and not isinstance(row_names, ut.Names):
             row_names = ut.Names(row_names)
