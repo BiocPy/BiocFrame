@@ -4,7 +4,7 @@
 
 - Implement wrapper methods within the `BiocFrame` class for merge and combine operations.
 - Initialize `BiocFrame` from a `NamedList`.
-- Renaming GitHub actions for consistency with other packages. 
+- Renaming GitHub actions for consistency with other packages.
 
 ## Version 0.6.0
 
