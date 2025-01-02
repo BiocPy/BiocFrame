@@ -1243,10 +1243,6 @@ class BiocFrame:
 
         return _data_copy
 
-    def combine(self, *other):
-        """Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only."""
-        return relaxed_combine_rows([self] + other)
-
     # TODO: very primitive implementation, needs very robust testing
     # TODO: implement in-place, view
     def __array_ufunc__(self, func, method, *inputs, **kwargs) -> "BiocFrame":
@@ -1273,6 +1269,40 @@ class BiocFrame:
                 input[col] = new_col
 
         return input
+
+    #############################
+    ######>> Combine Ops <<######
+    #############################
+
+    def combine(self, *other):
+        """Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only."""
+        return relaxed_combine_rows([self] + other)
+
+    def relaxed_combine_rows(self, *other):
+        """Wrapper around :py:func:`~relaxed_combine_rows`."""
+        return relaxed_combine_rows([self] + other)
+
+    def relaxed_combine_columns(self, *other):
+        """Wrapper around :py:func:`~relaxed_combine_columns`."""
+        return relaxed_combine_columns([self] + other)
+
+    def combine_rows(self, *other):
+        """Wrapper around :py:func:`~biocutils.combine_rows`."""
+        return _combine_rows_bframes([self] + other)
+
+    def combine_columns(self, *other):
+        """Wrapper around :py:func:`~biocutils.combine_columns`."""
+        return _combine_cols_bframes([self] + other)
+
+    def merge(
+        self,
+        *other: Sequence["BiocFrame"],
+        by: Union[None, str, Sequence] = None,
+        join: Literal["inner", "left", "right", "outer"] = "left",
+        rename_duplicate_columns: bool = False,
+    ):
+        """Wrapper around :py:func:`merge`."""
+        return merge([self] + other, by=by, join=join, rename_duplicate_columns=rename_duplicate_columns)
 
 
 ############################
