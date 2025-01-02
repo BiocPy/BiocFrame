@@ -1,6 +1,6 @@
-from collections import OrderedDict
+from collections import OrderedDict, abc
 from copy import copy
-from typing import Any, Dict, List, Literal, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Literal, Mapping, Optional, Sequence, Tuple, Union
 from warnings import warn
 
 import biocutils as ut
@@ -122,7 +122,7 @@ class BiocFrame:
 
     def __init__(
         self,
-        data: Optional[Dict[str, Any]] = None,
+        data: Mapping = None,
         number_of_rows: Optional[int] = None,
         row_names: Optional[List] = None,
         column_names: Optional[List[str]] = None,
@@ -137,6 +137,10 @@ class BiocFrame:
                 Dictionary of column names as `keys` and their values. All
                 columns must have the same length. Defaults to an empty
                 dictionary.
+
+                Alternatively may provide a `Mapping` object, for example
+                a :py:class:`~biocutils.NamedList` that can be coerced into
+                a dictionary.
 
             number_of_rows:
                 Number of rows. If not specified, inferred from ``data``. This
@@ -161,7 +165,18 @@ class BiocFrame:
             validate:
                 Internal use only.
         """
-        self._data = {} if data is None else data
+        if data is None:
+            data = {}
+
+        if isinstance(data, ut.NamedList):
+            data = data.as_dict()
+            # making sure all column values are lists
+            for k, v in data.items():
+                if not isinstance(v, list):
+                    # if its a scalar, make a list else corce to list
+                    data[k] = list(v) if isinstance(v, abc.Sequence) else [v]
+
+        self._data = data
         if row_names is not None and not isinstance(row_names, ut.Names):
             row_names = ut.Names(row_names)
         self._row_names = row_names
@@ -1243,10 +1258,6 @@ class BiocFrame:
 
         return _data_copy
 
-    def combine(self, *other):
-        """Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only."""
-        return relaxed_combine_rows([self] + other)
-
     # TODO: very primitive implementation, needs very robust testing
     # TODO: implement in-place, view
     def __array_ufunc__(self, func, method, *inputs, **kwargs) -> "BiocFrame":
@@ -1273,6 +1284,40 @@ class BiocFrame:
                 input[col] = new_col
 
         return input
+
+    #############################
+    ######>> Combine Ops <<######
+    #############################
+
+    def combine(self, *other):
+        """Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only."""
+        return relaxed_combine_rows(self, *other)
+
+    def relaxed_combine_rows(self, *other):
+        """Wrapper around :py:func:`~relaxed_combine_rows`."""
+        return relaxed_combine_rows(self, *other)
+
+    def relaxed_combine_columns(self, *other):
+        """Wrapper around :py:func:`~relaxed_combine_columns`."""
+        return relaxed_combine_columns(self, *other)
+
+    def combine_rows(self, *other):
+        """Wrapper around :py:func:`~biocutils.combine_rows`."""
+        return _combine_rows_bframes(self, *other)
+
+    def combine_columns(self, *other):
+        """Wrapper around :py:func:`~biocutils.combine_columns`."""
+        return _combine_cols_bframes(self, *other)
+
+    def merge(
+        self,
+        *other: Sequence["BiocFrame"],
+        by: Union[None, str, Sequence] = None,
+        join: Literal["inner", "left", "right", "outer"] = "left",
+        rename_duplicate_columns: bool = False,
+    ):
+        """Wrapper around :py:func:`merge`."""
+        return merge([self] + list(other), by=by, join=join, rename_duplicate_columns=rename_duplicate_columns)
 
 
 ############################

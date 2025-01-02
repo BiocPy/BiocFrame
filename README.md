@@ -12,7 +12,7 @@
 
 [![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
 [![PyPI-Server](https://img.shields.io/pypi/v/BiocFrame.svg)](https://pypi.org/project/BiocFrame/)
-![Unit tests](https://github.com/BiocPy/BiocFrame/actions/workflows/pypi-test.yml/badge.svg)
+![Unit tests](https://github.com/BiocPy/BiocFrame/actions/workflows/run-tests.yml/badge.svg)
 
 # Bioconductor-like data frames
 
