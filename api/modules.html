@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="biocframe package" href="biocframe.html" /><link rel="prev" title="BiocFrame - Bioconductor-like data frames" href="../tutorial.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>biocframe - BiocFrame 0.6.1 documentation</title>
+        <title>biocframe - BiocFrame 0.6.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">BiocFrame 0.6.1 documentation</div></a>
+      <a href="../index.html"><div class="brand">BiocFrame 0.6.2 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -191,7 +191,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.6.1 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.6.2 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -294,6 +294,8 @@
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.column_names"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column_names</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.columns</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.combine"><code class="docutils literal notranslate"><span class="pre">BiocFrame.combine()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.combine_columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.combine_columns()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.combine_rows"><code class="docutils literal notranslate"><span class="pre">BiocFrame.combine_rows()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.copy"><code class="docutils literal notranslate"><span class="pre">BiocFrame.copy()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.data"><code class="docutils literal notranslate"><span class="pre">BiocFrame.data</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.dims"><code class="docutils literal notranslate"><span class="pre">BiocFrame.dims</span></code></a></li>
@@ -310,7 +312,10 @@
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.get_slice"><code class="docutils literal notranslate"><span class="pre">BiocFrame.get_slice()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.has_column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.has_column()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.index"><code class="docutils literal notranslate"><span class="pre">BiocFrame.index</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.merge"><code class="docutils literal notranslate"><span class="pre">BiocFrame.merge()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.metadata"><code class="docutils literal notranslate"><span class="pre">BiocFrame.metadata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.relaxed_combine_columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.relaxed_combine_columns()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.relaxed_combine_rows"><code class="docutils literal notranslate"><span class="pre">BiocFrame.relaxed_combine_rows()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.remove_column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.remove_column()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.remove_columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.remove_columns()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="biocframe.html#biocframe.BiocFrame.BiocFrame.row"><code class="docutils literal notranslate"><span class="pre">BiocFrame.row()</span></code></a></li>
@@ -397,7 +402,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=2bd037f0"></script>
+</div><script src="../_static/documentation_options.js?v=1c28bd9a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="biocframe.io package" href="biocframe.io.html" /><link rel="prev" title="biocframe" href="modules.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>biocframe package - BiocFrame 0.6.1 documentation</title>
+        <title>biocframe package - BiocFrame 0.6.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">BiocFrame 0.6.1 documentation</div></a>
+      <a href="../index.html"><div class="brand">BiocFrame 0.6.2 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -191,7 +191,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.6.1 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.6.2 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -385,9 +385,13 @@ calling <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_s
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.11/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3.11/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.11/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.11/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</span>) – Dictionary of column names as <cite>keys</cite> and their values. All
+<li><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.11/library/typing.html#typing.Mapping" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a></span>) – <p>Dictionary of column names as <cite>keys</cite> and their values. All
 columns must have the same length. Defaults to an empty
-dictionary.</p></li>
+dictionary.</p>
+<p>Alternatively may provide a <cite>Mapping</cite> object, for example
+a <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedList</span></code> that can be coerced into
+a dictionary.</p>
+</p></li>
 <li><p><strong>number_of_rows</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.11/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3.11/library/functions.html#int" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – Number of rows. If not specified, inferred from <code class="docutils literal notranslate"><span class="pre">data</span></code>. This
 needs to be provided if <code class="docutils literal notranslate"><span class="pre">data</span></code> is empty and <code class="docutils literal notranslate"><span class="pre">row_names</span></code> are
 not present.</p></li>
@@ -493,6 +497,18 @@ These are passed to <a class="reference internal" href="#biocframe.BiocFrame.Bio
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.combine">
 <span class="sig-name descname"><span class="pre">combine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.combine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.combine" title="Link to this definition">¶</a></dt>
 <dd><p>Wrapper around <a class="reference internal" href="#biocframe.BiocFrame.relaxed_combine_rows" title="biocframe.BiocFrame.relaxed_combine_rows"><code class="xref py py-func docutils literal notranslate"><span class="pre">relaxed_combine_rows()</span></code></a>, provided for back-compatibility only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.combine_columns">
+<span class="sig-name descname"><span class="pre">combine_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.combine_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.combine_columns" title="Link to this definition">¶</a></dt>
+<dd><p>Wrapper around <code class="xref py py-func docutils literal notranslate"><span class="pre">combine_columns()</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.combine_rows">
+<span class="sig-name descname"><span class="pre">combine_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.combine_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.combine_rows" title="Link to this definition">¶</a></dt>
+<dd><p>Wrapper around <code class="xref py py-func docutils literal notranslate"><span class="pre">combine_rows()</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -732,10 +748,28 @@ Scalars are treated as length-1 sequences.</p></li>
 <dd><p>Alias to <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_row_names" title="biocframe.BiocFrame.BiocFrame.get_row_names"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_row_names</span></code></a>, provided for compatibility with <strong>pandas</strong>.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.merge">
+<span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'left'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_duplicate_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.merge" title="Link to this definition">¶</a></dt>
+<dd><p>Wrapper around <a class="reference internal" href="#biocframe.BiocFrame.merge" title="biocframe.BiocFrame.merge"><code class="xref py py-func docutils literal notranslate"><span class="pre">merge()</span></code></a>.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.metadata">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.11/library/stdtypes.html#dict" title="(in Python v3.11)"><span class="pre">dict</span></a></em><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.metadata" title="Link to this definition">¶</a></dt>
 <dd><p>Alias for <a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_metadata" title="biocframe.BiocFrame.BiocFrame.get_metadata"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_metadata</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.relaxed_combine_columns">
+<span class="sig-name descname"><span class="pre">relaxed_combine_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.relaxed_combine_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.relaxed_combine_columns" title="Link to this definition">¶</a></dt>
+<dd><p>Wrapper around <a class="reference internal" href="#biocframe.BiocFrame.relaxed_combine_columns" title="biocframe.BiocFrame.relaxed_combine_columns"><code class="xref py py-func docutils literal notranslate"><span class="pre">relaxed_combine_columns()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="biocframe.BiocFrame.BiocFrame.relaxed_combine_rows">
+<span class="sig-name descname"><span class="pre">relaxed_combine_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/BiocFrame.html#BiocFrame.relaxed_combine_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.BiocFrame.BiocFrame.relaxed_combine_rows" title="Link to this definition">¶</a></dt>
+<dd><p>Wrapper around <a class="reference internal" href="#biocframe.BiocFrame.relaxed_combine_rows" title="biocframe.BiocFrame.relaxed_combine_rows"><code class="xref py py-func docutils literal notranslate"><span class="pre">relaxed_combine_rows()</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1227,6 +1261,8 @@ with placeholders consisting of Nones or masked NumPy values.</p>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.column_names"><code class="docutils literal notranslate"><span class="pre">BiocFrame.column_names</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.columns</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.combine"><code class="docutils literal notranslate"><span class="pre">BiocFrame.combine()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.combine_columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.combine_columns()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.combine_rows"><code class="docutils literal notranslate"><span class="pre">BiocFrame.combine_rows()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.copy"><code class="docutils literal notranslate"><span class="pre">BiocFrame.copy()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.data"><code class="docutils literal notranslate"><span class="pre">BiocFrame.data</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.dims"><code class="docutils literal notranslate"><span class="pre">BiocFrame.dims</span></code></a></li>
@@ -1243,7 +1279,10 @@ with placeholders consisting of Nones or masked NumPy values.</p>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.get_slice"><code class="docutils literal notranslate"><span class="pre">BiocFrame.get_slice()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.has_column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.has_column()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.index"><code class="docutils literal notranslate"><span class="pre">BiocFrame.index</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.merge"><code class="docutils literal notranslate"><span class="pre">BiocFrame.merge()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.metadata"><code class="docutils literal notranslate"><span class="pre">BiocFrame.metadata</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.relaxed_combine_columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.relaxed_combine_columns()</span></code></a></li>
+<li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.relaxed_combine_rows"><code class="docutils literal notranslate"><span class="pre">BiocFrame.relaxed_combine_rows()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.remove_column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.remove_column()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.remove_columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.remove_columns()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.BiocFrame.BiocFrame.row"><code class="docutils literal notranslate"><span class="pre">BiocFrame.row()</span></code></a></li>
@@ -1286,7 +1325,7 @@ with placeholders consisting of Nones or masked NumPy values.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=2bd037f0"></script>
+</div><script src="../_static/documentation_options.js?v=1c28bd9a"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
