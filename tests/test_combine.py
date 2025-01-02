@@ -30,6 +30,12 @@ def test_basic():
     assert merged.shape[0] == obj1.shape[0] + obj2.shape[0]
     assert merged.shape[1] == 2
 
+    merged2 = obj1.combine(obj2)
+
+    assert isinstance(merged2, BiocFrame)
+    assert merged2.shape[0] == obj1.shape[0] + obj2.shape[0]
+    assert merged2.shape[1] == 2
+
 
 def test_multiple():
     merged = combine(obj1, obj2, obj1)
@@ -37,6 +43,12 @@ def test_multiple():
     assert isinstance(merged, BiocFrame)
     assert merged.shape[0] == 2 * obj1.shape[0] + obj2.shape[0]
     assert merged.shape[1] == 2
+
+    merged2 = obj1.combine(obj2, obj1)
+
+    assert isinstance(merged2, BiocFrame)
+    assert merged2.shape[0] == 2 * obj1.shape[0] + obj2.shape[0]
+    assert merged2.shape[1] == 2
 
 
 def test_empty():
@@ -49,6 +61,11 @@ def test_empty():
     assert merged.shape[0] == 15
     assert merged.shape[1] == 0
 
+    merged2 = o1.combine(o2)
+
+    assert isinstance(merged2, BiocFrame)
+    assert merged2.shape[0] == 15
+    assert merged2.shape[1] == 0
 
 def test_with_rownames():
     obj1.row_names = ["a", "b", "c", "d", "e"]
@@ -155,6 +172,29 @@ def test_relaxed_combine_rows():
         None,
     ]
 
+    merged2 = obj1.relaxed_combine_rows(obj2, obj3)
+
+    assert merged2.get_column_names().as_list() == ["column1", "column2", "column3"]
+    assert merged2.column("column1") == [1, 2, 3, -1, -2, -3, None, None, None]
+    assert (
+        merged2.column("column2").mask
+        == np.ma.array([False, False, False, True, True, True, False, False, False])
+    ).all()
+    assert (
+        merged2.column("column2").data == np.ma.array([4, 5, 6, 0, 0, 0, -4, -5, -6])
+    ).all()
+    assert merged2.column("column3") == [
+        None,
+        None,
+        None,
+        "A",
+        "B",
+        "C",
+        None,
+        None,
+        None,
+    ]
+
 
 def test_combine_columns_basic():
     obj1 = BiocFrame(
@@ -184,6 +224,12 @@ def test_combine_columns_basic():
     with pytest.raises(ValueError) as ex:
         combine_columns(obj1, obj2[1:4, :])
     assert str(ex.value).find("same number of rows") >= 0
+
+    merged2= obj1.combine_columns(obj2)
+    assert isinstance(merged2, BiocFrame)
+    assert merged2.get_column_names().as_list() == ["odd", "even", "foo", "bar"]
+    assert merged2.get_column("odd") == [1, 3, 5, 7, 9]
+    assert merged2.get_column("bar") == [0, 22, 44, 66, 88]
 
 
 def test_combine_columns_with_column_data():

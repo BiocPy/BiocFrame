@@ -1276,23 +1276,23 @@ class BiocFrame:
 
     def combine(self, *other):
         """Wrapper around :py:func:`~relaxed_combine_rows`, provided for back-compatibility only."""
-        return relaxed_combine_rows([self] + other)
+        return relaxed_combine_rows(self, *other)
 
     def relaxed_combine_rows(self, *other):
         """Wrapper around :py:func:`~relaxed_combine_rows`."""
-        return relaxed_combine_rows([self] + other)
+        return relaxed_combine_rows(self, *other)
 
     def relaxed_combine_columns(self, *other):
         """Wrapper around :py:func:`~relaxed_combine_columns`."""
-        return relaxed_combine_columns([self] + other)
+        return relaxed_combine_columns(self, *other)
 
     def combine_rows(self, *other):
         """Wrapper around :py:func:`~biocutils.combine_rows`."""
-        return _combine_rows_bframes([self] + other)
+        return _combine_rows_bframes(self, *other)
 
     def combine_columns(self, *other):
         """Wrapper around :py:func:`~biocutils.combine_columns`."""
-        return _combine_cols_bframes([self] + other)
+        return _combine_cols_bframes(self, *other)
 
     def merge(
         self,
