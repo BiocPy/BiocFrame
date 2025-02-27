@@ -43,14 +43,13 @@ def _validate_rows(
 
     if len(incorrect_len_keys) > 0:
         raise ValueError(
-            "All columns in ``data`` must be the same "
-            f"length, these columns do not: {', '.join(incorrect_len_keys)}."
+            f"All columns in ``data`` must be the same length, these columns do not: {', '.join(incorrect_len_keys)}."
         )
 
     if row_names is not None:
         if len(row_names) != number_of_rows:
             raise ValueError(
-                "Length of `row_names` and `number_of_rows` do not match, " f"{len(row_names)} != {number_of_rows}"
+                f"Length of `row_names` and `number_of_rows` do not match, {len(row_names)} != {number_of_rows}"
             )
         if any(x is None for x in row_names):
             raise ValueError("`row_names` cannot contain None values.")
