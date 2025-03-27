@@ -413,6 +413,31 @@ def test_bframe_remove_column():
     assert bframe2b.get_column_data().column("prop1") == [2]
 
 
+def test_bframe_remove_row():
+    obj = {
+        "column1": [1, 2, 3],
+        "column2": ["b", "n", "m"],
+    }
+
+    bframe = BiocFrame(obj, row_names=["row1", "row2", "row3"])
+    bframe2 = bframe.remove_row("row2")
+    assert not bframe2.has_row("row2")
+    assert bframe.has_row("row2")
+
+    bframe2 = bframe.remove_rows(["row2", "row3"])
+    assert bframe2.shape == (1, 2)
+
+    bframe2 = bframe.remove_rows([1])
+    assert bframe2.get_row_names().as_list() == ["row1", "row3"]
+    assert bframe2.shape == (2, 2)
+
+    # Works in place.
+    copy = bframe.__deepcopy__()
+    copy.remove_row("row1", in_place=True)
+    assert copy.has_row("row2")
+    assert copy.shape == (2, 2)
+
+
 def test_bframe_ufuncs():
     obj = {
         "column1": [1, 2, 3],

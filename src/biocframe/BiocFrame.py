@@ -640,6 +640,16 @@ class BiocFrame:
         )
         return self.get_column(column)
 
+    def has_row(self, name: str) -> bool:
+        """
+        Args:
+            name: Name of the row.
+
+        Returns:
+            Whether a row with the specified ``name`` exists in this object.
+        """
+        return name in self.row_names
+
     def get_row(self, row: Union[str, int]) -> dict:
         """
         Args:
@@ -1016,6 +1026,68 @@ class BiocFrame:
         output._column_names = ut.subset_sequence(output._column_names, keep)
         if output._column_data is not None:
             output._column_data = output._column_data[keep, :]
+
+        return output
+
+    def remove_row(self, row: Union[int, str], in_place: bool = False) -> "BiocFrame":
+        """Remove a row. This is a convenience wrapper around :py:attr:`~remove_rows`.
+
+        Args:
+            row:
+                Name or positional index of the row to remove.
+
+            in_place:
+                Whether to modify the object in place. Defaults to False.
+
+        Returns:
+            A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
+        return self.remove_rows([row], in_place=in_place)
+
+    def remove_rows(self, rows: Sequence[Union[int, str]], in_place: bool = False) -> "BiocFrame":
+        """Remove any number of existing rows.
+
+        Args:
+            rows:
+                Names or indices of the rows to remove.
+
+            in_place:
+                Whether to modify the object in place. Defaults to False.
+
+        Returns:
+            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
+        output = self._define_output(in_place)
+        if not in_place:
+            output._data = copy(output._data)
+
+        killset = set()
+        for name in rows:
+            if isinstance(name, int):
+                name = output._row_names[name]
+            if name not in output._row_names:
+                raise ValueError(f"Row '{name}' does not exist.")
+            killset.add(name)
+
+        keep = []
+        for i, row in enumerate(output._row_names):
+            if row not in killset:
+                keep.append(i)
+
+        for col in output._data:
+            output._data[col] = ut.subset_sequence(output._data[col], keep)
+
+        output._row_names = ut.subset_sequence(output._row_names, keep)
+
+        output._number_of_rows = int(
+            _guess_number_of_rows(
+                number_of_rows=None,
+                data=output._data,
+                row_names=output._row_names,
+            )
+        )
 
         return output
 
