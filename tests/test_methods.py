@@ -492,63 +492,6 @@ def test_bframe_remove_row():
     assert copy.has_row("row2")
     assert copy.shape == (2, 2)
 
-def test_bframe_remove_row():
-    obj = {
-        "column1": [1, 2, 3],
-        "column2": ["b", "n", "m"],
-    }
-
-    bframe = BiocFrame(obj, row_names=["row1", "row2", "row3"])
-
-    # Test row removal preserves original
-    bframe2 = bframe.remove_row("row2")
-    assert not bframe2.has_row("row2")
-    assert bframe.has_row("row2")
-
-    # Test multiple row removal by names
-    bframe2 = bframe.remove_rows(["row2", "row3"])
-    assert bframe2.shape == (1, 2)
-
-    # Test row removal by index
-    bframe2 = bframe.remove_rows([1])
-    assert bframe2.get_row_names().as_list() == ["row1", "row3"]
-    assert bframe2.shape == (2, 2)
-
-    # Test slice support
-    bframe2 = bframe.remove_rows(slice(1, 3))
-    assert bframe2.get_row_names().as_list() == ["row1"]
-    assert bframe2.shape == (1, 2)
-
-    # Test mixed types raises TypeError
-    with pytest.raises(TypeError, match="rows must contain all strings or all integers"):
-        bframe.remove_rows(["row1", 1])
-
-    # Test all integers works
-    bframe2 = bframe.remove_rows([0, 1])
-    assert bframe2.get_row_names().as_list() == ["row3"]
-    assert bframe2.shape == (1, 2)
-
-    # Test all strings works
-    bframe2 = bframe.remove_rows(["row1", "row2"])
-    assert bframe2.get_row_names().as_list() == ["row3"]
-    assert bframe2.shape == (1, 2)
-
-    # Test slice with negative indices
-    bframe2 = bframe.remove_rows(slice(-2, None))
-    assert bframe2.get_row_names().as_list() == ["row1"]
-    assert bframe2.shape == (1, 2)
-
-    # Test behavior with no row names
-    bframe2 = bframe.set_row_names(names=None)
-    assert not bframe2.has_row("row1")
-    assert bframe.has_row("row1")
-
-    # Test in-place modification
-    copy = bframe.__deepcopy__()
-    copy.remove_row("row1", in_place=True)
-    assert copy.has_row("row2")
-    assert copy.shape == (2, 2)
-
 def test_bframe_ufuncs():
     obj = {
         "column1": [1, 2, 3],
