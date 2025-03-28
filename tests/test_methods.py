@@ -412,6 +412,28 @@ def test_bframe_remove_column():
     bframe2b = bframe2a.remove_column("column1")
     assert bframe2b.get_column_data().column("prop1") == [2]
 
+    # Test slice support
+    bframe2 = bframe.remove_columns(slice(1, 2))
+    assert bframe2.get_column_names().as_list() == ["column1"]
+    assert bframe2.shape == (3, 1)
+
+    # Test mixed types raises TypeError
+    with pytest.raises(TypeError, match="columns must contain all strings or all integers"):
+        bframe.remove_columns(["column1", 1])
+
+    # Test all integers works
+    bframe2 = bframe.remove_columns([0, 1])
+    assert bframe2.shape == (3, 0)
+
+    # Test all strings works
+    bframe2 = bframe.remove_columns(["column1", "column2"])
+    assert bframe2.shape == (3, 0)
+
+    # Test slice with negative indices
+    bframe2 = bframe.remove_columns(slice(-1, None))
+    assert bframe2.get_column_names().as_list() == ["column1"]
+    assert bframe2.shape == (3, 1)
+
 
 def test_bframe_remove_row():
     obj = {

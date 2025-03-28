@@ -995,32 +995,43 @@ class BiocFrame:
         """
         return self.remove_columns([column], in_place=in_place)
 
-    def remove_columns(self, columns: Sequence[Union[int, str]], in_place: bool = False) -> "BiocFrame":
+    def remove_columns(self, columns: Union[Sequence[Union[int, str]], slice], in_place: bool = False) -> "BiocFrame":
         """Remove any number of existing columns.
 
         Args:
-            columns:
-                Names or indices of the columns to remove.
-
-            in_place:
-                Whether to modify the object in place. Defaults to False.
+            columns: Column identifiers to remove. Must be either:
+                - A sequence of strings matching column names
+                - A sequence of integer indices
+                - A slice object
+            in_place: Whether to modify the object in place. Defaults to False.
 
         Returns:
-            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
-            or as a reference to the (in-place-modified) original.
+            BiocFrame: A modified ``BiocFrame`` object.
+
+        Raises:
+            TypeError: If columns contains mixed types.
         """
         output = self._define_output(in_place)
         if not in_place:
             output._data = copy(output._data)
 
-        killset = set()
-        for name in columns:
-            if isinstance(name, int):
-                name = output._column_names[name]
-            if name not in output._data:
-                raise ValueError(f"Column '{name}' does not exist.")
-            del output._data[name]
-            killset.add(name)
+        if isinstance(columns, slice):
+            indices = range(*columns.indices(len(output._column_names)))
+            killset = {output._column_names[i] for i in indices}
+        else:
+            # Check for homogeneous types
+            types = set(type(x) for x in columns)
+            if len(types) > 1:
+                raise TypeError("columns must contain all strings or all integers")
+
+            killset = set()
+            for name in columns:
+                if isinstance(name, int):
+                    name = output._column_names[name]
+                if name not in output._data:
+                    raise ValueError(f"Column '{name}' does not exist.")
+                del output._data[name]
+                killset.add(name)
 
         keep = []
         for i, col in enumerate(output._column_names):
