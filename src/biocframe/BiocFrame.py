@@ -667,6 +667,7 @@ class BiocFrame:
             Whether a row with the specified ``name`` exists in this object.
         """
         if self.row_names is None:
+            warn("No row names are defined", UserWarning)
             return False
 
         return name in self.row_names
