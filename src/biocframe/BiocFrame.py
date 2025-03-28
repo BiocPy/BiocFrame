@@ -6,7 +6,7 @@ from warnings import warn
 import biocutils as ut
 import numpy
 
-__author__ = "Jayaram Kancherla, Aaron Lun"
+__author__ = "Jayaram Kancherla, Aaron Lun, Kevin Yang"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
@@ -640,6 +640,20 @@ class BiocFrame:
         )
         return self.get_column(column)
 
+    def has_row(self, name: str) -> bool:
+        """
+        Args:
+            name: Name of the row.
+
+        Returns:
+            Whether a row with the specified ``name`` exists in this object.
+        """
+        if self.row_names is None:
+            warn("No row names are defined", UserWarning)
+            return False
+
+        return name in self.row_names
+
     def get_row(self, row: Union[str, int]) -> dict:
         """
         Args:
@@ -1019,6 +1033,82 @@ class BiocFrame:
 
         return output
 
+    def remove_row(self, row: Union[int, str], in_place: bool = False) -> "BiocFrame":
+        """Remove a row. This is a convenience wrapper around :py:attr:`~remove_rows`.
+
+        Args:
+            row:
+                Name or positional index of the row to remove.
+
+            in_place:
+                Whether to modify the object in place. Defaults to False.
+
+        Returns:
+            A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+        """
+        return self.remove_rows([row], in_place=in_place)
+
+    def remove_rows(self, rows: Union[Sequence[Union[int, str]], slice], in_place: bool = False) -> "BiocFrame":
+        """Remove any number of existing rows.
+
+        Args:
+            rows: Row identifiers to remove. Must be either:
+                - A sequence of strings matching row names
+                - A sequence of integer indices
+                - A slice object
+
+            in_place:
+                Whether to modify the object in place. Defaults to False.
+
+        Returns:
+            A modified ``BiocFrame`` object, either as a copy of the original
+            or as a reference to the (in-place-modified) original.
+
+        Raises:
+            TypeError: If rows contain mixed types.
+        """
+        output = self._define_output(in_place)
+        if not in_place:
+            output._data = copy(output._data)
+
+        if isinstance(rows, slice):
+            indices = range(*rows.indices(len(output._row_names)))
+            killset = {output._row_names[i] for i in indices}
+        else:
+            # Check for homogeneous types
+            types = set(type(x) for x in rows)
+            if len(types) > 1:
+                raise TypeError("rows must contain all strings or all integers")
+
+            killset = set()
+            for name in rows:
+                if isinstance(name, int):
+                    name = output._row_names[name]
+                if name not in output._row_names:
+                    raise ValueError(f"Row '{name}' does not exist.")
+                killset.add(name)
+
+        keep = []
+        for i, row in enumerate(output._row_names):
+            if row not in killset:
+                keep.append(i)
+
+        for col in output._data:
+            output._data[col] = ut.subset_sequence(output._data[col], keep)
+
+        output._row_names = ut.subset_sequence(output._row_names, keep)
+
+        output._number_of_rows = int(
+            _guess_number_of_rows(
+                number_of_rows=None,
+                data=output._data,
+                row_names=output._row_names,
+            )
+        )
+
+        return output
+
     #########################
     ######>> Copying <<######
     #########################
@@ -1316,7 +1406,12 @@ class BiocFrame:
         rename_duplicate_columns: bool = False,
     ):
         """Wrapper around :py:func:`merge`."""
-        return merge([self] + list(other), by=by, join=join, rename_duplicate_columns=rename_duplicate_columns)
+        return merge(
+            [self] + list(other),
+            by=by,
+            join=join,
+            rename_duplicate_columns=rename_duplicate_columns,
+        )
 
 
 ############################
