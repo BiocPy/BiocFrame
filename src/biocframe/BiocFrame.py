@@ -1086,32 +1086,46 @@ class BiocFrame:
         return self.remove_rows([row], in_place=in_place)
 
     def remove_rows(
-        self, rows: Sequence[Union[int, str]], in_place: bool = False
+        self, rows: Union[Sequence[Union[int, str]], slice], in_place: bool = False
     ) -> "BiocFrame":
         """Remove any number of existing rows.
 
         Args:
-            rows:
-                Names or indices of the rows to remove.
+            rows: Row identifiers to remove. Must be either:
+                - A sequence of strings matching row names
+                - A sequence of integer indices
+                - A slice object
 
             in_place:
                 Whether to modify the object in place. Defaults to False.
 
         Returns:
-            BiocFrame: A modified ``BiocFrame`` object, either as a copy of the original
+            A modified ``BiocFrame`` object, either as a copy of the original
             or as a reference to the (in-place-modified) original.
+
+        Raises:
+            TypeError: If rows contain mixed types.
         """
         output = self._define_output(in_place)
         if not in_place:
             output._data = copy(output._data)
 
-        killset = set()
-        for name in rows:
-            if isinstance(name, int):
-                name = output._row_names[name]
-            if name not in output._row_names:
-                raise ValueError(f"Row '{name}' does not exist.")
-            killset.add(name)
+        if isinstance(rows, slice):
+            indices = range(*rows.indices(len(output._row_names)))
+            killset = {output._row_names[i] for i in indices}
+        else:
+            # Check for homogeneous types
+            types = set(type(x) for x in rows)
+            if len(types) > 1:
+                raise TypeError("rows must contain all strings or all integers")
+
+            killset = set()
+            for name in rows:
+                if isinstance(name, int):
+                    name = output._row_names[name]
+                if name not in output._row_names:
+                    raise ValueError(f"Row '{name}' does not exist.")
+                killset.add(name)
 
         keep = []
         for i, row in enumerate(output._row_names):
