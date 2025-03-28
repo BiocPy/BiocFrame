@@ -17,13 +17,13 @@ biocframe.BiocFrame module
 
 .. automodule:: biocframe.BiocFrame
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: biocframe
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

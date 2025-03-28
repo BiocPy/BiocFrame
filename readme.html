@@ -5,9 +5,9 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" />
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>Bioconductor-like data frames - BiocFrame 0.6.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
+        <title>Bioconductor-like data frames - BiocFrame 0.6.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
@@ -167,7 +167,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">BiocFrame 0.6.2 documentation</div></a>
+      <a href="index.html"><div class="brand">BiocFrame 0.6.3 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -191,7 +191,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">BiocFrame 0.6.2 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.6.3 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -294,7 +294,7 @@ pip<span class="w"> </span>install<span class="w"> </span>biocframe<span class="
 <section id="construction">
 <h2>Construction<a class="headerlink" href="#construction" title="Link to this heading">¶</a></h2>
 <p>To construct a <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> object, simply provide the data as a dictionary.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">biocframe</span><span class="w"> </span><span class="kn">import</span> <span class="n">BiocFrame</span>
 
 <span class="n">obj</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;ensembl&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ENS00001&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00002&quot;</span><span class="p">,</span> <span class="s2">&quot;ENS00003&quot;</span><span class="p">],</span>
@@ -488,7 +488,7 @@ otherwise, it is safer to just create a (shallow) copy via the default <code cla
 <h2>Combining objects<a class="headerlink" href="#combining-objects" title="Link to this heading">¶</a></h2>
 <p><strong>BiocFrame</strong> implements methods for the various <code class="docutils literal notranslate"><span class="pre">combine</span></code> generics from <a class="reference external" href="https://github.com/BiocPy/biocutils"><strong>BiocUtils</strong></a>.
 So, for example, to combine by row:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">biocutils</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">biocutils</span>
 
 <span class="n">bframe1</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
     <span class="p">{</span>
@@ -543,7 +543,7 @@ So, for example, to combine by row:</p>
 </div>
 <p>By default, both methods above assume that the number and identity of columns (for <code class="docutils literal notranslate"><span class="pre">combine_rows()</span></code>) or rows (for <code class="docutils literal notranslate"><span class="pre">combine_columns()</span></code>) are the same across objects.
 If this is not the case, e.g., with different columns across objects, we can use <strong>BiocFrame</strong>’s <code class="docutils literal notranslate"><span class="pre">relaxed_combine_rows()</span></code> instead:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">relaxed_combine_rows</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">biocframe</span><span class="w"> </span><span class="kn">import</span> <span class="n">relaxed_combine_rows</span>
 <span class="n">modified2</span> <span class="o">=</span> <span class="n">bframe2</span><span class="o">.</span><span class="n">set_column</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">])</span>
 <span class="n">combined</span> <span class="o">=</span> <span class="n">relaxed_combine_rows</span><span class="p">(</span><span class="n">bframe1</span><span class="p">,</span> <span class="n">modified2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">combined</span><span class="p">)</span>
@@ -563,7 +563,7 @@ If this is not the case, e.g., with different columns across objects, we can use
 </pre></div>
 </div>
 <p>Similarly, if the rows are different, we can use <strong>BiocFrame</strong>’s <code class="docutils literal notranslate"><span class="pre">merge</span></code> function:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">merge</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">biocframe</span><span class="w"> </span><span class="kn">import</span> <span class="n">merge</span>
 <span class="n">modified1</span> <span class="o">=</span> <span class="n">bframe1</span><span class="o">.</span><span class="n">set_row_names</span><span class="p">([</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">])</span>
 <span class="n">modified3</span> <span class="o">=</span> <span class="n">bframe3</span><span class="o">.</span><span class="n">set_row_names</span><span class="p">([</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">,</span> <span class="s2">&quot;G&quot;</span><span class="p">])</span>
 <span class="n">combined</span> <span class="o">=</span> <span class="n">merge</span><span class="p">([</span><span class="n">modified1</span><span class="p">,</span> <span class="n">modified3</span><span class="p">],</span> <span class="n">by</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">join</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">)</span>
@@ -585,7 +585,7 @@ If this is not the case, e.g., with different columns across objects, we can use
 <p><code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> is intended for accurate representation of Bioconductor objects for interoperability with R.
 Most users will probably prefer to work with <strong>pandas</strong> <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> objects for their actual analyses.
 This conversion is easily achieved:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">biocframe</span> <span class="kn">import</span> <span class="n">BiocFrame</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">biocframe</span><span class="w"> </span><span class="kn">import</span> <span class="n">BiocFrame</span>
 <span class="n">bframe</span> <span class="o">=</span> <span class="n">BiocFrame</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">],</span>
@@ -685,7 +685,7 @@ which implements the <code class="docutils literal notranslate"><span class="pre
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=1c28bd9a"></script>
+</div><script src="_static/documentation_options.js?v=b8503983"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>

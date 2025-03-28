@@ -9,13 +9,13 @@ biocframe.io.from\_pandas module
 
 .. automodule:: biocframe.io.from_pandas
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: biocframe.io
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
