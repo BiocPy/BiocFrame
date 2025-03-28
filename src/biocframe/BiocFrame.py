@@ -65,9 +65,7 @@ def _validate_columns(
 
     if column_data is not None:
         if column_data.shape[0] != len(column_names):
-            raise ValueError(
-                "Number of rows in `column_data` should be equal to the number of columns."
-            )
+            raise ValueError("Number of rows in `column_data` should be equal to the number of columns.")
 
 
 ############################
@@ -94,11 +92,7 @@ class BiocFrameIter:
 
     def __next__(self):
         if self._current_index < len(self._bframe):
-            iter_row_index = (
-                self._bframe.row_names[self._current_index]
-                if self._bframe.row_names is not None
-                else None
-            )
+            iter_row_index = self._bframe.row_names[self._current_index] if self._bframe.row_names is not None else None
 
             iter_slice = self._bframe.row(self._current_index)
             self._current_index += 1
@@ -293,9 +287,7 @@ class BiocFrame:
                 data = self._data[col]
                 showed = ut.show_as_cell(data, indices)
                 header = [col, "<" + ut.print_type(data) + ">"]
-                showed = ut.truncate_strings(
-                    showed, width=max(40, len(header[0]), len(header[1]))
-                )
+                showed = ut.truncate_strings(showed, width=max(40, len(header[0]), len(header[1])))
                 if insert_ellipsis:
                     showed = showed[:3] + ["..."] + showed[3:]
                 columns.append(header + showed)
@@ -346,9 +338,7 @@ class BiocFrame:
         """
         return self._row_names
 
-    def set_row_names(
-        self, names: Optional[List], in_place: bool = False
-    ) -> "BiocFrame":
+    def set_row_names(self, names: Optional[List], in_place: bool = False) -> "BiocFrame":
         """
         Args:
             names:
@@ -518,9 +508,7 @@ class BiocFrame:
             output = output.set_row_names(self._column_names)
         return output
 
-    def set_column_data(
-        self, column_data: Union[None, "BiocFrame"], in_place: bool = False
-    ) -> "BiocFrame":
+    def set_column_data(self, column_data: Union[None, "BiocFrame"], in_place: bool = False) -> "BiocFrame":
         """
         Args:
             column_data:
@@ -537,9 +525,7 @@ class BiocFrame:
         """
         if column_data is not None:
             if column_data.shape[0] != self.shape[1]:
-                raise ValueError(
-                    "Number of rows in `column_data` should be equal to the number of columns."
-                )
+                raise ValueError("Number of rows in `column_data` should be equal to the number of columns.")
 
         output = self._define_output(in_place)
         output._column_data = column_data
@@ -583,9 +569,7 @@ class BiocFrame:
             or as a reference to the (in-place-modified) original.
         """
         if not isinstance(metadata, dict):
-            raise TypeError(
-                f"`metadata` must be a dictionary, provided {type(metadata)}."
-            )
+            raise TypeError(f"`metadata` must be a dictionary, provided {type(metadata)}.")
         output = self._define_output(in_place)
         output._metadata = metadata
         return output
@@ -646,9 +630,7 @@ class BiocFrame:
 
             return self._data[column]
 
-        raise TypeError(
-            f"'column' must be a string or integer, provided '{type(column)}'."
-        )
+        raise TypeError(f"'column' must be a string or integer, provided '{type(column)}'.")
 
     def column(self, column: Union[str, int]) -> Any:
         """Alias for :py:meth:`~get_column`, provided for back-compatibility only."""
@@ -741,9 +723,7 @@ class BiocFrame:
         """
         new_column_names = self._column_names
         if not (isinstance(columns, slice) and columns == slice(None)):
-            new_column_indices, _ = ut.normalize_subscript(
-                columns, len(new_column_names), new_column_names
-            )
+            new_column_indices, _ = ut.normalize_subscript(columns, len(new_column_names), new_column_names)
             new_column_names = ut.subset_sequence(new_column_names, new_column_indices)
 
         new_data = {}
@@ -754,9 +734,7 @@ class BiocFrame:
         new_number_of_rows = self.shape[0]
         if not (isinstance(rows, slice) and rows == slice(None)):
             new_row_names = self.row_names
-            new_row_indices, _ = ut.normalize_subscript(
-                rows, self.shape[0], new_row_names
-            )
+            new_row_indices, _ = ut.normalize_subscript(rows, self.shape[0], new_row_names)
 
             new_number_of_rows = len(new_row_indices)
             for k, v in new_data.items():
@@ -788,9 +766,7 @@ class BiocFrame:
             columns = slice(None)
         return self.__getitem__((rows, columns))
 
-    def __getitem__(
-        self, args: Union[int, str, Sequence, tuple]
-    ) -> Union["BiocFrame", Any]:
+    def __getitem__(self, args: Union[int, str, Sequence, tuple]) -> Union["BiocFrame", Any]:
         """Wrapper around :py:attr:`~get_column` and :py:attr:`~get_slice` to obtain a slice of a ``BiocFrame`` or any
         of its columns.
 
@@ -906,13 +882,9 @@ class BiocFrame:
         if not in_place:
             output._data = copy(output._data)
 
-        row_idx, _ = ut.normalize_subscript(
-            rows, output.shape[0], names=output._row_names
-        )
+        row_idx, _ = ut.normalize_subscript(rows, output.shape[0], names=output._row_names)
 
-        col_idx, _ = ut.normalize_subscript(
-            columns, output.shape[1], names=output._column_names
-        )
+        col_idx, _ = ut.normalize_subscript(columns, output.shape[1], names=output._column_names)
 
         for i, x in enumerate(col_idx):
             nm = output._column_names[x]
@@ -939,9 +911,7 @@ class BiocFrame:
         )
         self.remove_column(name, in_place=True)
 
-    def set_column(
-        self, column: Union[int, str], value: Any, in_place: bool = False
-    ) -> "BiocFrame":
+    def set_column(self, column: Union[int, str], value: Any, in_place: bool = False) -> "BiocFrame":
         """Modify an existing column or add a new column. This is a convenience wrapper around :py:attr:`~set_columns`.
 
         Args:
@@ -962,9 +932,7 @@ class BiocFrame:
         """
         return self.set_columns({column: value}, in_place=in_place)
 
-    def set_columns(
-        self, columns: Dict[str, Any], in_place: bool = False
-    ) -> "BiocFrame":
+    def set_columns(self, columns: Dict[str, Any], in_place: bool = False) -> "BiocFrame":
         """Modify existing columns or add new columns.
 
         Args:
@@ -1011,9 +979,7 @@ class BiocFrame:
 
         return output
 
-    def remove_column(
-        self, column: Union[int, str], in_place: bool = False
-    ) -> "BiocFrame":
+    def remove_column(self, column: Union[int, str], in_place: bool = False) -> "BiocFrame":
         """Remove a column. This is a convenience wrapper around :py:attr:`~remove_columns`.
 
         Args:
@@ -1029,9 +995,7 @@ class BiocFrame:
         """
         return self.remove_columns([column], in_place=in_place)
 
-    def remove_columns(
-        self, columns: Sequence[Union[int, str]], in_place: bool = False
-    ) -> "BiocFrame":
+    def remove_columns(self, columns: Sequence[Union[int, str]], in_place: bool = False) -> "BiocFrame":
         """Remove any number of existing columns.
 
         Args:
@@ -1085,9 +1049,7 @@ class BiocFrame:
         """
         return self.remove_rows([row], in_place=in_place)
 
-    def remove_rows(
-        self, rows: Union[Sequence[Union[int, str]], slice], in_place: bool = False
-    ) -> "BiocFrame":
+    def remove_rows(self, rows: Union[Sequence[Union[int, str]], slice], in_place: bool = False) -> "BiocFrame":
         """Remove any number of existing rows.
 
         Args:
@@ -1162,9 +1124,7 @@ class BiocFrame:
         _num_rows_copy = deepcopy(self._number_of_rows)
         _rownames_copy = deepcopy(self.row_names)
         _metadata_copy = deepcopy(self.metadata)
-        _column_data_copy = (
-            deepcopy(self._column_data) if self._column_data is not None else None
-        )
+        _column_data_copy = deepcopy(self._column_data) if self._column_data is not None else None
 
         # copy dictionary first
         _data_copy = OrderedDict()
@@ -1172,9 +1132,7 @@ class BiocFrame:
             try:
                 _data_copy[col] = deepcopy(self.column(col))
             except Exception as e:
-                raise Exception(
-                    f"Cannot `deepcopy` column '{col}', full error: {str(e)}"
-                ) from e
+                raise Exception(f"Cannot `deepcopy` column '{col}', full error: {str(e)}") from e
 
         current_class_const = type(self)
         return current_class_const(
@@ -1211,9 +1169,7 @@ class BiocFrame:
     ######>> split by <<######
     ##########################
 
-    def split(
-        self, column_name: str, only_indices: bool = False
-    ) -> Dict[str, Union["BiocFrame", List[int]]]:
+    def split(self, column_name: str, only_indices: bool = False) -> Dict[str, Union["BiocFrame", List[int]]]:
         """Split the object by a column.
 
         Args:
@@ -1351,9 +1307,7 @@ class BiocFrame:
     ######>> Miscellaneous <<######
     ###############################
 
-    def flatten(
-        self, as_type: Literal["dict", "biocframe"] = "dict", delim: str = "."
-    ) -> "BiocFrame":
+    def flatten(self, as_type: Literal["dict", "biocframe"] = "dict", delim: str = ".") -> "BiocFrame":
         """Flatten a nested BiocFrame object.
 
         Args:
@@ -1544,11 +1498,7 @@ def _combine_cols_bframes(*x: BiocFrame):
         all_column_data.append(df._column_data)
         for n in df._column_names:
             if n in all_data:
-                raise ValueError(
-                    "All objects to combine must have different columns (duplicated '"
-                    + n
-                    + "')."
-                )
+                raise ValueError("All objects to combine must have different columns (duplicated '" + n + "').")
             all_data[n] = df._data[n]
 
     combined_column_data = None
@@ -1559,10 +1509,7 @@ def _combine_cols_bframes(*x: BiocFrame):
         try:
             combined_column_data = ut.combine_rows(*all_column_data)
         except Exception as ex:
-            raise ValueError(
-                "Failed to combine 'column_data' when combining 'BiocFrame' objects by column. "
-                + str(ex)
-            )
+            raise ValueError("Failed to combine 'column_data' when combining 'BiocFrame' objects by column. " + str(ex))
 
     current_class_const = type(first)
     return current_class_const(
@@ -1603,9 +1550,7 @@ def _show_as_cell_BiocFrame(x: BiocFrame, indices: Sequence[int]) -> List[str]:
 
 
 @ut.assign_rows.register(BiocFrame)
-def _assign_rows_BiocFrame(
-    x: BiocFrame, indices: Sequence[int], replacement: BiocFrame
-) -> BiocFrame:
+def _assign_rows_BiocFrame(x: BiocFrame, indices: Sequence[int], replacement: BiocFrame) -> BiocFrame:
     return x.set_slice(indices, replacement.get_column_names(), replacement)
 
 
@@ -1676,20 +1621,12 @@ def relaxed_combine_rows(*x: BiocFrame) -> BiocFrame:
 def _normalize_merge_key_to_index(x, i, by):
     if by is None:
         if x[i]._row_names is None:
-            raise ValueError(
-                "Row names required as key but are absent in object " + str(i) + "."
-            )
+            raise ValueError("Row names required as key but are absent in object " + str(i) + ".")
         return None
     elif isinstance(by, int):
         nc = x[i].shape[1]
         if by < -nc or by >= nc:
-            raise ValueError(
-                "Integer 'by' is out of range for object "
-                + str(i)
-                + " ("
-                + str(nc)
-                + " columns)."
-            )
+            raise ValueError("Integer 'by' is out of range for object " + str(i) + " (" + str(nc) + " columns).")
         if by < 0:
             return by + nc
         else:
@@ -1700,9 +1637,7 @@ def _normalize_merge_key_to_index(x, i, by):
             raise ValueError("No key column '" + by + "' in object " + str(i) + ".")
         return ib
     else:
-        raise TypeError(
-            "Unknown type '" + type(by).__name__ + "' for the 'by' argument."
-        )
+        raise TypeError("Unknown type '" + type(by).__name__ + "' for the 'by' argument.")
 
 
 def _get_merge_key(x, i, by):
@@ -1819,11 +1754,7 @@ def merge(
                     counter += 1
                     y = original + " (" + str(counter) + ")"
             elif y in new_data:
-                raise ValueError(
-                    "Detected duplicate columns across objects to be merged ('"
-                    + y
-                    + "')."
-                )
+                raise ValueError("Detected duplicate columns across objects to be merged ('" + y + "').")
 
             new_columns.append(y)
             if noop:
