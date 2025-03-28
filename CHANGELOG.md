@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.6.2
+- Add support for slice objects in `remove_rows()` and enforce homogenous types.
+
 ## Version 0.6.1
 
 - Implement wrapper methods within the `BiocFrame` class for merge and combine operations.

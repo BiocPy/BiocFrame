@@ -6,7 +6,7 @@ from warnings import warn
 import biocutils as ut
 import numpy
 
-__author__ = "Jayaram Kancherla, Aaron Lun"
+__author__ = "Jayaram Kancherla, Aaron Lun, Kevin Yang"
 __copyright__ = "jkanche"
 __license__ = "MIT"
 
