@@ -648,6 +648,9 @@ class BiocFrame:
         Returns:
             Whether a row with the specified ``name`` exists in this object.
         """
+        if self.row_names is None:
+            return False
+
         return name in self.row_names
 
     def get_row(self, row: Union[str, int]) -> dict:

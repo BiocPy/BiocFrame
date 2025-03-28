@@ -431,6 +431,11 @@ def test_bframe_remove_row():
     assert bframe2.get_row_names().as_list() == ["row1", "row3"]
     assert bframe2.shape == (2, 2)
 
+    # Returns False if row_names is None
+    bframe2 = bframe.set_row_names(names=None)
+    assert not bframe2.has_row("row1")
+    assert bframe.has_row("row1")
+
     # Works in place.
     copy = bframe.__deepcopy__()
     copy.remove_row("row1", in_place=True)
