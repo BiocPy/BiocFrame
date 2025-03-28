@@ -1,7 +1,9 @@
 # Changelog
 
 ## Version 0.6.2
-- Add support for slice objects in `remove_rows()` and enforce homogenous types.
+- Implement `remove_rows()`.
+- Implement `has_row()`.
+- Add support for slice objects in `remove_columns()` and enforce homogenous types.
 
 ## Version 0.6.1
 
