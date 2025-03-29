@@ -1,11 +1,11 @@
 # Changelog
 
-## Version 0.6.2
+## Version 0.6.3
 - Implement `remove_rows()`.
 - Implement `has_row()`.
 - Add support for slice objects in `remove_columns()` and enforce homogeneous types.
 
-## Version 0.6.1
+## Version 0.6.1 - 0.6.2
 
 - Implement wrapper methods within the `BiocFrame` class for merge and combine operations.
 - Initialize `BiocFrame` from a `NamedList`.
