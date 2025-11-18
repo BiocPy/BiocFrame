@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 import pandas as pd
-from biocframe.BiocFrame import BiocFrame
+from biocframe.frame import BiocFrame
 from biocutils import Factor
 
 __author__ = "jkanche"

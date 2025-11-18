@@ -1,4 +1,4 @@
-from ..BiocFrame import BiocFrame
+from ..frame import BiocFrame
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
