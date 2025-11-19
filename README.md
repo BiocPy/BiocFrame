@@ -32,6 +32,106 @@ pip install biocframe
 pip install biocframe[optional]
 ```
 
+## Quick Examples
+
+### Genomic Annotation Data
+
+Genomic data often requires storing coordinates, annotations, and metadata together:
+
+```python
+# Gene annotation with nested structures
+gene_annotations = BiocFrame({
+    "gene_id": ["GENE1", "GENE2", "GENE3"],
+    "symbol": ["BRCA1", "TP53", "EGFR"],
+    "location": BiocFrame({
+        "chromosome": ["chr17", "chr17", "chr7"],
+        "start": [43044295, 7668422, 55019017],
+        "end": [43125483, 7687550, 55211628],
+        "strand": ["-", "-", "+"],
+    }),
+    "transcripts": [
+        ["NM_007294", "NM_007297", "NM_007300"],
+        ["NM_000546"],
+        ["NM_005228", "NM_201282"],
+    ],
+    "pathways": [
+        ["DNA repair", "Cell cycle"],
+        ["Apoptosis", "Cell cycle", "DNA repair"],
+        ["Cell growth", "Signal transduction"],
+    ],
+}, row_names=["ENSG00000012048", "ENSG00000141510", "ENSG00000146648"])
+
+print(gene_annotations)
+```
+
+### Multi-Omics Data Integration
+
+When combining different types of omics data with varying structures:
+
+```python
+# Multi-omics data with different measurement types
+multi_omics = BiocFrame({
+    "sample_id": ["S1", "S2", "S3"],
+    "rna_seq": np.array([
+        [100, 200, 150],
+        [300, 250, 180],
+        [120, 220, 160],
+    ], dtype=np.float32),
+    "methylation": BiocFrame({
+        "cg0001": [0.85, 0.92, 0.78],
+        "cg0002": [0.45, 0.38, 0.52],
+        "cg0003": [0.12, 0.15, 0.10],
+    }),
+    "clinical": BiocFrame({
+        "age": [45, 52, 38],
+        "gender": ["M", "F", "F"],
+        "diagnosis": ["Type A", "Type B", "Type A"],
+    }),
+}, column_data=BiocFrame({
+    "data_type": ["identifier", "expression", "epigenetic", "clinical"],
+    "source": ["lab", "sequencer", "array", "EHR"],
+}))
+
+print(multi_omics)
+print("\nColumn metadata:")
+print(multi_omics.get_column_data())
+```
+
+### Hierarchical Data Structures
+
+For data with natural hierarchies (e.g., samples → patients → cohorts):
+
+```python
+# Hierarchical clinical trial data
+clinical_trial = BiocFrame({
+    "patient_id": ["P001", "P002", "P003"],
+    "cohort": ["A", "A", "B"],
+    "samples": [
+        BiocFrame({
+            "sample_id": ["S001", "S002"],
+            "collection_date": ["2024-01-01", "2024-01-15"],
+            "vital_status": ["alive", "alive"],
+        }),
+        BiocFrame({
+            "sample_id": ["S003", "S004", "S005"],
+            "collection_date": ["2024-01-02", "2024-01-16", "2024-01-30"],
+            "vital_status": ["alive", "alive", "deceased"],
+        }),
+        BiocFrame({
+            "sample_id": ["S006"],
+            "collection_date": ["2024-01-03"],
+            "vital_status": ["alive"],
+        }),
+    ],
+}, metadata={
+    "trial_name": "PHASE_III_STUDY",
+    "start_date": "2024-01-01",
+    "status": "ongoing",
+})
+
+print(clinical_trial)
+```
+
 ## Construction
 
 To construct a `BiocFrame` object, simply provide the data as a dictionary.

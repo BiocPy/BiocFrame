@@ -1,5 +1,11 @@
 # Changelog
 
+## Version 0.7.0
+
+- Major update to type hints throughout the module for better type safety and consistency.
+- Fixed bug in slice operations where column indices might be incorrectly initialized.
+- Added missing index validation in `get_row()` for integer row indices. Similar index validation in `remove_columns()` and `remove_rows()` for out-of-range indices.
+
 ## Version 0.6.3
 - Implement `remove_rows()`.
 - Implement `has_row()`.
