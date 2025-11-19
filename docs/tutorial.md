@@ -14,6 +14,81 @@ This flexibility allows us to accept arbitrarily complex objects as columns, whi
 These classes follow a functional paradigm for accessing or setting properties, with further details discussed in [functional paradigm](https://biocpy.github.io/tutorial/chapters/philosophy.html) section.
 :::
 
+# When to Use `BiocFrame`
+
+`BiocFrame` is particularly well-suited for the following scenarios:
+
+## 1. **Bioconductor Interoperability**
+
+When working with R's Bioconductor ecosystem, `BiocFrame` provides seamless data exchange without type coercion issues that can occur with pandas.
+
+```{code-cell}
+from biocframe import BiocFrame
+import numpy as np
+
+# Preserve exact types for R interoperability
+gene_data = BiocFrame({
+    "gene_id": ["ENSG00000139618", "ENSG00000157764"],
+    "expression": np.array([2.5, 3.1], dtype=np.float32),
+    "p_value": np.array([0.001, 0.003], dtype=np.float64),
+})
+
+# Types are preserved exactly as provided
+print(type(gene_data["expression"]))  # <class 'numpy.ndarray'>
+print(gene_data["expression"].dtype)  # float32
+```
+
+## 2. **Nested and Complex Data Structures**
+
+When your data contains nested structures, lists of varying lengths, or other complex objects that don't fit into traditional tabular formats.
+
+```{code-cell}
+# Genomic ranges with nested information
+genomic_data = BiocFrame({
+    "gene_id": ["GENE1", "GENE2", "GENE3"],
+    "coordinates": BiocFrame({
+        "chr": ["chr1", "chr2", "chr1"],
+        "start": [1000, 2000, 3000],
+        "end": [1500, 2500, 3500],
+    }),
+    "transcripts": [
+        ["T1", "T2"],           # GENE1 has 2 transcripts
+        ["T3"],                 # GENE2 has 1 transcript
+        ["T4", "T5", "T6"],     # GENE3 has 3 transcripts
+    ],
+    "metadata": [
+        {"source": "Ensembl", "version": 109},
+        {"source": "NCBI", "version": 38},
+        {"source": "Ensembl", "version": 109},
+    ],
+})
+
+print(genomic_data)
+```
+
+## 3. **Functional Programming Style**
+
+When you prefer immutable operations that don't modify data in-place, making your code more predictable and easier to debug.
+
+```{code-cell}
+# Chain operations without side effects
+original = BiocFrame({
+    "A": [1, 2, 3],
+    "B": [4, 5, 6],
+})
+
+# All operations return new objects
+modified = (original
+    .set_column_names(["X", "Y"])
+    .set_row_names(["row1", "row2", "row3"])
+    .set_metadata({"source": "example"})
+)
+
+# Original is unchanged
+print("Original column names:", original.column_names)
+print("Modified column names:", modified.column_names)
+```
+
 # Advantages of `BiocFrame`
 
 One of the core principles guiding the implementation of the `BiocFrame` class is "**_what you put is what you get_**". Unlike Pandas `DataFrame`, `BiocFrame` makes no assumptions about the types of the columns provided as input. Some key differences to highlight the advantages of using `BiocFrame` are especially in terms of modifications to column types and handling nested dataframes.
@@ -145,6 +220,106 @@ The `row_names` parameter is analogous to index in the pandas world and should n
 - `column_data`: A `BiocFrame`object containing metadata about the columns. This must have the same number of rows as the numbers of columns.
 - `metadata`: Additional metadata about the object, usually a dictionary.
 - `column_names`: If different from the keys in the `data`. If not provided, this is automatically extracted from the keys in the `data`.
+
+# Example Use Cases
+
+## Use Case 1: Genomic Annotation Data
+
+Genomic data often requires storing coordinates, annotations, and metadata together:
+
+```{code-cell}
+# Gene annotation with nested structures
+gene_annotations = BiocFrame({
+    "gene_id": ["GENE1", "GENE2", "GENE3"],
+    "symbol": ["BRCA1", "TP53", "EGFR"],
+    "location": BiocFrame({
+        "chromosome": ["chr17", "chr17", "chr7"],
+        "start": [43044295, 7668422, 55019017],
+        "end": [43125483, 7687550, 55211628],
+        "strand": ["-", "-", "+"],
+    }),
+    "transcripts": [
+        ["NM_007294", "NM_007297", "NM_007300"],
+        ["NM_000546"],
+        ["NM_005228", "NM_201282"],
+    ],
+    "pathways": [
+        ["DNA repair", "Cell cycle"],
+        ["Apoptosis", "Cell cycle", "DNA repair"],
+        ["Cell growth", "Signal transduction"],
+    ],
+}, row_names=["ENSG00000012048", "ENSG00000141510", "ENSG00000146648"])
+
+print(gene_annotations)
+```
+
+## Use Case 2: Multi-Omics Data Integration
+
+When combining different types of omics data with varying structures:
+
+```{code-cell}
+# Multi-omics data with different measurement types
+multi_omics = BiocFrame({
+    "sample_id": ["S1", "S2", "S3"],
+    "rna_seq": np.array([
+        [100, 200, 150],
+        [300, 250, 180],
+        [120, 220, 160],
+    ], dtype=np.float32),
+    "methylation": BiocFrame({
+        "cg0001": [0.85, 0.92, 0.78],
+        "cg0002": [0.45, 0.38, 0.52],
+        "cg0003": [0.12, 0.15, 0.10],
+    }),
+    "clinical": BiocFrame({
+        "age": [45, 52, 38],
+        "gender": ["M", "F", "F"],
+        "diagnosis": ["Type A", "Type B", "Type A"],
+    }),
+}, column_data=BiocFrame({
+    "data_type": ["identifier", "expression", "epigenetic", "clinical"],
+    "source": ["lab", "sequencer", "array", "EHR"],
+}))
+
+print(multi_omics)
+print("\nColumn metadata:")
+print(multi_omics.get_column_data())
+```
+
+## Use Case 3: Hierarchical Data Structures
+
+For data with natural hierarchies (e.g., samples → patients → cohorts):
+
+```{code-cell}
+# Hierarchical clinical trial data
+clinical_trial = BiocFrame({
+    "patient_id": ["P001", "P002", "P003"],
+    "cohort": ["A", "A", "B"],
+    "samples": [
+        BiocFrame({
+            "sample_id": ["S001", "S002"],
+            "collection_date": ["2024-01-01", "2024-01-15"],
+            "vital_status": ["alive", "alive"],
+        }),
+        BiocFrame({
+            "sample_id": ["S003", "S004", "S005"],
+            "collection_date": ["2024-01-02", "2024-01-16", "2024-01-30"],
+            "vital_status": ["alive", "alive", "deceased"],
+        }),
+        BiocFrame({
+            "sample_id": ["S006"],
+            "collection_date": ["2024-01-03"],
+            "vital_status": ["alive"],
+        }),
+    ],
+}, metadata={
+    "trial_name": "PHASE_III_STUDY",
+    "start_date": "2024-01-01",
+    "status": "ongoing",
+})
+
+print(clinical_trial)
+```
 
 # With other `DataFrame` libraries
 
