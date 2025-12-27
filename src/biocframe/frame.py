@@ -697,7 +697,7 @@ class BiocFrame:
             try:
                 if not isinstance(row, int):
                     row = int(row)  # incase its a numpy int
-            except Exception as e:
+            except Exception:
                 raise TypeError("`row` must be either an integer index or row name.")
 
             if row < 0:

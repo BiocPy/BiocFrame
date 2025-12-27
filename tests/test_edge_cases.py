@@ -228,4 +228,3 @@ def test_merge_with_missing_keys():
     assert len(result) == 5
     assert result.column("B") == [4, 5, 6, None, None]
     assert result.column("C") == [None, None, None, 7, 8]
-
