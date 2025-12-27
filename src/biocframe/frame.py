@@ -126,7 +126,7 @@ class BiocFrame:
         row_names: Optional[Union[Sequence[str], ut.Names]] = None,
         column_names: Optional[Union[Sequence[str], ut.Names]] = None,
         column_data: Optional[BiocFrame] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: Optional[Union[Dict[str, Any], ut.NamedList]] = None,
         _validate: bool = True,
     ) -> None:
         """Initialize a ``BiocFrame`` object from columns.
