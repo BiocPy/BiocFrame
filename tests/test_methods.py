@@ -709,9 +709,9 @@ def test_get_columns():
         "B": ["x", "y", "z"]
     }
     bframe = BiocFrame(obj)
-    
+
     cols = bframe.get_columns()
-    
+
     assert isinstance(cols, list)
     assert len(cols) == 2
     assert cols[0] == [1, 2, 3]
@@ -720,7 +720,7 @@ def test_get_columns():
 def test_contains_dunder():
     obj = {"A": [1], "B": [2]}
     bframe = BiocFrame(obj)
-    
+
     assert "A" in bframe
     assert "B" in bframe
     assert "C" not in bframe
@@ -728,10 +728,10 @@ def test_contains_dunder():
 def test_empty_property():
     empty_bf = BiocFrame({}, number_of_rows=0)
     assert empty_bf.empty is True
-    
+
     full_bf = BiocFrame({"A": [1, 2]})
     assert full_bf.empty is False
-    
+
     cols_bf = BiocFrame({"A": [], "B": []})
     assert cols_bf.empty is True
 
@@ -740,30 +740,30 @@ def test_head_tail():
         "val": list(range(10))
     }
     bframe = BiocFrame(data)
-    
+
     h = bframe.head(3)
     assert h.shape == (3, 1)
     assert h.column("val") == [0, 1, 2]
-    
+
     h_default = bframe.head()
     assert h_default.shape == (5, 1)
     assert h_default.column("val") == [0, 1, 2, 3, 4]
-    
+
     h_large = bframe.head(20)
     assert h_large.shape == (10, 1)
-    
+
     t = bframe.tail(3)
     assert t.shape == (3, 1)
     assert t.column("val") == [7, 8, 9]
-    
+
     t_large = bframe.tail(20)
     assert t_large.shape == (10, 1)
 
 def test_head_tail_errors():
     bframe = BiocFrame({"A": [1, 2, 3]})
-    
+
     with pytest.raises(ValueError):
         bframe.head(-1)
-        
+
     with pytest.raises(ValueError):
         bframe.tail(-1)

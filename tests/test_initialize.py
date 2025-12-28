@@ -180,9 +180,9 @@ def test_initialize_from_sequence():
         ["a", "b", "c"],    # Column 2
     ]
     col_names = ["id", "val"]
-    
+
     bframe = BiocFrame(data, column_names=col_names)
-    
+
     assert bframe is not None
     assert bframe.shape == (3, 2)
     assert bframe.column_names.as_list() == ["id", "val"]
