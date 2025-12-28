@@ -1,4 +1,11 @@
-from ..BiocFrame import BiocFrame
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pandas
+
+from ..frame import BiocFrame
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"

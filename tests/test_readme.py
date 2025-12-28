@@ -1,6 +1,6 @@
 from random import random
 
-from biocframe.BiocFrame import BiocFrame
+from biocframe.frame import BiocFrame
 
 __author__ = "jkanche"
 __copyright__ = "jkanche"
