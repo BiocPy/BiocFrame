@@ -90,7 +90,7 @@ class BiocFrameIter:
     def __iter__(self) -> BiocFrameIter:
         return self
 
-    def __next__(self) -> Tuple[Optional[str], Dict[str, Any]]:
+    def __next__(self) -> Tuple[Optional[Union[ut.Names, str]], Dict[str, Any]]:
         if self._current_index < len(self._bframe):
             iter_row_index = self._bframe.row_names[self._current_index] if self._bframe.row_names is not None else None
 
