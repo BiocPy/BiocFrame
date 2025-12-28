@@ -702,3 +702,17 @@ def test_bframe_split():
     assert isinstance(split_frame, dict)
     assert len(split_frame) == 2
     assert len(split_frame["b"]) == 2
+
+def test_get_columns():
+    obj = {
+        "A": [1, 2, 3],
+        "B": ["x", "y", "z"]
+    }
+    bframe = BiocFrame(obj)
+    
+    cols = bframe.get_columns()
+    
+    assert isinstance(cols, list)
+    assert len(cols) == 2
+    assert cols[0] == [1, 2, 3]
+    assert cols[1] == ["x", "y", "z"]

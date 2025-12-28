@@ -121,7 +121,7 @@ class BiocFrame:
 
     def __init__(
         self,
-        data: Optional[Union[Dict[str, Any], ut.NamedList]] = None,
+        data: Optional[Union[Dict[str, Any], ut.NamedList, Sequence[Any]]] = None,
         number_of_rows: Optional[int] = None,
         row_names: Optional[Union[Sequence[str], ut.Names]] = None,
         column_names: Optional[Union[Sequence[str], ut.Names]] = None,
@@ -140,6 +140,10 @@ class BiocFrame:
                 Alternatively may provide a `Mapping` object, for example
                 a :py:class:`~biocutils.NamedList` that can be coerced into
                 a dictionary.
+
+                Alternatively, a sequence of columns may be provided. In this case,
+                ``column_names`` must be provided and must have the same length
+                as the sequence.
 
             number_of_rows:
                 Number of rows. If not specified, inferred from ``data``. This
@@ -174,6 +178,14 @@ class BiocFrame:
                 if not isinstance(v, list):
                     # if its a scalar, make a list else corce to list
                     data[k] = list(v) if isinstance(v, abc.Sequence) else [v]
+        elif isinstance(data, Sequence) and not isinstance(data, (str, dict)):
+            if column_names is None:
+                raise ValueError("`column_names` must be provided if `data` is a sequence.")
+
+            if len(data) != len(column_names):
+                raise ValueError("Length of `data` and `column_names` must match.")
+
+            data = dict(zip(column_names, data))
 
         self._data = data
 
@@ -428,6 +440,14 @@ class BiocFrame:
             A list of column names.
         """
         return self._column_names
+
+    def get_columns(self) -> List[Any]:
+        """Get all columns as a list.
+
+        Returns:
+            A list containing the data for each column.
+        """
+        return [self._data[c] for c in self._column_names]
 
     def set_column_names(self, names: Union[Sequence[str], ut.Names], in_place: bool = False) -> BiocFrame:
         """Set new column names.

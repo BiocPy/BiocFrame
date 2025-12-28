@@ -173,3 +173,27 @@ def test_NamedList():
     assert isinstance(frame, BiocFrame)
     assert frame.shape == (1, 4)
     assert list(frame.get_column_names()) == ["A", "B", "C", "D"]
+
+def test_initialize_from_sequence():
+    data = [
+        [1, 2, 3],          # Column 1
+        ["a", "b", "c"],    # Column 2
+    ]
+    col_names = ["id", "val"]
+    
+    bframe = BiocFrame(data, column_names=col_names)
+    
+    assert bframe is not None
+    assert bframe.shape == (3, 2)
+    assert bframe.column_names.as_list() == ["id", "val"]
+    assert bframe.column("id") == [1, 2, 3]
+    assert bframe.column("val") == ["a", "b", "c"]
+
+def test_initialize_from_sequence_errors():
+    data = [[1, 2], [3, 4]]
+
+    with pytest.raises(ValueError, match="`column_names` must be provided"):
+        BiocFrame(data)
+
+    with pytest.raises(ValueError, match="Length of `data` and `column_names` must match"):
+        BiocFrame(data, column_names=["A"])
