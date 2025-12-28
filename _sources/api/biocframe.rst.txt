@@ -12,10 +12,10 @@ Subpackages
 Submodules
 ----------
 
-biocframe.BiocFrame module
---------------------------
+biocframe.frame module
+----------------------
 
-.. automodule:: biocframe.BiocFrame
+.. automodule:: biocframe.frame
    :members:
    :show-inheritance:
    :undoc-members:
