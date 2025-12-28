@@ -6,7 +6,7 @@
 - Fixed bug in slice operations where column indices might be incorrectly initialized.
 - Added missing index validation in `get_row()` for integer row indices. Similar index validation in `remove_columns()` and `remove_rows()` for out-of-range indices.
 - Accept a list of column values and column names to initialize a biocframe object.
-- Implement empty, contains, head, tail, 
+- Implement empty, contains, head, tail,
 - Coercions to list and `NamedList` from bioctuls.
 
 ## Version 0.6.3
