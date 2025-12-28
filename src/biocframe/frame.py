@@ -219,6 +219,53 @@ class BiocFrame:
         else:
             return self.__copy__()
 
+    def __eq__(self, other: Any) -> bool:
+        """Check if the current object is equal to another.
+
+        Args:
+            other:
+                Object to compare with.
+
+        Returns:
+            True if the objects are equal, False otherwise.
+        """
+        if not isinstance(other, BiocFrame):
+            return False
+
+        if self.shape != other.shape:
+            return False
+
+        if self.row_names != other.row_names:
+            return False
+
+        if self.column_names != other.column_names:
+            return False
+
+        for col in self.column_names:
+            d1 = self.column(col)
+            d2 = other.column(col)
+
+            if isinstance(d1, numpy.ndarray) or isinstance(d2, numpy.ndarray):
+                if not numpy.array_equal(d1, d2):
+                    return False
+            else:
+                try:
+                    if d1 != d2:
+                        return False
+                except Exception:
+                    # Fallback for other array-like objects (e.g. pandas Series)
+                    # where bool(d1 == d2) is ambiguous.
+                    if not numpy.array_equal(d1, d2):
+                        return False
+
+        if self.metadata != other.metadata:
+            return False
+
+        if self.column_data != other.column_data:
+            return False
+
+        return True
+
     #################################
     ######>> Shape and stuff <<######
     #################################
@@ -771,6 +818,40 @@ class BiocFrame:
     #########################
     ######>> Slicers <<######
     #########################
+
+    def head(self, n: int = 5) -> BiocFrame:
+        """Get the first `n` rows.
+
+        Args:
+            n:
+                Number of rows to return.
+
+        Returns:
+            A new ``BiocFrame`` object with the first `n` rows.
+        """
+        if n < 0:
+            raise ValueError("n must be non-negative.")
+
+        return self[:n, :]
+
+    def tail(self, n: int = 5) -> BiocFrame:
+        """Get the last `n` rows.
+
+        Args:
+            n:
+                Number of rows to return.
+
+        Returns:
+            A new ``BiocFrame`` object with the last `n` rows.
+        """
+        if n < 0:
+            raise ValueError("n must be non-negative.")
+
+        rows = self.shape[0]
+        if n > rows:
+            n = rows
+
+        return self[rows - n : rows, :]
 
     def get_slice(
         self,

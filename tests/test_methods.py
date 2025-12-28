@@ -734,3 +734,36 @@ def test_empty_property():
     
     cols_bf = BiocFrame({"A": [], "B": []})
     assert cols_bf.empty is True
+
+def test_head_tail():
+    data = {
+        "val": list(range(10))
+    }
+    bframe = BiocFrame(data)
+    
+    h = bframe.head(3)
+    assert h.shape == (3, 1)
+    assert h.column("val") == [0, 1, 2]
+    
+    h_default = bframe.head()
+    assert h_default.shape == (5, 1)
+    assert h_default.column("val") == [0, 1, 2, 3, 4]
+    
+    h_large = bframe.head(20)
+    assert h_large.shape == (10, 1)
+    
+    t = bframe.tail(3)
+    assert t.shape == (3, 1)
+    assert t.column("val") == [7, 8, 9]
+    
+    t_large = bframe.tail(20)
+    assert t_large.shape == (10, 1)
+
+def test_head_tail_errors():
+    bframe = BiocFrame({"A": [1, 2, 3]})
+    
+    with pytest.raises(ValueError):
+        bframe.head(-1)
+        
+    with pytest.raises(ValueError):
+        bframe.tail(-1)
