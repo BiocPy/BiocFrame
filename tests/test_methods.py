@@ -716,3 +716,21 @@ def test_get_columns():
     assert len(cols) == 2
     assert cols[0] == [1, 2, 3]
     assert cols[1] == ["x", "y", "z"]
+
+def test_contains_dunder():
+    obj = {"A": [1], "B": [2]}
+    bframe = BiocFrame(obj)
+    
+    assert "A" in bframe
+    assert "B" in bframe
+    assert "C" not in bframe
+
+def test_empty_property():
+    empty_bf = BiocFrame({}, number_of_rows=0)
+    assert empty_bf.empty is True
+    
+    full_bf = BiocFrame({"A": [1, 2]})
+    assert full_bf.empty is False
+    
+    cols_bf = BiocFrame({"A": [], "B": []})
+    assert cols_bf.empty is True

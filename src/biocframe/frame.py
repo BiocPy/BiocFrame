@@ -238,9 +238,38 @@ class BiocFrame:
         """
         return self.shape[0]
 
+    @property
+    def empty(self) -> bool:
+        """Check if the object is empty.
+
+        Returns:
+            True if the object has no rows, False otherwise.
+        """
+        return self.is_empty()
+
+    def is_empty(self) -> bool:
+        """Check if the object is empty.
+
+        Returns:
+            True if the object has no rows, False otherwise.
+        """
+        return self.shape[0] == 0
+
     def __iter__(self) -> BiocFrameIter:
         """Iterator over rows."""
         return BiocFrameIter(self)
+
+    def __contains__(self, name: str) -> bool:
+        """Check if a column exists.
+
+        Args:
+            name:
+                Name of the column.
+
+        Returns:
+            True if the column exists, False otherwise.
+        """
+        return self.has_column(name)
 
     @property
     def dims(self) -> Tuple[int, int]:
