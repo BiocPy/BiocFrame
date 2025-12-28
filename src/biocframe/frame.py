@@ -500,6 +500,22 @@ class BiocFrame:
         """
         return self._data
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Alias for :py:meth:`~get_data`.
+
+        Returns:
+            Dictionary of columns and their values.
+        """
+        return self.get_data()
+
+    def to_NamedList(self) -> ut.NamedList:
+        """Convert the ``BiocFrame`` to a :py:class:`~biocutils.NamedList`.
+
+        Returns:
+            A ``NamedList`` containing the columns.
+        """
+        return ut.NamedList([self._data[c] for c in self._column_names], names=self._column_names)
+
     @property
     def data(self) -> Dict[str, Any]:
         """Alias for :py:attr:`~get_data`."""
@@ -1127,6 +1143,12 @@ class BiocFrame:
         previous = len(output._column_names)
 
         for column, value in columns.items():
+            if output.shape == (0, 0):
+                output._number_of_rows = ut.get_height(value)
+
+                if output._row_names is not None and len(output._row_names) == 0 and output._number_of_rows > 0:
+                    output._row_names = None
+
             if ut.get_height(value) != output.shape[0]:
                 raise ValueError(
                     "Length of `value`, does not match the number of the rows,"
