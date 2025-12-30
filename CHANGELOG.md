@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.7.0
+## Version 0.7.0 - 0.7.1
 
 - Major update to type hints throughout the module for better type safety and consistency.
 - Fixed bug in slice operations where column indices might be incorrectly initialized.
@@ -8,8 +8,10 @@
 - Accept a list of column values and column names to initialize a biocframe object.
 - Implement empty, contains, head, tail,
 - Coercions to list and `NamedList` from bioctuls.
+- `BiocFrame` now extends `BiocObject`, with metadata attribute now a `NamedList` from the biocutils package.
 
 ## Version 0.6.3
+
 - Implement `remove_rows()`.
 - Implement `has_row()`.
 - Add support for slice objects in `remove_columns()` and enforce homogeneous types.
@@ -47,6 +49,7 @@
 - Internal refactoring to use generics from the BiocUtils package.
 
 ## Version 0.3
+
 This release migrates the package to a more palatable Google's Python style guide. A major modification to the package is with casing, all `camelCase` methods, functions and parameters are now `snake_case`.
 
 In addition, docstrings and documentation has been updated to use sphinx's features of linking objects to their types. Sphinx now also documents private and special dunder methods (e.g. `__getitem__`, `__copy__` etc). Intersphinx has been updated to link to references from dependent packages.
@@ -56,6 +59,7 @@ configuration for flake8, ruff and black has been added to pyproject.toml and se
 In addition, pyscaffold has been updated to use "myst-parser" as the markdown compiler instead of recommonmark. As part of the pyscaffold setup, one may use pre-commits to run some of the routine tasks of linting and formatting before every commit. While this is sometimes annoying and can be ignored with `--no-verify`, it brings some consistency to the code base.
 
 ## Version 0.2
+
 - refactor DataFrame as BiocFrame
 - implementing slicing methods, tests
 
