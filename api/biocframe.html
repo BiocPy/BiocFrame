@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="biocframe.io package" href="biocframe.io.html"><link rel="prev" title="biocframe" href="modules.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
-        <title>biocframe package - BiocFrame 0.7.0 documentation</title>
+        <title>biocframe package - BiocFrame 0.7.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
@@ -162,7 +162,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../index.html"><div class="brand">BiocFrame 0.7.0 documentation</div></a>
+      <a href="../index.html"><div class="brand">BiocFrame 0.7.1 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -183,7 +183,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
   
-  <span class="sidebar-brand-text">BiocFrame 0.7.0 documentation</span>
+  <span class="sidebar-brand-text">BiocFrame 0.7.1 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -279,7 +279,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="biocframe.frame.BiocFrame">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">biocframe.frame.</span></span><span class="sig-name descname"><span class="pre">BiocFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_validate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/frame.html#BiocFrame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.frame.BiocFrame" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.12/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://biocpy.github.io/BiocUtils/api/biocutils.html#biocutils.bioc_object.BiocObject" title="(in biocutils v0.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiocObject</span></code></a></p>
 <p><cite>BiocFrame</cite> is an alternative to <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>, with support for nested and flexible column types.
 Inspired by the <code class="docutils literal notranslate"><span class="pre">DFrame</span></code> class from Bioconductor’s <strong>S4Vectors</strong> package. Any object may be used as a column,
 provided it has:</p>
@@ -749,20 +749,6 @@ column and contains that column’s metadata.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="biocframe.frame.BiocFrame.get_metadata">
-<span class="sig-name descname"><span class="pre">get_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/frame.html#BiocFrame.get_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.frame.BiocFrame.get_metadata" title="Link to this definition">¶</a></dt>
-<dd><p>Get the metadata.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dictionary of metadata for this object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="biocframe.frame.BiocFrame.get_row">
 <span class="sig-name descname"><span class="pre">get_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/frame.html#BiocFrame.get_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.frame.BiocFrame.get_row" title="Link to this definition">¶</a></dt>
 <dd><p>Get a specified row.</p>
@@ -908,12 +894,6 @@ Scalars are treated as length-1 sequences.</p></li>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#biocframe.frame.BiocFrame" title="biocframe.frame.BiocFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiocFrame</span></code></a></span></p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="biocframe.frame.BiocFrame.metadata">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.12/library/typing.html#typing.Dict" title="(in Python v3.12)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.12/library/typing.html#typing.Any" title="(in Python v3.12)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#biocframe.frame.BiocFrame.metadata" title="Link to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#biocframe.frame.BiocFrame.get_metadata" title="biocframe.frame.BiocFrame.get_metadata"><code class="xref py py-attr docutils literal notranslate"><span class="pre">get_metadata</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1136,27 +1116,6 @@ or as a reference to the (in-place-modified) original.</p>
 new or existing column names, or integers containing the position
 of the column. Values should be the contents of each column.</p></li>
 <li><p><strong>in_place</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether to modify the object in place. Defaults to False.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#biocframe.frame.BiocFrame" title="biocframe.frame.BiocFrame"><code class="xref py py-class docutils literal notranslate"><span class="pre">BiocFrame</span></code></a></span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A modified <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> object, either as a copy of the original
-or as a reference to the (in-place-modified) original.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="biocframe.frame.BiocFrame.set_metadata">
-<span class="sig-name descname"><span class="pre">set_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/biocframe/frame.html#BiocFrame.set_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#biocframe.frame.BiocFrame.set_metadata" title="Link to this definition">¶</a></dt>
-<dd><p>Set new metadata.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>metadata</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.12/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3.12/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – New metadata for this object.</p></li>
-<li><p><strong>in_place</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether to modify the <code class="docutils literal notranslate"><span class="pre">BiocFrame</span></code> object in place.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1557,7 +1516,6 @@ with placeholders consisting of Nones or masked NumPy values.</p>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.get_column_names"><code class="docutils literal notranslate"><span class="pre">BiocFrame.get_column_names()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.get_columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.get_columns()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.get_data"><code class="docutils literal notranslate"><span class="pre">BiocFrame.get_data()</span></code></a></li>
-<li><a class="reference internal" href="#biocframe.frame.BiocFrame.get_metadata"><code class="docutils literal notranslate"><span class="pre">BiocFrame.get_metadata()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.get_row"><code class="docutils literal notranslate"><span class="pre">BiocFrame.get_row()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.get_row_names"><code class="docutils literal notranslate"><span class="pre">BiocFrame.get_row_names()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.get_slice"><code class="docutils literal notranslate"><span class="pre">BiocFrame.get_slice()</span></code></a></li>
@@ -1567,7 +1525,6 @@ with placeholders consisting of Nones or masked NumPy values.</p>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.index"><code class="docutils literal notranslate"><span class="pre">BiocFrame.index</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.is_empty"><code class="docutils literal notranslate"><span class="pre">BiocFrame.is_empty()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.merge"><code class="docutils literal notranslate"><span class="pre">BiocFrame.merge()</span></code></a></li>
-<li><a class="reference internal" href="#biocframe.frame.BiocFrame.metadata"><code class="docutils literal notranslate"><span class="pre">BiocFrame.metadata</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.relaxed_combine_columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.relaxed_combine_columns()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.relaxed_combine_rows"><code class="docutils literal notranslate"><span class="pre">BiocFrame.relaxed_combine_rows()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.remove_column"><code class="docutils literal notranslate"><span class="pre">BiocFrame.remove_column()</span></code></a></li>
@@ -1581,7 +1538,6 @@ with placeholders consisting of Nones or masked NumPy values.</p>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.set_column_data"><code class="docutils literal notranslate"><span class="pre">BiocFrame.set_column_data()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.set_column_names"><code class="docutils literal notranslate"><span class="pre">BiocFrame.set_column_names()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.set_columns"><code class="docutils literal notranslate"><span class="pre">BiocFrame.set_columns()</span></code></a></li>
-<li><a class="reference internal" href="#biocframe.frame.BiocFrame.set_metadata"><code class="docutils literal notranslate"><span class="pre">BiocFrame.set_metadata()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.set_row_names"><code class="docutils literal notranslate"><span class="pre">BiocFrame.set_row_names()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.set_slice"><code class="docutils literal notranslate"><span class="pre">BiocFrame.set_slice()</span></code></a></li>
 <li><a class="reference internal" href="#biocframe.frame.BiocFrame.shape"><code class="docutils literal notranslate"><span class="pre">BiocFrame.shape</span></code></a></li>
@@ -1617,7 +1573,7 @@ with placeholders consisting of Nones or masked NumPy values.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=fe7df9b0"></script>
+</div><script src="../_static/documentation_options.js?v=5a057da9"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
