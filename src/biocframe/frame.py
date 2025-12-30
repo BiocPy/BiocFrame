@@ -104,7 +104,7 @@ class BiocFrameIter:
 ############################
 
 
-class BiocFrame:
+class BiocFrame(ut.BiocObject):
     """`BiocFrame` is an alternative to :class:`~pandas.DataFrame`, with support for nested and flexible column types.
     Inspired by the ``DFrame`` class from Bioconductor's **S4Vectors** package. Any object may be used as a column,
     provided it has:
@@ -168,6 +168,12 @@ class BiocFrame:
             _validate:
                 Internal use only.
         """
+
+        super().__init__(
+            metadata=metadata,
+            _validate=_validate,
+        )
+
         if data is None:
             data = {}
 
@@ -176,7 +182,7 @@ class BiocFrame:
             # making sure all column values are lists
             for k, v in data.items():
                 if not isinstance(v, list):
-                    # if its a scalar, make a list else corce to list
+                    # if its a scalar, make a list else coerce to list
                     data[k] = list(v) if isinstance(v, abc.Sequence) else [v]
         elif isinstance(data, Sequence) and not isinstance(data, (str, dict)):
             if column_names is None:
@@ -206,18 +212,11 @@ class BiocFrame:
         else:
             self._column_names = column_names if isinstance(column_names, ut.Names) else ut.Names(column_names)
 
-        self._metadata = {} if metadata is None else metadata
         self._column_data = column_data
 
         if _validate:
             _validate_rows(self._number_of_rows, self._data, self._row_names)
             _validate_columns(self._column_names, self._data, self._column_data)
-
-    def _define_output(self, in_place: bool = False) -> BiocFrame:
-        if in_place is True:
-            return self
-        else:
-            return self.__copy__()
 
     def __eq__(self, other: Any) -> bool:
         """Check if the current object is equal to another.
@@ -667,51 +666,6 @@ class BiocFrame:
             UserWarning,
         )
         self.set_column_data(column_data, in_place=True)
-
-    def get_metadata(self) -> dict:
-        """Get the metadata.
-
-        Returns:
-            Dictionary of metadata for this object.
-        """
-        return self._metadata
-
-    def set_metadata(self, metadata: Dict[str, Any], in_place: bool = False) -> BiocFrame:
-        """Set new metadata.
-
-        Args:
-            metadata:
-                New metadata for this object.
-
-            in_place:
-                Whether to modify the ``BiocFrame`` object in place.
-
-        Returns:
-            A modified ``BiocFrame`` object, either as a copy of the original
-            or as a reference to the (in-place-modified) original.
-        """
-        if not isinstance(metadata, dict):
-            raise TypeError(f"`metadata` must be a dictionary, provided {type(metadata)}.")
-        output = self._define_output(in_place)
-        output._metadata = metadata
-        return output
-
-    @property
-    def metadata(self) -> Dict[str, Any]:
-        """Alias for :py:attr:`~get_metadata`."""
-        return self.get_metadata()
-
-    @metadata.setter
-    def metadata(self, metadata: Dict[str, Any]) -> None:
-        """Alias for :py:attr:`~set_metadata` with ``in_place = True``.
-
-        As this mutates the original object, a warning is raised.
-        """
-        warn(
-            "Setting property 'metadata' is an in-place operation, use 'set_metadata' instead",
-            UserWarning,
-        )
-        self.set_metadata(metadata, in_place=True)
 
     ################################
     ######>> Single getters <<######
