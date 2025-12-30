@@ -59,7 +59,7 @@ def test_bframe_basic_ops():
     assert len(bframe.column_names) == 3
 
     assert bframe.get_column_data() is None
-    assert bframe.metadata == {}
+    assert bframe.metadata == ut.NamedList()
 
     assert len(bframe.dims) == 2
     assert bframe.dims == (3, 3)
@@ -104,7 +104,7 @@ def test_bframe_setters():
     assert bframe.column_names is not None
     assert len(bframe.column_names) == 3
 
-    assert bframe.metadata == {}
+    assert bframe.metadata == ut.NamedList()
 
     bframe.metadata = {"a": "b"}
     assert bframe.metadata is not None
