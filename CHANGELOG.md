@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.7.0 - 0.7.1
+## Version 0.7.0 - 0.7.2
 
 - Major update to type hints throughout the module for better type safety and consistency.
 - Fixed bug in slice operations where column indices might be incorrectly initialized.
