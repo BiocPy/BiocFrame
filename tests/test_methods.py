@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 import pandas as pd
-from biocframe.frame import BiocFrame
+from biocframe.BiocFrame import BiocFrame
 from biocutils import Factor, Names
 import biocutils as ut
 

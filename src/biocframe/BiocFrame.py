@@ -713,10 +713,6 @@ class BiocFrame(ut.BiocObject):
 
     def column(self, column: Union[str, int]) -> Any:
         """Alias for :py:meth:`~get_column`, provided for back-compatibility only."""
-        warn(
-            "Method 'column' is deprecated, use 'get_column' instead",
-            DeprecationWarning,
-        )
         return self.get_column(column)
 
     def has_row(self, name: str) -> bool:
