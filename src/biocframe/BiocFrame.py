@@ -212,6 +212,10 @@ class BiocFrame(ut.BiocObject):
         else:
             self._column_names = column_names if isinstance(column_names, ut.Names) else ut.Names(column_names)
 
+        if self._number_of_rows == 0 and len(self._column_names) > 0 and len(self._data) == 0:
+            for col in self._column_names:
+                self._data[col] = []
+
         self._column_data = column_data
 
         if _validate:
