@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.7.0 - 0.7.2
+## Version 0.7.0 - 0.7.3
 
 - Major update to type hints throughout the module for better type safety and consistency.
 - Fixed bug in slice operations where column indices might be incorrectly initialized.
@@ -9,6 +9,7 @@
 - Implement empty, contains, head, tail,
 - Coercions to list and `NamedList` from bioctuls.
 - `BiocFrame` now extends `BiocObject`, with metadata attribute now a `NamedList` from the biocutils package.
+- Support creating frame with 0 rows but has column names.
 
 ## Version 0.6.3
 

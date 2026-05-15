@@ -73,6 +73,14 @@ def test_empty_obj_with_size():
     assert bframe is not None
 
 
+def test_empty_with_column_names():
+    bframe = BiocFrame(column_names=["A", "B"])
+    assert bframe.shape == (0, 2)
+    assert list(bframe.column_names) == ["A", "B"]
+    assert len(bframe.column("A")) == 0
+    assert len(bframe.column("B")) == 0
+
+
 def test_should_fail():
     with pytest.raises(Exception):
         df_gr = pd.DataFrame(
