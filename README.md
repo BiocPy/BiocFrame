@@ -40,26 +40,31 @@ Genomic data often requires storing coordinates, annotations, and metadata toget
 
 ```python
 # Gene annotation with nested structures
-gene_annotations = BiocFrame({
-    "gene_id": ["GENE1", "GENE2", "GENE3"],
-    "symbol": ["BRCA1", "TP53", "EGFR"],
-    "location": BiocFrame({
-        "chromosome": ["chr17", "chr17", "chr7"],
-        "start": [43044295, 7668422, 55019017],
-        "end": [43125483, 7687550, 55211628],
-        "strand": ["-", "-", "+"],
-    }),
-    "transcripts": [
-        ["NM_007294", "NM_007297", "NM_007300"],
-        ["NM_000546"],
-        ["NM_005228", "NM_201282"],
-    ],
-    "pathways": [
-        ["DNA repair", "Cell cycle"],
-        ["Apoptosis", "Cell cycle", "DNA repair"],
-        ["Cell growth", "Signal transduction"],
-    ],
-}, row_names=["ENSG00000012048", "ENSG00000141510", "ENSG00000146648"])
+gene_annotations = BiocFrame(
+    {
+        "gene_id": ["GENE1", "GENE2", "GENE3"],
+        "symbol": ["BRCA1", "TP53", "EGFR"],
+        "location": BiocFrame(
+            {
+                "chromosome": ["chr17", "chr17", "chr7"],
+                "start": [43044295, 7668422, 55019017],
+                "end": [43125483, 7687550, 55211628],
+                "strand": ["-", "-", "+"],
+            }
+        ),
+        "transcripts": [
+            ["NM_007294", "NM_007297", "NM_007300"],
+            ["NM_000546"],
+            ["NM_005228", "NM_201282"],
+        ],
+        "pathways": [
+            ["DNA repair", "Cell cycle"],
+            ["Apoptosis", "Cell cycle", "DNA repair"],
+            ["Cell growth", "Signal transduction"],
+        ],
+    },
+    row_names=["ENSG00000012048", "ENSG00000141510", "ENSG00000146648"],
+)
 
 print(gene_annotations)
 ```
@@ -70,27 +75,39 @@ When combining different types of omics data with varying structures:
 
 ```python
 # Multi-omics data with different measurement types
-multi_omics = BiocFrame({
-    "sample_id": ["S1", "S2", "S3"],
-    "rna_seq": np.array([
-        [100, 200, 150],
-        [300, 250, 180],
-        [120, 220, 160],
-    ], dtype=np.float32),
-    "methylation": BiocFrame({
-        "cg0001": [0.85, 0.92, 0.78],
-        "cg0002": [0.45, 0.38, 0.52],
-        "cg0003": [0.12, 0.15, 0.10],
-    }),
-    "clinical": BiocFrame({
-        "age": [45, 52, 38],
-        "gender": ["M", "F", "F"],
-        "diagnosis": ["Type A", "Type B", "Type A"],
-    }),
-}, column_data=BiocFrame({
-    "data_type": ["identifier", "expression", "epigenetic", "clinical"],
-    "source": ["lab", "sequencer", "array", "EHR"],
-}))
+multi_omics = BiocFrame(
+    {
+        "sample_id": ["S1", "S2", "S3"],
+        "rna_seq": np.array(
+            [
+                [100, 200, 150],
+                [300, 250, 180],
+                [120, 220, 160],
+            ],
+            dtype=np.float32,
+        ),
+        "methylation": BiocFrame(
+            {
+                "cg0001": [0.85, 0.92, 0.78],
+                "cg0002": [0.45, 0.38, 0.52],
+                "cg0003": [0.12, 0.15, 0.10],
+            }
+        ),
+        "clinical": BiocFrame(
+            {
+                "age": [45, 52, 38],
+                "gender": ["M", "F", "F"],
+                "diagnosis": ["Type A", "Type B", "Type A"],
+            }
+        ),
+    },
+    column_data=BiocFrame(
+        {
+            "data_type": ["identifier", "expression", "epigenetic", "clinical"],
+            "source": ["lab", "sequencer", "array", "EHR"],
+        }
+    ),
+)
 
 print(multi_omics)
 print("\nColumn metadata:")
@@ -103,31 +120,40 @@ For data with natural hierarchies (e.g., samples → patients → cohorts):
 
 ```python
 # Hierarchical clinical trial data
-clinical_trial = BiocFrame({
-    "patient_id": ["P001", "P002", "P003"],
-    "cohort": ["A", "A", "B"],
-    "samples": [
-        BiocFrame({
-            "sample_id": ["S001", "S002"],
-            "collection_date": ["2024-01-01", "2024-01-15"],
-            "vital_status": ["alive", "alive"],
-        }),
-        BiocFrame({
-            "sample_id": ["S003", "S004", "S005"],
-            "collection_date": ["2024-01-02", "2024-01-16", "2024-01-30"],
-            "vital_status": ["alive", "alive", "deceased"],
-        }),
-        BiocFrame({
-            "sample_id": ["S006"],
-            "collection_date": ["2024-01-03"],
-            "vital_status": ["alive"],
-        }),
-    ],
-}, metadata={
-    "trial_name": "PHASE_III_STUDY",
-    "start_date": "2024-01-01",
-    "status": "ongoing",
-})
+clinical_trial = BiocFrame(
+    {
+        "patient_id": ["P001", "P002", "P003"],
+        "cohort": ["A", "A", "B"],
+        "samples": [
+            BiocFrame(
+                {
+                    "sample_id": ["S001", "S002"],
+                    "collection_date": ["2024-01-01", "2024-01-15"],
+                    "vital_status": ["alive", "alive"],
+                }
+            ),
+            BiocFrame(
+                {
+                    "sample_id": ["S003", "S004", "S005"],
+                    "collection_date": ["2024-01-02", "2024-01-16", "2024-01-30"],
+                    "vital_status": ["alive", "alive", "deceased"],
+                }
+            ),
+            BiocFrame(
+                {
+                    "sample_id": ["S006"],
+                    "collection_date": ["2024-01-03"],
+                    "vital_status": ["alive"],
+                }
+            ),
+        ],
+    },
+    metadata={
+        "trial_name": "PHASE_III_STUDY",
+        "start_date": "2024-01-01",
+        "status": "ongoing",
+    },
+)
 
 print(clinical_trial)
 ```
@@ -160,11 +186,7 @@ For example, we can nest a `BiocFrame` inside another `BiocFrame`:
 obj = {
     "ensembl": ["ENS00001", "ENS00002", "ENS00002"],
     "symbol": ["MAP1A", "BIN1", "ESR1"],
-    "ranges": BiocFrame({
-        "chr": ["chr1", "chr2", "chr3"],
-        "start": [1000, 1100, 5000],
-        "end": [1100, 4000, 5500]
-    }),
+    "ranges": BiocFrame({"chr": ["chr1", "chr2", "chr3"], "start": [1000, 1100, 5000], "end": [1100, 4000, 5500]}),
 }
 
 bframe2 = BiocFrame(obj, row_names=["row1", "row2", "row3"])
@@ -188,7 +210,7 @@ print(bframe.shape)
 print(bframe.get_column_names())
 ## ['ensembl', 'symbol']
 
-print(bframe.column_names) # same as above
+print(bframe.column_names)  # same as above
 ## ['ensembl', 'symbol']
 ```
 
@@ -220,7 +242,7 @@ print(sliced)
 ##       <list>
 ## [0] ENS00002
 
-sliced = bframe[[0,2], ["symbol", "ensembl"]]
+sliced = bframe[[0, 2], ["symbol", "ensembl"]]
 print(sliced)
 ## BiocFrame with 2 rows and 2 columns
 ##     symbol  ensembl
@@ -280,9 +302,7 @@ print(modified)
 Change the row or column names:
 
 ```python
-modified = bframe.\
-    set_column_names(["FOO", "BAR"]).\
-    set_row_names(['alpha', 'bravo', 'charlie'])
+modified = bframe.set_column_names(["FOO", "BAR"]).set_row_names(["alpha", "bravo", "charlie"])
 print(modified)
 ## BiocFrame with 3 rows and 2 columns
 ##              FOO    BAR
@@ -295,9 +315,9 @@ print(modified)
 We also support Bioconductor's metadata concepts, either along the columns or for the entire object:
 
 ```python
-modified = bframe.\
-    set_metadata({ "author": "Jayaram Kancherla" }).\
-    set_column_data(BiocFrame({"column_source": ["Ensembl", "HGNC" ]}))
+modified = bframe.set_metadata({"author": "Jayaram Kancherla"}).set_column_data(
+    BiocFrame({"column_source": ["Ensembl", "HGNC"]})
+)
 print(modified)
 ## BiocFrame with 3 rows and 2 columns
 ##      ensembl symbol
@@ -317,8 +337,8 @@ We prefer not to do it this way as it can silently mutate ``BiocFrame`` instance
 Nonetheless:
 
 ```python
-testframe = BiocFrame({ "A": [1,2,3], "B": [4,5,6] })
-testframe.column_names = ["column1", "column2" ]
+testframe = BiocFrame({"A": [1, 2, 3], "B": [4, 5, 6]})
+testframe.column_names = ["column1", "column2"]
 print(testframe)
 ## BiocFrame with 3 rows and 2 columns
 ##     column1 column2
@@ -332,7 +352,7 @@ Similarly, we could set or replace columns directly:
 
 ```python
 testframe["column2"] = ["A", "B", "C"]
-testframe[1:3, ["column1","column2"]] = BiocFrame({"x":[4, 5], "y":["E", "F"]})
+testframe[1:3, ["column1", "column2"]] = BiocFrame({"x": [4, 5], "y": ["E", "F"]})
 ## BiocFrame with 3 rows and 2 columns
 ##     column1 column2
 ##      <list>  <list>
@@ -411,6 +431,7 @@ If this is not the case, e.g., with different columns across objects, we can use
 
 ```python
 from biocframe import relaxed_combine_rows
+
 modified2 = bframe2.set_column("foo", ["A", "B", "C", "D", "E"])
 combined = relaxed_combine_rows(bframe1, modified2)
 print(combined)
@@ -433,6 +454,7 @@ Similarly, if the rows are different, we can use **BiocFrame**'s `merge` functio
 
 ```python
 from biocframe import merge
+
 modified1 = bframe1.set_row_names(["A", "B", "C", "D", "E"])
 modified3 = bframe3.set_row_names(["C", "D", "E", "F", "G"])
 combined = merge([modified1, modified3], by=None, join="outer")
@@ -456,12 +478,8 @@ This conversion is easily achieved:
 
 ```python
 from biocframe import BiocFrame
-bframe = BiocFrame(
-    {
-        "foo": ["A", "B", "C", "D", "E"],
-        "bar": [True, False, True, False, True]
-    }
-)
+
+bframe = BiocFrame({"foo": ["A", "B", "C", "D", "E"], "bar": [True, False, True, False, True]})
 
 pd = bframe.to_pandas()
 print(pd)
